@@ -1,7 +1,10 @@
 GITHUB REPOSITORIES
 ===================
 
-GitHub Repositories is an open source Google Chrome Extension project.
+GitHub Repositories is a Google Chrome Extension used to access users GitHub data.
+
+It is an open source project.
+
 
 License
 -------
