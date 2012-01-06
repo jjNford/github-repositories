@@ -30,7 +30,7 @@ function loadApplication() {
     
         if(!localStorage['menu_selected']) {localStorage['selected'] = 'repositories';}
         $('menu li').bind('click', menuOnClickListener); 
-        $("#context_switcher span").html('<img src="' + github.user.avatar_url + '" />' + github.user.login);                    
+        $("#context_switcher .context-menu-button").html('<img src="' + github.user.avatar_url + '" />' + github.user.login);                    
         $('menu li[data=' + localStorage['menu_selected'] + ']').addClass('selected');
         $("#application").fadeIn(400, function(){});
 
@@ -90,4 +90,11 @@ function loadFollowers() {
 $(document).ready(function() {
     if(!(token = github.getAccessToken())) { showAuthorize(); }    
     else{ github.loadUser(validateToken); }
+    
+    $('#context_switcher .context-menu-button').click(function() {
+    	if($('#context_switcher .context-pane').is(':visible'))
+    		$('#context_switcher .context-pane').hide();
+    	else
+    		$('#context_switcher .context-pane').show();
+    });
 });	
