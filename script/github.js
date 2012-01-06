@@ -150,3 +150,23 @@ GitHub.prototype.loadUser = function(callback) {
 GitHub.prototype.loadRepositories = function(callback) {
     context.api.get('repositories', 'user/repos', callback);
 };
+
+// Get watched repositories from GitHub.
+GitHub.prototype.loadWatched = function(callback) {
+	context.api.get('watched', 'user/watched', callback);
+};
+
+// Get watched repositories from GitHub.
+GitHub.prototype.loadWatched = function(callback) {
+	context.api.get('watched', 'user/watched', callback);
+};
+
+// Get users being followed.
+GitHub.prototype.loadFollowing = function(callback) {
+	context.api.get('watched', 'user/following', callback);
+};
+
+// Get following users.
+GitHub.prototype.loadFollowers = function(callback) {
+	context.api.get('watched', 'user/followers', callback);
+};
