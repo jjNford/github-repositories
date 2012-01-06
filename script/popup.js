@@ -34,6 +34,8 @@ function loadApplication() {
         $('menu li[data=' + localStorage['menu_selected'] + ']').addClass('selected');
         $("#application").fadeIn(400, function(){});
 
+		console.log(github.user);
+
 		loadContent();
     });
 }

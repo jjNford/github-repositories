@@ -170,3 +170,8 @@ GitHub.prototype.loadFollowing = function(callback) {
 GitHub.prototype.loadFollowers = function(callback) {
 	context.api.get('followers', 'user/followers', callback);
 };
+
+// Get user organizations.
+GitHub.prototype.loadOrganizations = function(callback) {
+	context.api.get('organizations', 'user/orgs', callback);
+};
