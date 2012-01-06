@@ -1,0 +1,252 @@
+/*******************************************************************************
+********************************************************************************
+********************************************************************************
+***                                                                          ***
+***                                  CLASSES                                 ***
+***                                                                          ***
+********************************************************************************
+********************************************************************************
+*******************************************************************************/
+
+.hidden {
+    display: none;
+}
+
+/*******************************************************************************
+********************************************************************************
+********************************************************************************
+***                                                                          ***
+***                                    ALL                                   ***
+***                                                                          ***
+********************************************************************************
+********************************************************************************
+*******************************************************************************/
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    color: #000000;
+}
+
+body {
+    width: 750px;
+    height: 400px;
+    font-size: 13.34px;
+    font-family: helvetica, arial, freesans, clean, sans-serif;
+    line-height: 1.4;
+}
+
+header {
+    height: 38px;
+    padding: 8px 0 0 91.5px;
+    display: block;
+    background: #FAFAFA;
+    background: -webkit-gradient(linear, left top, left bottom, from(#FAFAFA), to(#EAEAEA));
+    border-bottom: 1px solid #CACACA;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.4),0 0 10px rgba(0,0,0,0.1);
+}
+
+/*******************************************************************************
+********************************************************************************
+********************************************************************************
+***                                                                          ***
+***                                  LOADING                                 ***
+***                                                                          ***
+********************************************************************************
+********************************************************************************
+*******************************************************************************/
+
+.loading {
+    margin-top: -16px;
+    position: relative;
+    top: 50%;
+    text-align: center;
+}
+
+/*******************************************************************************
+********************************************************************************
+********************************************************************************
+***                                                                          ***
+***                                   AUTHORIZE                              ***
+***                                                                          ***
+********************************************************************************
+********************************************************************************
+*******************************************************************************/
+
+
+#authorize h1 {
+    height: 38px;
+    display: block;
+    padding-left: 18px;
+    background: rgb(130, 154, 168);
+    background: -webkit-gradient(linear, left top, left bottom, from(rgb(130, 154, 168)), to(rgb(64, 90, 106)));
+    border: 1px solid #677C89;
+    border-radius: 3px 3px  0 0;
+    border-bottom-color: #6B808D;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: bold;
+    text-shadow: rgba(0, 0, 0, 0.7) 0 -1px 0;
+    line-height: 38px;
+}
+
+#authorize h1 a {
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: normal;
+    text-decoration: none;
+    text-shadow: none;
+}
+
+#authorize h1 a:hover {
+    text-decoration: underline;
+}
+
+#authorize div {
+    height: 226px;
+    background: #E9F1F4;
+    border: 1px solid #D8DEE2;
+    border-radius: 0 0 3px 3px;
+    border-top-color: #E9F1F4;
+    border-bottom-width: 2px;
+    text-align: center;
+}
+
+#authorize button {
+    width: 81px;
+    height: 34px;
+    margin-top: 80.5px;
+    background: rgb(255, 255, 255);
+    background: -webkit-gradient(linear, left top, left bottom, from(rgb(255, 255, 255)), to(rgb(225, 225, 225)));
+    box-shadow: rgba(0, 0, 0, 0.3) 0 1px 4px 0;
+    border: none;
+    border-bottom: 1px solid #EBEBEB;
+    border-radius: 4px;    
+    color: #333;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: #FFFFFF 1px 1px 0;
+    cursor: pointer;
+}
+
+#authorize button:hover {
+    background: #438BB1;
+    background: -webkit-gradient(linear, left top, left bottom, from(#0CA6DD), to(#0770A0));
+    border-bottom-color: #0770A0;
+    color: #FFFFFF;
+    text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/*******************************************************************************
+********************************************************************************
+********************************************************************************
+***                                                                          ***
+***                                APPLICATION                               ***
+***                                                                          ***
+********************************************************************************
+********************************************************************************
+*******************************************************************************/
+
+#application, #dashboard, #content  {
+    height: 353px;
+    overflow: hidden;
+}
+
+#dashboard, #content {
+    float: left;
+}
+
+#dashboard {
+    width: 249px;
+    border-right: 1px solid #CACACA;
+}
+
+#context_switcher {
+    max-width: 225px;
+    margin: 0 auto;
+    margin-top: 25px;    
+    font-size: 13px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#context_switcher span {
+    height: 21px;
+    margin: 0 auto;
+    padding: 3px 28px 3px 3px;
+    display: inline-block;
+    background: url("../img/switcher.png") 100% -2px no-repeat, -webkit-gradient(linear, left top, left bottom, from(#F4F4F4), to(#ECECEC));
+    border: 1px solid #D4D4D4;
+    border-radius: 3px;
+    color: #333;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #FFFFFF;
+    line-height: 21px;
+}
+
+#context_switcher span:hover {
+    background: url("../img/switcher.png") 100% -32px no-repeat, -webkit-gradient(linear, left top, left bottom, from(#599BDC), to(#3173B4));
+    border: 1px solid #518CC6;
+    border-bottom-color: #2A65A0;
+    color: #FFFFFF;
+    text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+#context_switcher img {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: -1px;
+    margin-right: 7px;
+    vertical-align: middle;
+    border-radius: 2px;
+}
+
+#content {
+    width: 500px;
+}
+
+menu ul {
+    width: 175px;
+    margin: 0 auto;
+    margin-top: 77.5px;
+    display: block;
+    color: #777777;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: 0 1px 0 #FFFFFF;
+    text-align: center;
+    cursor: pointer;
+    list-style-type: none;
+}
+
+menu li {
+    height: 34px;
+    background: url('../img/menu_bar_background.png') 0 0 repeat-x;
+    border: 1px solid #DADADA;
+    border-top: 0;
+    line-height: 32px;
+}
+
+menu li:first-child {
+    border-top: 1px solid #EAEAEA;
+    border-radius: 3px 3px 0 0;
+}
+
+menu li:last-child {
+    border-radius: 0 0 3px 3px;
+    border-bottom: 1px solid #CACACA;
+}
+
+menu li:hover {
+    background: url('../img/menu_bar_background_hover.png') 0 0 repeat-x;
+    color: #4183CA;
+}
+
+menu .selected {
+    background: url('../img/menu_bar_background_highlight.png') 0 0 repeat-x !important;
+    color: #000000 !important;
+}

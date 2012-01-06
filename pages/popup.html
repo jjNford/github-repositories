@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	
+	<!-- css -->
+	<link rel="stylesheet" href="../css/style.css" />
+	<!-- end css -->
+	
+	<!-- js -->
+	<script src="../script/jquery-1.7.min.js"></script>
+	<script src="../script/github.js"></script>
+	<script src="../script/popup.js"></script>
+	<!-- end js -->
+	
+</head>
+<body>
+
+    <!-- header -->
+    <header><img src="../img/logo_header.png" /></header>
+    <!-- end header -->
+    
+    <!-- loading -->
+    <article class="loading"><img src="../img/loading.gif" /></article>
+    <!-- end loading -->
+    
+    <!-- authorize -->
+    <article id="authorize" class="hidden">
+        <h1>Log in <a href="https://github.com/plans">(Pricing and Signup)</a></h1>
+        <div><button>Authorize</button></div>
+    </article>
+    <!-- end authorize -->
+    
+    <!-- application -->
+    <article id="application" class="hidden">
+        <section id="dashboard">
+            <div id="context_switcher"><span></span></div>
+            <menu>
+                <ul>
+                    <li data="loadRepositories">Repositories</li>
+                    <li data="Watched">Watched</li>
+                    <li data="Following">Following</li>
+                    <li data="Followers">Followers</li>
+                </ul>
+            </menu>
+        </section>
+        <section id="content"></section>
+    </article>
+    <!-- end application -->
+    
+</body>
+</html>

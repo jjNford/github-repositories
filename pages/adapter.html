@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>    
+    <meta charset="utf-8">
+	<title>Authorizing</title>
+	
+	<!-- js -->
+	<script src="../script/github.js"></script>
+	<script>
+	    var url = window.location.href;
+	    var flow = new GitHub();
+	    flow.oauth2.processCode(url);
+	</script>
+	<!-- end js -->
+	
+	<!-- css -->
+	<link rel="stylesheet" href="../css/style.css" />
+	<!-- end css -->
+	
+</head>
+<body style="width: 100%;">
+    <header><img src="../img/logo_header.png" /></header>
+	<article class="loading"><img src="../img/loading.gif" /></article>
+</body>
+</html>
