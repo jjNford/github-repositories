@@ -32,29 +32,55 @@ function loadApplication() {
         $('menu li').bind('click', menuOnClickListener); 
         $("#context_switcher span").html('<img src="' + github.user.avatar_url + '" />' + github.user.login);                    
         $('menu li[data=' + localStorage['menu_selected'] + ']').addClass('selected');
-        $("#application").fadeIn(400, function(){});   
-        loadContent();     
+        $("#application").fadeIn(400, function(){});
+
+		loadContent();
     });
 }
 
 
 // Menu onClickListener.
 function menuOnClickListener() {
+	
+	// Change selected menu item.
     $('menu li[data=' + localStorage['menu_selected'] + ']').removeClass('selected');
-    localStorage['menu_selected'] = $(this).attr('data');    
+    localStorage['menu_selected'] = $(this).attr('data');
     $('menu li[data=' + localStorage['menu_selected'] + ']').addClass('selected');
-    loadContent();
-    $('#content').fadeOut(500, function(){});    
+    $('#content').fadeOut(400, function(){});
+	
+	loadContent();
 };
 
 
+// Load application content.
 function loadContent() {
-    github[localStorage['menu_selected']](test);
-};
+	var content = localStorage['menu_selected'];
+	var callback = window[content];
+	
+	github[content](callback);
+}
+
+// Load and display repositories.
+function loadRepositories() {
+	console.log(github.repositories);
+}
 
 
-function test(data) {
-    console.log(data);
+// Load and display watched.
+function loadWatched() {
+	console.log(github.watched);
+}
+
+
+// Load and display following.
+function loadFollowing() {
+	console.log(github.following);
+}
+
+
+// Load and display followers.
+function loadFollowers() {
+	console.log(github.followers);
 }
 
 

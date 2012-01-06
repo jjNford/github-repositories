@@ -163,10 +163,10 @@ GitHub.prototype.loadWatched = function(callback) {
 
 // Get users being followed.
 GitHub.prototype.loadFollowing = function(callback) {
-	context.api.get('watched', 'user/following', callback);
+	context.api.get('following', 'user/following', callback);
 };
 
 // Get following users.
 GitHub.prototype.loadFollowers = function(callback) {
-	context.api.get('watched', 'user/followers', callback);
+	context.api.get('followers', 'user/followers', callback);
 };
