@@ -1,3 +1,12 @@
+/* GitHub JavaScript Object
+ *
+ * Contains JavaScript API to get private GitHub data from https://www.github.com.
+ *
+ * Thank you Boris Smus for your concept of using an adapter page to prevent
+ * background script from running when completing the OAuth2 flow.
+ * http://smus.com/oauth2-chrome-extensions
+ *
+ */
 
 // Object Constructor
 var GitHub = function() {
@@ -141,37 +150,7 @@ GitHub.prototype.clearAccessToken = function() {
 	delete localStorage[access_token_date];
 };
 
-// Get user data from GitHub.
-GitHub.prototype.loadUser = function(callback) {	
-	context.api.get('user', 'user', callback);
-};
-
-// Get user repositories from GitHub.
-GitHub.prototype.loadRepositories = function(callback) {
-    context.api.get('repositories', 'user/repos', callback);
-};
-
-// Get watched repositories from GitHub.
-GitHub.prototype.loadWatched = function(callback) {
-	context.api.get('watched', 'user/watched', callback);
-};
-
-// Get watched repositories from GitHub.
-GitHub.prototype.loadWatched = function(callback) {
-	context.api.get('watched', 'user/watched', callback);
-};
-
-// Get users being followed.
-GitHub.prototype.loadFollowing = function(callback) {
-	context.api.get('following', 'user/following', callback);
-};
-
-// Get following users.
-GitHub.prototype.loadFollowers = function(callback) {
-	context.api.get('followers', 'user/followers', callback);
-};
-
-// Get user organizations.
-GitHub.prototype.loadOrganizations = function(callback) {
-	context.api.get('organizations', 'user/orgs', callback);
-};
+// Load data from GitHub.
+GitHub.prototype.load = function(member, api_uri, callback) {
+	context.api.get(member, api_uri, callback);
+}

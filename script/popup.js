@@ -21,33 +21,40 @@ function validateToken(user) {
         showAuthorize();
     }
     else { loadApplication(); }
-}
+};
 
 
 // Load the Application.
 function loadApplication() {
     $(".loading").fadeOut(400, function() {
     
-        if(!localStorage['menu_selected']) {localStorage['selected'] = 'repositories';}
-        $('menu li').bind('click', menuOnClickListener); 
-        $("#context_switcher .context-menu-button").html('<img src="' + github.user.avatar_url + '" />' + github.user.login);                    
-        $('menu li[data=' + localStorage['menu_selected'] + ']').addClass('selected');
-        $("#application").fadeIn(400, function(){});
+		// Configure context switcher.
+		$("#context_switcher .context-menu-button").html('<img src="' + github.user.avatar_url + '" />' + github.user.login);
+	    $('#context_switcher .context-menu-button').click(function() {
+	    	if($('#context_switcher .context-pane').is(':visible')) {
+	    		$('#context_switcher .context-pane').hide();
+			}
+	    	else { $('#context_switcher .context-pane').show(); }
+	    });
 
-		console.log(github.user);
+		// Get menu tabe and content.
+        if(!localStorage['content']) { localStorage['selected'] = 'repositories'; }
+        $('menu li').bind('click', menuOnClickListener);                  
+        $('menu li[data=' + localStorage['content'] + ']').addClass('selected');
+        $("#application").fadeIn(400, function(){});
 
 		loadContent();
     });
-}
+};
 
 
 // Menu onClickListener.
 function menuOnClickListener() {
 	
 	// Change selected menu item.
-    $('menu li[data=' + localStorage['menu_selected'] + ']').removeClass('selected');
-    localStorage['menu_selected'] = $(this).attr('data');
-    $('menu li[data=' + localStorage['menu_selected'] + ']').addClass('selected');
+    $('menu li[data=' + localStorage['content'] + ']').removeClass('selected');
+    localStorage['content'] = $(this).attr('data');
+    $('menu li[data=' + localStorage['content'] + ']').addClass('selected');
     $('#content').fadeOut(400, function(){});
 	
 	loadContent();
@@ -56,45 +63,73 @@ function menuOnClickListener() {
 
 // Load application content.
 function loadContent() {
-	var content = localStorage['menu_selected'];
-	var callback = window[content];
+
+	var content = localStorage['content'];
 	
-	github[content](callback);
-}
+	var member = null;
+	var api_uri = null;
+	var callback = null;
 
-// Load and display repositories.
-function loadRepositories() {
-	console.log(github.repositories);
-}
+	// Take appropriate action.
+	switch(content) {	
+		case 'repositories':
+			member   = 'repos';
+			api_uri  = 'user/repos';
+			callback = displayRepositories;
+			break;
+			
+		case 'watched':
+			member   = 'watched';
+			api_uri  = 'user/watched';
+			callback = displayWatched;
+			break;
+			
+		case 'following':
+			member   = 'following';
+			api_uri  = 'user/following';
+			callback = displayFollowing;
+			break;	
+				
+		case 'followers':
+			member   = 'followers';
+			api_uri  = 'user/followers';
+			callback = displayFollowers;
+			break;
+			
+		default:
+			break;
+	}
+	
+	github.load(member, api_uri, callback);	
+};
 
 
-// Load and display watched.
-function loadWatched() {
+// Display user repositories.
+function displayRepositories() {
+	console.log(github.repos);
+};
+
+
+// Displays users watched repositories.
+function displayWatched() {
 	console.log(github.watched);
-}
+};
 
 
-// Load and display following.
-function loadFollowing() {
+// Display followed users.
+function displayFollowing() {
 	console.log(github.following);
-}
+};
 
 
-// Load and display followers.
-function loadFollowers() {
+// Display users followers.
+function displayFollowers() {
 	console.log(github.followers);
-}
+};
 
 
 // Here we go...
 $(document).ready(function() {
     if(!(token = github.getAccessToken())) { showAuthorize(); }    
-    else{ github.loadUser(validateToken); }
-    
-    $('#context_switcher .context-menu-button').click(function() {
-    	if($('#context_switcher .context-pane').is(':visible'))
-    		$('#context_switcher .context-pane').hide();
-    	else
-    		$('#context_switcher .context-pane').show();
-    });
+    else{ github.load('user', 'user', validateToken); }
 });	
