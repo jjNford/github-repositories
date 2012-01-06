@@ -69,6 +69,9 @@ header .header_logo {
 .loading {
 	width: 100%;
 	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
 	background: url('../img/loading.gif') center center no-repeat;
 }
 

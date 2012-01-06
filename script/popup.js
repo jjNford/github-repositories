@@ -26,7 +26,7 @@ function validateToken(user) {
 
 // Load the Application.
 function loadApplication() {
-    $(".loading").fadeOut(400, function() {
+    $("#loading").fadeOut(400, function() {
     
 		// Configure context switcher.
 		$("#context_switcher .context-menu-button").html('<img src="' + github.user.avatar_url + '" />' + github.user.login);
