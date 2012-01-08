@@ -316,7 +316,7 @@ menu .selected {
     text-decoration: underline;
 }
 
-.following li {
+.follow-list li {
     height: 24px;
     padding: 5px 0;
     border-bottom: 1px solid #DDDDDD;
@@ -325,7 +325,7 @@ menu .selected {
     font-weight: bold;
 }
 
-.following img {
+.follow-list img {
     width: 20px;
     height: 20px;
     margin-right: 10px;

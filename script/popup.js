@@ -2,7 +2,7 @@
 var github = new GitHub();
 
 // Application Constants.
-var FADE_SPEED = 500;
+var FADE_SPEED = 300;
 
 
 // Prompt user to authorize extension with GitHub.
@@ -71,8 +71,9 @@ function dashboardMenuOnClickListener() {
 // Set content section display to loading.
 function displayContentLoading() {
     var contentSection = $('#content');
+    
     contentSection.fadeOut(FADE_SPEED, function() {
-        $('#content').html("").addClass('loading').fadeIn(FADE_SPEED);
+        $('#content').html("").addClass('loading').fadeIn(FADE_SPEED).delay(FADE_SPEED);
     });
 };
 
@@ -80,6 +81,7 @@ function displayContentLoading() {
 // Set content section to display content.
 function displayContent(content) {
     var contentSection = $('#content');
+    
     contentSection.fadeOut(FADE_SPEED, function(){
         contentSection.removeClass('loading').html(content).fadeIn(FADE_SPEED);
     });
@@ -88,6 +90,9 @@ function displayContent(content) {
 
 // Load content.
 function loadContent() {
+
+    displayContentLoading();
+
     switch( localStorage['content'] ) {
         case 'repositories':
             github.api.getAsync('repos', 'user/repos', displayRepositories);
@@ -110,6 +115,25 @@ function loadContent() {
 // Display user repositories.
 function displayRepositories() {
 	console.log(github.repos);
+	
+	var html = '<ul lcass="repo-list">';
+	
+	for(var key in github.repos) {
+	    html += '<li>';
+	    html += '<ul class="repo-stats">';
+	    html += '<li>' + github.repos[key].language + '</li>';
+	    html += '<li><a href="' + github.repos[key].svn_url + '/watchers" target="_blank">' + github.repos[key].watchers + '</a></li>';
+	    html += '<li><a href="' + github.repos[key].svn_url + '/network" target="_blank">' + github.repos[key].forks + '</a></li>';
+	    html += '</ul>';
+	    html += '<h3><a href="' + github.repos[key].svn_url + '" target="_blank">' + github.repos[key].name + '</a></h3>';
+	    html += '<div><p>' + github.repos[key].description + '</p>';
+	    html += '<p>Last updated ' + github.repos[key].updated_at + '</p></div>';
+	    html += '</li>';
+	}
+	
+	html += '</ul>';
+	displayContent(html);
+	
 };
 
 
@@ -122,7 +146,7 @@ function displayWatched() {
 // Display followed users.
 function displayFollowing() {
 	
-	var html = '<ul class="following">';
+	var html = '<ul class="follow-list">';
 	var contentSection = $('#content');
 	
 	for(var key in github.following) {
@@ -148,7 +172,7 @@ function displayFollowing() {
 // Display users followers.
 function displayFollowers() {
 
-	var html = '<ul class="following">';
+	var html = '<ul class="follow-list">';
 	var contentSection = $('#content');
 	
 	for(var key in github.followers) {
