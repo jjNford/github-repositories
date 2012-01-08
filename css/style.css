@@ -11,10 +11,11 @@
 * {
     margin: 0;
     padding: 0;
+    list-style: none;
 }
 
 body {
-    width: 750px;
+    width: 740px;
     height: 400px;
     color: #000000;
     font-size: 13.34px;
@@ -222,7 +223,6 @@ button:hover {
 }
 
 .context-switcher ul {
-	list-style: none;
 	margin: 0;
 	padding: 0;
 }
@@ -271,7 +271,6 @@ menu ul {
     text-shadow: 0 1px 0 #FFFFFF;
     text-align: center;
     cursor: pointer;
-    list-style-type: none;
 }
 
 menu li {
@@ -303,5 +302,34 @@ menu .selected {
 }
  
 #content {
-    width: 500px;
+    width: 450px;
+    padding: 0 20px;
+    overflow-y: scroll;
+}
+
+#content a {
+    color: #4183C4;
+    text-decoration: none;
+}
+
+#content a:hover {
+    text-decoration: underline;
+}
+
+.following li {
+    height: 24px;
+    padding: 5px 0;
+    border-bottom: 1px solid #DDDDDD;
+    color: #999999;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.following img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    padding: 1px;
+    border: 1px solid #DDDDDD;
+    vertical-align: middle;
 }

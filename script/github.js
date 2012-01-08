@@ -8,43 +8,26 @@
  *
  */
 
-// Object Constructor
+// GitHub Object Constructor.
 var GitHub = function() {
 	
 	// Create a context handle for anonymous function closure & scoping.
 	context = this;
 	
 	// Local storage entries.
-	access_token      = "github_access_token";
-	access_token_date = "github_access_token_date";
+	access_token_key      = "github_access_token";
+	access_token_date_key = "github_access_token_date";
 };
 
-// GitHub API Attributes
-GitHub.prototype.api = {
-	client_id         : "911fa741a8b8dac7d28c",
-	client_secret     : "e13f2f8ba4d9892eb231b4fcf3257013736327d1",
-	api_url           : "https://api.github.com/",
-	redirect_url      : "https://github.com/robots.txt",
-	access_token_url  : "https://github.com/login/oauth/access_token",
-	authorization_url : "https://github.com/login/oauth/authorize",
-	scopes            : [],
-	
-	// API Get request (requires jQuery).
-	get : function(variable, api_uri, callback) {
-		var data = {access_token: context.getAccessToken()};	
-		$.getJSON(context.api.api_url + api_uri, data)
-			.success(function(data){
-				context[variable] = data;
-				callback(data);
-			})
-			.error(function(data){
-				
-				// Make sure an internet connection exists.
-				if(data.readyState == 0 && data.status ==0) {}
-				else { callback(false); }
-			}
-		);
-	}
+// Get GitHub OAuth2 access token.
+GitHub.prototype.getAccessToken = function() {
+	return localStorage[access_token_key];
+};
+
+// Clear GitHub OAuth2 access tokens.
+GitHub.prototype.clearAccessToken = function() {
+	delete localStorage[access_token_key];
+	delete localStorage[access_token_date_key];
 };
 
 // GitHub OAuth2 Interface.
@@ -129,8 +112,8 @@ GitHub.prototype.oauth2 = {
 		
 		// Save token information in local storage.
 		// API V3 does not support expiration date or refresh token.
-		localStorage[access_token] = accessToken;
-		localStorage[access_token_date] = (new Date).valueOf();
+		localStorage[access_token_key] = accessToken;
+		localStorage[access_token_date_key] = (new Date).valueOf();
 		
 		// Close the current page.
 		chrome.tabs.getCurrent(function(thisTab) {
@@ -139,18 +122,53 @@ GitHub.prototype.oauth2 = {
 	}
 };
 
-// Get GitHub OAuth2 access token.
-GitHub.prototype.getAccessToken = function() {
-	return localStorage[access_token];
+// GitHub API Interface.
+GitHub.prototype.api = {
+	client_id         : "911fa741a8b8dac7d28c",
+	client_secret     : "e13f2f8ba4d9892eb231b4fcf3257013736327d1",
+	api_url           : "https://api.github.com/",
+	redirect_url      : "https://github.com/robots.txt",
+	access_token_url  : "https://github.com/login/oauth/access_token",
+	authorization_url : "https://github.com/login/oauth/authorize",
+	scopes            : [],
+	
+	// API Asynchronous GET request (requires jQuery).
+	getAsync : function(variable, api_uri, callback) {
+		var data = {access_token: context.getAccessToken()};
+			
+		$.getJSON(context.api.api_url + api_uri, data)
+			.success(function(json){
+				context[variable] = json;
+				callback(json);
+			})
+			.error(function(json){
+				
+				// Make sure an internet connection exists.
+				if(json.readyState == 0 && json.status ==0) {}
+				else { callback(false); }
+			}
+		);
+	},
+	
+	// API Synchronous GET request(requires jQuery).
+	getSync: function(api_uri) {
+	    var data = {access_token: context.getAccessToken()};
+	    
+	    $.ajax({
+	        async: false,
+	        url: context.api.api_url + api_uri,
+	        data: data,
+	        dataType: "json",
+	        success: function(json) {
+	            data = json;
+	        },
+	        error: function(json) {
+	            // Make sure an internet connection exists.
+	            if(json.readyState == 0 && json.status ==0) {}
+	            else { data = false; }
+	        }
+	    });
+	        	    
+	    return data;
+	}
 };
-
-// Clear GitHub OAuth2 access token.
-GitHub.prototype.clearAccessToken = function() {
-	delete localStorage[access_token];
-	delete localStorage[access_token_date];
-};
-
-// Load data from GitHub.
-GitHub.prototype.load = function(member, api_uri, callback) {
-	context.api.get(member, api_uri, callback);
-}
