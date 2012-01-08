@@ -1,107 +1,90 @@
-// GitHub Interface
 var github = new GitHub();
 
 
-// Prompt the user to authorize the extension with GitHub.
-function showAuthorize() {
-	$("#authorize button").click( function(){ github.oauth2.begin(); });
-	$("header").delay(500).fadeOut(500);
-	$(".loading").delay(500).fadeOut(500, function() {
-	    $("body").animate({width: "413px", height: "269px"}, function() {
-	        $("#authorize").delay(750).fadeIn(500);
-	    });
-	});
-};
 
+// Prompt user to authorize extension with GitHub.
+function showAuthorizationScreen() {
 
-// Validate users tokens.
-function validateToken(user) {
-    if(!user) {
-        github.clearAccessToken();
-        showAuthorize();
-    }
-    else { loadApplication(); }
-};
+    var popupAnimation = {width: "413px", height: "269px"};
 
-
-// Load the Application.
-function loadApplication() {
-    $("#loading").fadeOut(400, function() {
-    
-		// Configure context switcher.
-		$("#context_switcher .context-menu-button").html('<img src="' + github.user.avatar_url + '" />' + github.user.login);
-	    $('#context_switcher .context-menu-button').click(function() {
-	    	if($('#context_switcher .context-pane').is(':visible')) {
-	    		$('#context_switcher .context-pane').hide();
-			}
-	    	else { $('#context_switcher .context-pane').show(); }
-	    });
-
-		// Get menu tabe and content.
-        if(!localStorage['content']) { localStorage['selected'] = 'repositories'; }
-        $('menu li').bind('click', menuOnClickListener);                  
-        $('menu li[data=' + localStorage['content'] + ']').addClass('selected');
-        $("#application").fadeIn(400, function(){});
-
-		loadContent();
+    $('#popup-header').delay(500).fadeOut(200, function(){
+        $('body').removeClass('loading').animate(popupAnimation, function(){
+            $('#authorization').delay(750).fadeIn(400);
+            $('#authorization button').click(function(){github.oauth2.begin();});
+        });
     });
+}
+
+
+
+// Validate users token.
+function validateToken(user) {
+    if(user) {loadApplication();}
+    else {
+        github.clearAccessToken();
+        showAuthorizationScreen();
+    }
 };
 
 
-// Menu onClickListener.
-function menuOnClickListener() {
-	
-	// Change selected menu item.
+
+// Load popup application.
+function loadApplication() {
+    
+    // Configure context switcher.
+    $('.context-switcher .context-menu-button').html('<img src="' + github.user.avatar_url + '" />' + github.user.login);
+    $('.context-switcher .context-menu-button').click(function() {
+        if($('.context-switcher .context-pane').is(':visible')) {
+    	    $('.context-switcher .context-pane').hide();
+    	}
+    	else { $('.context-switcher .context-pane').show(); }
+    });
+    
+    // Set menu tab onClickListeners.
+    $('#dashboard menu li').bind('click', dashboardMenuOnClickListener);
+    
+    // Set selected menu tab.
+    var currentTab = localStorage['content'] ? localStorage['content'] : 'repositories';    
+    $('#dashboard menu li[data=' + currentTab + ']').addClass('selected');
+    
+    $('body').removeClass('loading');
+    $('#content').addClass('loading');
+    $('#application').removeClass('hidden');
+}
+
+
+
+// Dashboard Menu OnClickListener.
+function dashboardMenuOnClickListener() {
+    
+    // Change selected menu tab.
     $('menu li[data=' + localStorage['content'] + ']').removeClass('selected');
     localStorage['content'] = $(this).attr('data');
     $('menu li[data=' + localStorage['content'] + ']').addClass('selected');
-    $('#content').fadeOut(400, function(){});
-	
-	loadContent();
-};
+    
+    // Set content to loading.
+    $('#content').html();
+    $('#content').addClass('loading');
+    
+    // Load the appropriate content.
+    switch( localStorage['content'] ) {
+        case 'repositories':
+            github.load('repos', 'user/repos', displayRepositories);
+            break;
+        case 'watched':
+            github.load('watched', 'user/watched', displayWatched);
+            break;
+        case 'following':
+            github.load('following', 'user/following', displayFollowing);
+            break;
+        case 'followers':
+            github.load('followers', 'user/followers', displayFollowers);
+            break;
+        default:
+            break;
+    }
+}
 
-
-// Load application content.
-function loadContent() {
-
-	var content = localStorage['content'];
-	
-	var member = null;
-	var api_uri = null;
-	var callback = null;
-
-	// Take appropriate action.
-	switch(content) {	
-		case 'repositories':
-			member   = 'repos';
-			api_uri  = 'user/repos';
-			callback = displayRepositories;
-			break;
-			
-		case 'watched':
-			member   = 'watched';
-			api_uri  = 'user/watched';
-			callback = displayWatched;
-			break;
-			
-		case 'following':
-			member   = 'following';
-			api_uri  = 'user/following';
-			callback = displayFollowing;
-			break;	
-				
-		case 'followers':
-			member   = 'followers';
-			api_uri  = 'user/followers';
-			callback = displayFollowers;
-			break;
-			
-		default:
-			break;
-	}
-	
-	github.load(member, api_uri, callback);	
-};
 
 
 // Display user repositories.
@@ -110,10 +93,12 @@ function displayRepositories() {
 };
 
 
+
 // Displays users watched repositories.
 function displayWatched() {
 	console.log(github.watched);
 };
+
 
 
 // Display followed users.
@@ -122,14 +107,16 @@ function displayFollowing() {
 };
 
 
+
 // Display users followers.
 function displayFollowers() {
 	console.log(github.followers);
 };
 
 
-// Here we go...
+
+// Start Application.
 $(document).ready(function() {
-    if(!(token = github.getAccessToken())) { showAuthorize(); }    
-    else{ github.load('user', 'user', validateToken); }
-});	
+    if((token = github.getAccessToken())) {github.load('user', 'user', validateToken);}
+    else {showAuthorizationScreen();}
+});

@@ -1,92 +1,92 @@
-/*******************************************************************************
-********************************************************************************
-********************************************************************************
-***                                                                          ***
-***                                  CLASSES                                 ***
-***                                                                          ***
-********************************************************************************
-********************************************************************************
-*******************************************************************************/
-
-.hidden {
-    display: none;
-}
-
-/*******************************************************************************
-********************************************************************************
-********************************************************************************
-***                                                                          ***
-***                                    ALL                                   ***
-***                                                                          ***
-********************************************************************************
-********************************************************************************
-*******************************************************************************/
+/******************************************************************************
+*******************************************************************************
+*******************************************************************************
+***                                                                         ***
+***                                   POPUP                                 ***
+***                                                                         ***
+*******************************************************************************
+*******************************************************************************
+******************************************************************************/
 
 * {
     margin: 0;
     padding: 0;
 }
 
-html, body {
-    color: #000000;
-}
-
 body {
     width: 750px;
     height: 400px;
+    color: #000000;
     font-size: 13.34px;
     font-family: helvetica, arial, freesans, clean, sans-serif;
     line-height: 1.4;
 }
 
-header {
-    height: 38px;
-    padding: 8px 0 0 91.5px;
+button {
+    background: rgb(255, 255, 255);
+    background: -webkit-gradient(linear, left top, left bottom, from(rgb(255, 255, 255)), to(rgb(225, 225, 225)));
+    box-shadow: rgba(0, 0, 0, 0.3) 0 1px 4px 0;
+    border: none;
+    border-bottom: 1px solid #EBEBEB;
+    border-radius: 4px;    
+    color: #333;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: #FFFFFF 1px 1px 0;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #438BB1;
+    background: -webkit-gradient(linear, left top, left bottom, from(#0CA6DD), to(#0770A0));
+    border-bottom-color: #0770A0;
+    color: #FFFFFF;
+    text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.hidden {
+    display: none;
+}
+
+.loading {
+	background: url('../img/loading.gif') center center no-repeat;
+}
+
+.github-header {
+    height: 46px;
     display: block;
     background: #FAFAFA;
-    background: -webkit-gradient(linear, left top, left bottom, from(#FAFAFA), to(#EAEAEA));
+    background: url("../img/logo_header.png") 91.5px center no-repeat, -webkit-gradient(linear, left top, left bottom, from(#FAFAFA), to(#EAEAEA));
     border-bottom: 1px solid #CACACA;
     box-shadow: 0 1px 0 rgba(255,255,255,0.4),0 0 10px rgba(0,0,0,0.1);
 }
 
-header .header_logo {
-	width: 67px;
-	height: 30px;
-	display: block;
-	background: url('../img/logo_header.png');
+/******************************************************************************
+*******************************************************************************
+*******************************************************************************
+***                                                                         ***
+***                                  ADAPTER                                ***
+***                                                                         ***
+*******************************************************************************
+*******************************************************************************
+******************************************************************************/
+
+.adapter {
+    width: 100%;
+    height: 100%;
 }
 
-/*******************************************************************************
-********************************************************************************
-********************************************************************************
-***                                                                          ***
-***                                  LOADING                                 ***
-***                                                                          ***
-********************************************************************************
-********************************************************************************
-*******************************************************************************/
+/******************************************************************************
+*******************************************************************************
+*******************************************************************************
+***                                                                         ***
+***                              AUTHORIZATION                              ***
+***                                                                         ***
+*******************************************************************************
+*******************************************************************************
+******************************************************************************/
 
-.loading {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-	background: url('../img/loading.gif') center center no-repeat;
-}
-
-/*******************************************************************************
-********************************************************************************
-********************************************************************************
-***                                                                          ***
-***                                   AUTHORIZE                              ***
-***                                                                          ***
-********************************************************************************
-********************************************************************************
-*******************************************************************************/
-
-
-#authorize h1 {
+#authorization h1 {
     height: 38px;
     display: block;
     padding-left: 18px;
@@ -102,7 +102,7 @@ header .header_logo {
     line-height: 38px;
 }
 
-#authorize h1 a {
+#authorization h1 a {
     color: #FFFFFF;
     font-size: 11px;
     font-weight: normal;
@@ -110,11 +110,11 @@ header .header_logo {
     text-shadow: none;
 }
 
-#authorize h1 a:hover {
+#authorization h1 a:hover {
     text-decoration: underline;
 }
 
-#authorize div {
+#authorization div {
     height: 226px;
     background: #E9F1F4;
     border: 1px solid #D8DEE2;
@@ -124,56 +124,33 @@ header .header_logo {
     text-align: center;
 }
 
-#authorize button {
+#authorization button {
     width: 81px;
     height: 34px;
     margin-top: 80.5px;
-    background: rgb(255, 255, 255);
-    background: -webkit-gradient(linear, left top, left bottom, from(rgb(255, 255, 255)), to(rgb(225, 225, 225)));
-    box-shadow: rgba(0, 0, 0, 0.3) 0 1px 4px 0;
-    border: none;
-    border-bottom: 1px solid #EBEBEB;
-    border-radius: 4px;    
-    color: #333;
-    font-size: 12px;
-    font-weight: bold;
-    text-shadow: #FFFFFF 1px 1px 0;
-    cursor: pointer;
 }
 
-#authorize button:hover {
-    background: #438BB1;
-    background: -webkit-gradient(linear, left top, left bottom, from(#0CA6DD), to(#0770A0));
-    border-bottom-color: #0770A0;
-    color: #FFFFFF;
-    text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
-}
-
-/*******************************************************************************
-********************************************************************************
-********************************************************************************
-***                                                                          ***
-***                                APPLICATION                               ***
-***                                                                          ***
-********************************************************************************
-********************************************************************************
-*******************************************************************************/
-
-#application, #dashboard, #content  {
-    height: 353px;
-    overflow: hidden;
-}
-
-#dashboard, #content {
-    float: left;
-}
-
-#dashboard {
-    width: 249px;
-    border-right: 1px solid #CACACA;
-}
-
-#context_switcher {
+/******************************************************************************
+*******************************************************************************
+*******************************************************************************
+***                                                                         ***
+***                               APPLICATION                               ***
+***                                                                         ***
+*******************************************************************************
+*******************************************************************************
+******************************************************************************/
+ 
+ #application, #dashboard, #content {
+     height: 353px;
+     float: left;
+ }
+ 
+ #dashboard {
+     width: 249px;
+     border-right: 1px solid #CACACA;
+ }
+ 
+.context-switcher {
     max-width: 225px;
     margin: 0 auto;
     margin-top: 25px;    
@@ -182,7 +159,7 @@ header .header_logo {
     cursor: pointer;
 }
 
-#context_switcher .context-menu-button {
+.context-switcher .context-menu-button {
 	width: 142px;
     height: 21px;
     margin: 0 auto;
@@ -198,7 +175,7 @@ header .header_logo {
     text-align: left;
 }
 
-#context_switcher .context-menu-button:hover {
+.context-switcher .context-menu-button:hover {
     background: url("../img/switcher.png") 100% -32px no-repeat, -webkit-gradient(linear, left top, left bottom, from(#599BDC), to(#3173B4));
     border: 1px solid #518CC6;
     border-bottom-color: #2A65A0;
@@ -206,7 +183,7 @@ header .header_logo {
     text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
 }
 
-#context_switcher img {
+.context-switcher img {
     width: 20px;
     height: 20px;
     position: relative;
@@ -216,7 +193,7 @@ header .header_logo {
     border-radius: 2px;
 }
 
-#context_switcher .context-pane {
+.context-switcher .context-pane {
 	background: #fff;
     border: 1px solid #c1c1c1;
     border-radius: 5px 5px 5px 5px;
@@ -230,7 +207,7 @@ header .header_logo {
     display: none;
 }
 
-#context_switcher h3 {
+.context-switcher h3 {
 	font-size: 12px;
 	font-weight: bold;
 	color: #111;
@@ -244,34 +221,34 @@ header .header_logo {
 	border-top-right-radius: 4px;
 }
 
-#context_switcher ul {
+.context-switcher ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
 
-#context_switcher ul li {
+.context-switcher ul li {
 	display: block;
 	border-top: 1px solid #eee;
 	padding: 8px 10px 8px 20px;
 	cursor: pointer;
 }
 
-#context_switcher ul li:hover {
+.context-switcher ul li:hover {
 	background: #4f83c4;
 }
 
-#context_switcher li h4 a:link, #context_switcher li h4 a:active, #context_switcher li h4 a:visited {
+.context-switcher li h4 a:link, .context-switcher li h4 a:active, .context-switcher li h4 a:visited {
 	display: block;
 	color: #666;
 	text-decoration: none;
 }
 
-#context_switcher li h4 a:hover {
+.context-switcher li h4 a:hover {
 	text-decoration: none;
 }
 
-#context_switcher li h4 a span {
+.context-switcher li h4 a span {
 	float: right;
 	margin-top: 2px;
 	font-weight: normal;
@@ -279,14 +256,10 @@ header .header_logo {
 	color: #999;
 }
 
-#context_switcher li:hover h4, #context_switcher li:hover h4 a, #context_switcher li:hover h4 a span {
+.context-switcher li:hover h4, .context-switcher li:hover h4 a, .context-switcher li:hover h4 a span {
 	color: #fff;
-}
-
-#content {
-    width: 500px;
-}
-
+} 
+ 
 menu ul {
     width: 175px;
     margin: 0 auto;
@@ -327,4 +300,8 @@ menu li:hover {
 menu .selected {
     background: url('../img/menu_bar_background_highlight.png') 0 0 repeat-x !important;
     color: #000000 !important;
+}
+ 
+#content {
+    width: 500px;
 }

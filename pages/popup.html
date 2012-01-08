@@ -14,20 +14,14 @@
 	<!-- end js -->
 	
 </head>
-<body>
+<body class="loading">
 
     <!-- header -->
-    <header>
-		<span class="header_logo"></span>
-	</header>
+    <header id="popup-header" class="github-header"></header>
     <!-- end header -->
-    
-    <!-- loading -->
-    <article id="loading" class="loading"></article>
-    <!-- end loading -->
-    
+        
     <!-- authorize -->
-    <article id="authorize" class="hidden">
+    <article id="authorization" class="hidden">
         <h1>Log in <a href="https://github.com/plans">(Pricing and Signup)</a></h1>
         <div><button>Authorize</button></div>
     </article>
@@ -35,10 +29,13 @@
     
     <!-- application -->
     <article id="application" class="hidden">
+        
+        <!-- dashboard -->
         <section id="dashboard">
-            <div id="context_switcher">
+            
+            <!-- context switcher -->
+            <div class="context-switcher">
             	<span class="context-menu-button"></span>
-            	
             	<div class="context-pane">
             		<h3>Switch account context</h3>
             		<ul class="context-pane-selector">
@@ -52,6 +49,9 @@
             		</ul>
             	</div>
             </div>
+            <!-- end context switcher -->
+            
+            <!-- menu -->
             <menu>
                 <ul>
                     <li data="repositories">Repositories</li>
@@ -60,8 +60,14 @@
                     <li data="followers">Followers</li>
                 </ul>
             </menu>
+            <!-- end menu -->
         </section>
+        <!-- end dashboard -->
+        
+        <!-- content -->
         <section id="content"></section>
+        <!-- end content -->
+        
     </article>
     <!-- end application -->
     
