@@ -42,11 +42,11 @@ function loadApplication() {
     $('.context-switcher .context-menu-button').html('<img src="' + github.user.avatar_url + '" />' + github.user.login);
     
     // Set menu tab onClickListeners.
-    $('#dashboard menu li').bind('click', dashboardMenuOnClickListener);
+    $('#dashboard nav li').bind('click', dashboardMenuOnClickListener);
     
     // Set selected menu tab.
     var currentTab = localStorage['content'] ? localStorage['content'] : 'repositories';    
-    $('#dashboard menu li[data=' + currentTab + ']').addClass('selected');
+    $('#dashboard nav li[data=' + currentTab + ']').addClass('selected');
     
     $('body').removeClass('loading');
     $('#content').addClass('loading');
@@ -60,9 +60,9 @@ function loadApplication() {
 function dashboardMenuOnClickListener() {
     
     // Change selected menu tab.
-    $('menu li[data=' + localStorage['content'] + ']').removeClass('selected');
+    $('nav li[data=' + localStorage['content'] + ']').removeClass('selected');
     localStorage['content'] = $(this).attr('data');
-    $('menu li[data=' + localStorage['content'] + ']').addClass('selected');
+    $('nav li[data=' + localStorage['content'] + ']').addClass('selected');
     
     loadContent();
 };

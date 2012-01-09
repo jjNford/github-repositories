@@ -194,7 +194,7 @@ button:hover {
     border-radius: 2px;
 }
  
-menu ul {
+nav ul {
     width: 175px;
     margin: 0 auto;
     margin-top: 51.25px;
@@ -207,7 +207,7 @@ menu ul {
     cursor: pointer;
 }
 
-menu li {
+nav li {
     height: 34px;
     background: url('../img/menu_bar_background.png') 0 0 repeat-x;
     border: 1px solid #DADADA;
@@ -215,22 +215,22 @@ menu li {
     line-height: 32px;
 }
 
-menu li:first-child {
+nav li:first-child {
     border-top: 1px solid #EAEAEA;
     border-radius: 3px 3px 0 0;
 }
 
-menu li:last-child {
+nav li:last-child {
     border-radius: 0 0 3px 3px;
     border-bottom: 1px solid #CACACA;
 }
 
-menu li:hover {
+nav li:hover {
     background: url('../img/menu_bar_background_hover.png') 0 0 repeat-x;
     color: #4183CA;
 }
 
-menu .selected {
+nav .selected {
     background: url('../img/menu_bar_background_highlight.png') 0 0 repeat-x !important;
     color: #000000 !important;
 }
