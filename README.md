@@ -16,8 +16,8 @@ Author
 ------
 **JJ Ford**
 
-++ http://jjnford.com
-++ https://twitter.com/#!/jjNford
++ http://jjnford.com
++ https://twitter.com/#!/jjNford
 
 
 License
