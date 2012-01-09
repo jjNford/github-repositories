@@ -13,7 +13,7 @@
     	}
     ],
         
-    "description": "Quickly access your GitHub Repositories from your Google Chrome Browser",
+    "description": "Quickly access your GitHub Repositories",
     
     "icons": {
         "16": "img/icon_16x16.png",
@@ -29,5 +29,5 @@
     	"https://api.github.com/*" 
     ],   
         
-    "version": "2.0"
+    "version": "2.0.0"
 }

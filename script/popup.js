@@ -40,12 +40,6 @@ function loadApplication() {
     
     // Configure context switcher.
     $('.context-switcher .context-menu-button').html('<img src="' + github.user.avatar_url + '" />' + github.user.login);
-    $('.context-switcher .context-menu-button').click(function() {
-        if($('.context-switcher .context-pane').is(':visible')) {
-    	    $('.context-switcher .context-pane').hide();
-    	}
-    	else { $('.context-switcher .context-pane').show(); }
-    });
     
     // Set menu tab onClickListeners.
     $('#dashboard menu li').bind('click', dashboardMenuOnClickListener);
