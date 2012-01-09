@@ -15,7 +15,7 @@
 }
 
 body {
-    width: 740px;
+    width: 720px;
     height: 400px;
     color: #000000;
     font-size: 13.34px;
@@ -154,7 +154,7 @@ button:hover {
 .context-switcher {
     max-width: 225px;
     margin: 0 auto;
-    margin-top: 25px;    
+    margin-top: 51.25px;    
     font-size: 13px;
     text-align: center;
     cursor: pointer;
@@ -263,7 +263,7 @@ button:hover {
 menu ul {
     width: 175px;
     margin: 0 auto;
-    margin-top: 77.5px;
+    margin-top: 51.25px;
     display: block;
     color: #777777;
     font-size: 12px;
@@ -303,7 +303,7 @@ menu .selected {
  
 #content {
     width: 450px;
-    padding: 0 20px;
+    padding: 0 10px;
     overflow-y: scroll;
 }
 
@@ -332,4 +332,82 @@ menu .selected {
     padding: 1px;
     border: 1px solid #DDDDDD;
     vertical-align: middle;
+}
+
+.repo-list li {
+    margin-bottom: 10px;
+    border: 1px solid #DDDDDD;
+    border-radius: 4px;
+}
+
+.repo-list li:first-child {
+    margin-top: 10px;
+}
+
+.repo-list h3 {
+    height: 35px;
+    padding-left: 28px;
+    font-size: 14px; 
+    line-height: 35px;  
+    white-space: nowrap; 
+}
+
+.repo-list div {
+    padding: 5px 10px;
+    background: #FAFAFA;
+    background: -webkit-gradient(linear,left top,left bottom,from(#fafafa),to(#efefef));
+    border-top: 1px solid #EEEEEE;
+}
+
+.repo-list .description {
+    margin-bottom: 3px;
+    color: #444444;
+    font-size: 12px;
+}
+
+.repo-list .updated-at {
+    color: #888888;
+    font-size: 11px;
+}
+
+.repo-list .public {
+    background: url('../img/public.png') 6px 9px no-repeat;
+}
+
+.repo-list .private {
+    background: url('../img/private.png') 6px 9px no-repeat;
+}
+
+ul .repo-stats {
+    float: right;
+    margin-right: 10px;
+    color: #666666;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.repo-stats li {
+    display: inline-block;
+    border: none;
+}
+
+.repo-stats a {
+    color: #666666 !important;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 35px;
+}
+
+.repo-stats a:hover {
+    text-decoration: none !important;
+}
+
+.repo-stats .watchers {
+    padding: 0 5px 0 23px;
+    background: url('../img/repostat_watchers.png') 5px -6px no-repeat;
+}
+
+.repo-stats .forks {
+    padding: 0 5px 0 23px;
+    background: url('../img/repostat_forks.png') 5px -6px no-repeat;
 }

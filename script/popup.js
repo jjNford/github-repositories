@@ -4,7 +4,6 @@ var github = new GitHub();
 // Application Constants.
 var FADE_SPEED = 300;
 
-
 // Prompt user to authorize extension with GitHub.
 function showAuthorizationScreen() {
 
@@ -21,7 +20,14 @@ function showAuthorizationScreen() {
 
 // Validate users token.
 function validateToken(user) {
-    if(user) {loadApplication();}
+
+    // If the user is valid load the application.
+    if(user) {
+        loadApplication();
+    }
+    
+    // If the user is not valid then clear access tokens
+    // and show the authorization screen.
     else {
         github.clearAccessToken();
         showAuthorizationScreen();
@@ -114,32 +120,50 @@ function loadContent() {
 
 // Display user repositories.
 function displayRepositories() {
-	console.log(github.repos);
 	
-	var html = '<ul lcass="repo-list">';
+	var updated = '';
+	var date = new Date();
+	
+	var html = '<ul class="repo-list">';
 	
 	for(var key in github.repos) {
-	    html += '<li>';
+	    html += '<li class="' + (github.repos[key].private ? 'private' : 'public') + '">';
 	    html += '<ul class="repo-stats">';
 	    html += '<li>' + github.repos[key].language + '</li>';
-	    html += '<li><a href="' + github.repos[key].svn_url + '/watchers" target="_blank">' + github.repos[key].watchers + '</a></li>';
-	    html += '<li><a href="' + github.repos[key].svn_url + '/network" target="_blank">' + github.repos[key].forks + '</a></li>';
+	    html += '<li><a href="' + github.repos[key].svn_url + '/watchers" target="_blank" class="watchers">' + github.repos[key].watchers + '</a></li>';
+	    html += '<li><a href="' + github.repos[key].svn_url + '/network" target="_blank" class="forks">' + github.repos[key].forks + '</a></li>';
 	    html += '</ul>';
 	    html += '<h3><a href="' + github.repos[key].svn_url + '" target="_blank">' + github.repos[key].name + '</a></h3>';
-	    html += '<div><p>' + github.repos[key].description + '</p>';
-	    html += '<p>Last updated ' + github.repos[key].updated_at + '</p></div>';
+	    html += '<div><p class="description">' + github.repos[key].description + '</p>';
+	    html += '<p class="updated-at">Last updated ' + github.repos[key].updated_at + '</p></div>';	         
 	    html += '</li>';
 	}
 	
 	html += '</ul>';
 	displayContent(html);
-	
 };
 
 
 // Displays users watched repositories.
 function displayWatched() {
-	console.log(github.watched);
+    
+    var html = '<ul class="repo-list">';
+    
+    for(var key in github.watched) {
+        html += '<li class="' + (github.watched[key].private ? 'private' : 'public') + '">';
+        html += '<ul class="repo-stats">';
+        html += '<li>' + github.watched[key].language + '</li>';
+        html += '<li><a href="' + github.watched[key].svn_url + '/watchers" target="_blank" class="watchers">' + github.watched[key].watchers + '</a></li>';
+        html += '<li><a href="' + github.watched[key].svn_url + '/network" target="_blank" class="forks">' + github.watched[key].forks + '</a></li>';
+        html += '</ul>';
+        html += '<h3><a href="' + github.watched[key].svn_url + '" target="_blank">' + github.watched[key].name + '</a></h3>';
+        html += '<div><p class="description">' + github.watched[key].description + '</p>';
+        html += '<p class="updated-at">Last updated ' + github.watched[key].updated_at + '</p></div>';
+        html += '</li>';
+    }
+    
+    html += '</ul>';
+    displayContent(html);
 };
 
 
@@ -172,6 +196,7 @@ function displayFollowing() {
 // Display users followers.
 function displayFollowers() {
 
+    var name = '';
 	var html = '<ul class="follow-list">';
 	var contentSection = $('#content');
 	
@@ -184,7 +209,7 @@ function displayFollowers() {
 	    html += github.followers[key].login;
 	    html += '</a>';
 	    
-	    var name = github.api.getSync('users/' + github.followers[key].login).name;
+	    name = github.api.getSync('users/' + github.followers[key].login).name;
 	    
 	    html += name ? ' (' + name + ')' : "";
 	    html += '</li>';	    
@@ -197,6 +222,13 @@ function displayFollowers() {
 
 // Start Application.
 $(document).ready(function() {
-    if( (token = github.getAccessToken()) ) {github.api.getAsync('user', 'user', validateToken);}
+    
+    // If an application access token exists get the user.
+    if( (token = github.getAccessToken()) ) {
+        github.api.getAsync('user', 'user', validateToken);
+    }
+    
+    // If no application access token exists show the 
+    // authorization screen.
     else {showAuthorizationScreen();}
 });
