@@ -217,12 +217,16 @@ function displayFollowers() {
 // Start Application.
 $(document).ready(function() {
     
+    $('body').removeClass('loading');
+    $('#application').removeClass('hidden');
+    
+    
     // If an application access token exists get the user.
-    if( (token = github.getAccessToken()) ) {
-        github.api.getAsync('user', 'user', validateToken);
-    }
+    //if( (token = github.getAccessToken()) ) {
+    //    github.api.getAsync('user', 'user', validateToken);
+    //}
     
     // If no application access token exists show the 
     // authorization screen.
-    else {showAuthorizationScreen();}
+    //else {showAuthorizationScreen();}
 });

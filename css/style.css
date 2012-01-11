@@ -34,7 +34,7 @@ button {
     font-size: 12px;
     font-weight: bold;
     text-shadow: #FFFFFF 1px 1px 0;
-    cursor: pointer;
+    cursor: pointer;    
 }
 
 button:hover {
