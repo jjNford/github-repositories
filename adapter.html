@@ -1,0 +1,26 @@
+<!-- GitHub OAuth 2 Adapter Page -->
+
+<!DOCTYPE html>
+<html lang="en" class="adapter">
+<head>    
+    <meta charset="utf-8">
+	<title>Authorizing</title>
+	
+	<!-- js -->
+	<script src="js/github.js"></script>
+	<script>
+	    var url = window.location.href;
+	    var flow = new GitHub();
+	    flow.oauth2.processCode(url);
+	</script>
+	<!-- end js -->
+	
+	<!-- css -->
+	<link rel="stylesheet" href="../css/style.css" />
+	<!-- end css -->
+	
+</head>
+<body class="adapter loading">
+    <header class="github_header"></header>
+</body>
+</html>

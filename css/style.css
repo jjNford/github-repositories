@@ -1,0 +1,301 @@
+* {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.hidden {
+	display: none;
+}
+
+.invisible {
+	visibility: hidden;
+}
+
+.adapter {
+	width: 100%;
+	height: 100%;
+}
+
+.popup {
+	width: 720px;
+	height: 500px;
+	color: #000000;
+	font-family: helvetica, arial, freesans, clean, sans-serif;
+}
+
+.loading {
+	background: url('../img/loading.gif') center center no-repeat;
+}
+
+.github_header {
+	height: 46px;
+	background: #fafafa;
+	background: url("../img/header_logo.png") 91.5px center no-repeat,
+	            -webkit-gradient(linear, left top, left bottom, from(#fafafa), to(#eaeaea));
+	border-bottom: 1px solid #cacaca;
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    background: rgb(255, 255, 255);
+    background: -webkit-gradient(linear, left top, left bottom, from(rgb(255, 255, 255)), to(rgb(225, 225, 225)));
+    box-shadow: rgba(0, 0, 0, 0.3) 0 1px 4px 0;
+    border: none;
+    border-bottom: 1px solid #EBEBEB;
+    border-radius: 4px;    
+    color: #333;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: #FFFFFF 1px 1px 0;
+    cursor: pointer;    
+}
+
+button:hover {
+    background: #438BB1;
+    background: -webkit-gradient(linear, left top, left bottom, from(#0CA6DD), to(#0770A0));
+    border-bottom-color: #0770A0;
+    color: #FFFFFF;
+    text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+#authorization h1 {
+    height: 38px;
+    display: block;
+    padding-left: 18px;
+    background: rgb(130, 154, 168);
+    background: -webkit-gradient(linear, left top, left bottom, from(rgb(130, 154, 168)), to(rgb(64, 90, 106)));
+    border: 1px solid #677C89;
+    border-radius: 3px 3px  0 0;
+    border-bottom-color: #6B808D;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: bold;
+    text-shadow: rgba(0, 0, 0, 0.7) 0 -1px 0;
+    line-height: 38px;
+}
+
+#authorization h1 a {
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: normal;
+    text-decoration: none;
+    text-shadow: none;
+}
+
+#authorization h1 a:hover {
+    text-decoration: underline;
+}
+
+#authorization div {
+    height: 226px;
+    background: #E9F1F4;
+    border: 1px solid #D8DEE2;
+    border-radius: 0 0 3px 3px;
+    border-top-color: #E9F1F4;
+    border-bottom-width: 2px;
+    text-align: center;
+}
+
+#authorization button {
+    width: 81px;
+    height: 34px;
+    margin-top: 80.5px;
+}
+
+#application_header {
+	height: 47px;
+	margin-top: -47px;
+}
+
+.user_links {
+	float: right;
+	margin: 10px 10px 0 0;
+	background: #f1f1f1;
+	background: -webkit-linear-gradient(#f1f1f1,#e0e0e0);
+	border: 1px solid #dddddd;
+	border-radius: 3px;
+	box-shadow: 0 1px 0 #fafafa, inset 0 1px 0 #fafafa;
+}
+
+.user_links li, .user_links a {
+	display: inline-block;
+}
+
+.user_links li {
+	height: 25px;
+	margin-left: 10px;
+}
+
+.user_links a {
+	width: 16px;
+	height: 16px;
+	padding: 0 5px;
+	padding-top: 5px;
+	background: url('../img/user_links.png') 0 0 no-repeat;
+	text-decoration: none;
+}
+
+.user_links li:first-child a {
+	padding-left: 0;
+}
+
+.user_links .notifications a {
+	background-position: -32px 4px;
+}
+
+.user_links .notifications:hover a {
+	background-position-y: -34px;
+}
+
+.user_links .account_settings a {
+	background-position: -92px 4px;
+}
+
+.user_links .account_settings:hover a {
+	background-position-y: -36px;
+}
+
+.user_links .log_out a {
+	background-position: -66px 4px;
+}
+
+.user_links .log_out:hover a {
+	background-position-y: -33px;
+}
+
+.user_links .tooltip {
+	margin-left: 3px;
+}
+
+.tooltip {
+	display: block;
+	position: absolute;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-bottom: 5px solid rgba(0, 0, 0, .77);
+}
+
+.tooltip h1 {
+	height: 24px;
+	display: block;
+	position: absolute;
+	margin-top: 5px;
+	padding: 0 8px;
+	background: rgba(0, 0, 0, .77);
+	border-radius: 3px;
+	color: #ffffff;
+	font-size: 11px;
+	font-weight: normal;
+	line-height: 24px;
+	white-space: nowrap;
+}
+
+#application_footer {
+	clear: both;	
+	height: 39px;
+	background: #fafafa;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fafafa), to(#eaeaea));
+	border-top: 1px solid #cacaca;	
+	box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.4), 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#dashboard, #content {	
+	height: 413px;
+	float: left;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+#dashboard {
+	width: 249px;
+	border-right: 1px solid #cacaca;
+}
+
+#content {
+	width: 450px;
+	padding: 0 10px;
+}
+
+.context_switcher, .application_nav {
+	margin-top: 79.3px;
+}
+
+.context_switcher {
+	width: 173px;
+	height: 27px;
+	margin-left: auto;
+	margin-right: auto;
+	background: url('../img/context_switcher.png') 100% -2px no-repeat,
+	            -webkit-gradient(linear, left top, left bottom, from(#f4f4f4), to(#ececec));
+	border: 1px solid #d4d4d4;
+	border-radius: 3px;
+	color: #333333;
+	font-size: 13px;
+	font-weight: bold;
+	text-align: left;
+	text-shadow: 1px 1px 0 #ffffff;
+	line-height: 27px;
+}
+
+.context_switcher:hover {
+    background: url("../img/context_switcher.png") 100% -32px no-repeat, 
+                -webkit-gradient(linear, left top, left bottom, from(#599bdc), to(#3173b4));
+	border: 1px solid #518cc6;
+	border-bottom-color: #2a65a0;
+	color: #ffffff;
+	text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);	
+}
+
+.context_switcher .context {
+	display: block;
+	padding: 0 28px 0 3px;
+}
+
+.context_switcher .context img {
+	width: 20px;
+	height: 20px;
+	margin-top: -2px;
+	padding-right: 7px;
+	border-radius: 2px;
+	vertical-align: middle;
+}
+
+.application_nav ul {
+	width: 175px;
+	margin: 0 auto;
+	color: #777777;
+	font-size: 12px;
+	font-weight: bold;
+	text-shadow: 0 1px 0 #ffffff;
+	text-align: center;
+	cursor: pointer;
+}
+
+.application_nav li {
+	height: 34px;
+	background: url('../img/nav_bar_background.png') 0 0 repeat-x, 
+	            #fafafa;
+	border: 1px solid #dadada;
+	border-top: none;
+	line-height: 32px;
+}
+
+.application_nav li:first-child {
+	border-top: 1px solid #eaeaea;
+	border-radius: 3px 3px 0 0;
+}
+
+.application_nav li:last-child {
+	border-radius: 0 0 3px 3px;
+	border-bottom: 1px solid #cacaca;
+}
+
+.application_nav li:hover {
+	background: url('../img/nav_bar_background_hover.png') 0 0 repeat-x;
+}
+
+.application_nav .selected {
+	background: url('../img/nav_bar_background_highlight.png') 0 0 repeat-x!important;
+	color: #000000!important;
+}
