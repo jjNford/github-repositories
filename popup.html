@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<meta charset="utf-8">
+	
+	<!-- Style Sheets -->
+	<link rel="stylesheet" href="css/reset.css" />
+	<link rel="stylesheet" href="css/popup.css" />
+	
+	<!-- Javascript -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js"></script>
+	<script src="js/github.js"></script>	
+	
+	<script>
+	
+		// Display users public repositories.
+		function makePublicRepositories(){
+			var username = gh.user(localStorage["gitHubUsername"]);
+			
+			username.allRepos(function(data){
+				var html = "<ul>";
+			
+				$.each(data.repositories, function(index, repository){
+					html += "<li><a href='" + repository.url + "' target='_blank'><span id='item'>";
+					html += "<img src='img/public.png' /><span class='owner'>" + repository.owner + "</span>/<span class='name'>" + repository.name + "</span>";
+					html += "</span></a></li>";
+				});
+			
+				html += "</ul>";
+				
+				$('#application > #repositories > #public').html(html);
+			});
+		}
+		
+		// Display users watched repositories.
+		function makeWatchedRepositories(){
+			var username = gh.user(localStorage["gitHubUsername"]);
+			
+			username.watching(function(data){
+				var html = "<ul>";
+			
+				$.each(data.repositories, function(index, repository){
+					html += "<li><a href='" + repository.url + "' target='_blank'><span id='item'>";
+					html += "<img src='img/public.png' /><span class='owner'>" + repository.owner + "</span>/<span class='name'>" + repository.name + "</span>";
+					html += "</span></a></li>";
+				});
+			
+				html += "</ul>";
+				
+				$('#repositories > #watched').html(html);
+			});
+		}
+		
+		
+		$(document).ready(function(){
+			
+			// Determine if user credentials are needed...
+			if(!localStorage["gitHubUsername"] || localStorage["gitHubUsername"] == "") {
+				$("#application").hide();
+				$("#credentials").show();
+			} 
+			else {
+				makePublicRepositories();
+				makeWatchedRepositories();
+				
+				$("#credentials").hide();
+				$("#application").show();
+				
+				// Show public repositories first.
+				$('#application > #repositories > #public').show();
+				$('#application > #repositories > #watched').hide();
+				
+				// Set public as selected.
+				$('#application > header > nav > ul > li[title=public]').addClass("selected");
+			}
+			
+			// Bind on submit...
+			$('form[id=userCredentials]').submit(function(){
+				if( $('input[id=gitHubUsername]').val().trim != "") {
+					localStorage["gitHubUsername"] = $('input[id=gitHubUsername]').val().trim();
+					$('#credentials').slideUp("slow", function(){
+						$('#application').slideDown("slow");
+					});
+				}
+			});
+			
+			// Public or watched repositories…
+			$('#application > header > nav > ul > li').click(function(){
+				
+				// Change background of selected.
+				$('#application > header > nav > ul > li').removeClass("selected");
+				$(this).addClass("selected");
+				
+				// Hide repositories.
+				$('#application > #repositories > div').each(function(){
+					$(this).hide();
+				});
+				
+				// Show correct repository.
+				$("#application > #repositories > #" + $(this).attr("title")).show();
+			});
+		});	
+	</script>
+	
+</head>
+<body>
+	
+	<div id="wrapper">
+			
+		<section id="credentials">
+			<img src="img/github_128.png" />
+			<form id="userCredentials" method="" action="" >
+				<label>GitHub Username</label><br />
+				<small><a href="http://www.jjnford.com" target="_blank">Extension created by JJ Ford</a></small><br />
+				<input id="gitHubUsername" type="text" /><br />
+				<input type="submit" value="Save" />
+			</form>
+		</section>
+		
+		<section id="application">
+			<header>
+				<nav>
+					<ul>
+						<li title="public">Public</li>
+						<li title="watched">Watched</li>
+					</ul>
+				</nav>
+			</header>
+			<section id="repositories">
+				<div id="public"></div>
+				<div id="watched"></div>
+			</section>
+		</section>
+				
+	</div>
+	
+</body>
+</html>

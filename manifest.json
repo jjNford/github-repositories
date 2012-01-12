@@ -1,33 +1,17 @@
 {
-    "browser_action": {
-        "default_icon": "img/icon_128x128.png",
-        "default_title": "GitHub Repositories",
-        "default_popup": "pages/popup.html"
-    },
-    
-    "content_scripts": [
-    	{
-    		"matches": ["https://github.com/robots.txt*"],
-    		"js": ["script/injection.js"],
-    		"run_at": "document_start"
-    	}
-    ],
-        
-    "description": "Quickly access your GitHub Repositories",
-    
-    "icons": {
-        "16": "img/icon_16x16.png",
-        "48": "img/icon_48x48.png",
-        "128": "img/icon_128x128.png"
-    },
-    
-    "name": "GitHub Repositories",
-        
-    "permissions": [
-    	"tabs",
-    	"https://github.com/*",
-    	"https://api.github.com/*" 
-    ],   
-        
-    "version": "2.0.0"
+	"browser_action":{
+		"default_icon":"img/github_128.png",
+		"default_title":"GitHub Repositories",
+		"default_popup":"popup.html"
+	},
+	"description":"Quickly access your public and watched GitHub repositories through Google Chrome.",
+	"icons":{
+	    "16":"img/github_16.png",
+		"48":"img/github_128.png",
+		"128":"img/github_128.png"
+	},
+	"name":"GitHub Repositories",
+	"options_page":"options.html",
+    "permissions":["http://*.github.com/"],
+    "version":"1.0.1"
 }
