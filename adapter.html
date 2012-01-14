@@ -7,11 +7,10 @@
 	<title>Authorizing</title>
 	
 	<!-- js -->
-	<script src="js/github.js"></script>
+	<script src="js/oauth2.js"></script>
 	<script>
-	    var url = window.location.href;
-	    var flow = new GitHub();
-	    flow.oauth2.processCode(url);
+	    var oauth2 = new OAuth2();
+	    oauth2.flow.getAccessCode(window.location.href);
 	</script>
 	<!-- end js -->
 	

@@ -204,7 +204,7 @@ button:hover {
 	height: 413px;
 	float: left;
 	overflow-x: hidden;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 
 #dashboard {

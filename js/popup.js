@@ -1,8 +1,40 @@
-// Application Globals
-var github = new GitHub();
-
 // Application Constants.
 var FADE_SPEED = 300;
+
+
+// GitHub Object.
+var GitHub = function() {
+	this.api_url = "https://api.github.com/";
+};
+
+
+// Application Globals
+var oauth2 = new OAuth2();
+var github = new GitHub();
+
+
+// Load GitHub user.
+function loadUser() {
+	
+    // If an application access token exists get the user.
+    if(oauth2.getAccessToken()) {
+		$.getJSON(github.api_url + 'user', {access_token: oauth2.getAccessToken()})
+			.success(function(json, textStatus, jqXHR) {
+				github.user = json;
+				loadApplication();
+			})
+			.error(function(json){
+				console.log(json);
+				// Do nothing if there is no connection.
+				if(json.readyState == 0 && json.status == 0) {}
+				else {showAuthorizationScreen();}
+			});
+    }
+    
+    // If no application access token exists show the authorization screen.
+    else { showAuthorizationScreen(); }	
+};
+
 
 // Prompt user to authorize extension with GitHub.
 function showAuthorizationScreen() {
@@ -13,25 +45,10 @@ function showAuthorizationScreen() {
         $('body').removeClass('loading').animate(popupAnimation, function(){
             $('#authorization').delay(750).fadeIn(FADE_SPEED);
             $('#authorization button').click( function(){
-	 			github.oauth2.begin();
+	 			oauth2.flow.begin();
 			});
         });
     });
-};
-
-
-// Validate users token.
-function validateToken(user) {
-    // If the user is valid load the application.
-    if(user) {
-        loadApplication();
-    }
-    // If the user is not valid then clear access tokens
-    // and show the authorization screen.
-    else {
-        github.clearAccessToken();
-        showAuthorizationScreen();
-    }
 };
 
 
@@ -41,26 +58,32 @@ function loadApplication() {
     // Configure context switcher.
     $('.context_switcher .context').html('<img src="' + github.user.avatar_url + '" />' + github.user.login);
     
-    // Set menu tab onClickListeners.
-    $('.application_nav li').bind('click', dashboardMenuOnClickListener);
+    // Set navigation tab onClickListeners.
+    $('.application_nav li').bind('click', dashboardNavigationOnClickListener);
 
 	// Set logout onClickListener.
-	$('.user_links .log_out').bind('click', function() {
-		delete localStorage['content'];
-		github.clearAccessToken();
-		self.close();
-	});
+	$('.user_links .log_out').bind('click', logoutOnClickListener);
 
 	// Display application
     $('body').removeClass('loading');
     $('#content').addClass('loading');
     $('#application').removeClass('hidden');
 
-	// Set selected menu tab (must be after application is visible).
+	// Set selected navigation tab (must be after application is visible).
     if(!localStorage['content']) { localStorage['content'] = "repositories"; } 
     $('.application_nav li[data=' + localStorage['content'] + ']').addClass('selected');
+
+	// Create the user link tooltips.
+	createUserLinkToolTips();
     
-	// Set tooltip margins.
+	// Load users content.
+    loadContent();
+};
+
+
+// Create the user link tooltips.
+function createUserLinkToolTips() {
+	// Set tooltip margins & hover effects.
 	$('.tooltip h1').each(function(){ 
 		$(this).css('margin-left', -$(this).width()/2-8);
 	});		
@@ -74,14 +97,24 @@ function loadApplication() {
 			function(){ toolTips.addClass('invisible'); }
 		);
 	});
-    
-	// Load users content.
-    loadContent();
-};
+}
 
 
-// Dashboard Menu OnClickListener.
-function dashboardMenuOnClickListener() {
+// Logout OnClickListener.
+function logoutOnClickListener() {
+	oauth2.clearAccessToken();
+	localStorage.clear();
+	
+	// Close popup.
+	self.close();
+	
+	// Close window when viewing from window.
+	chrome.tabs.getCurrent(function(thisTab) { chrome.tabs.remove(thisTab.id, function(){}); });
+}
+
+
+// Dashboard Navigation OnClickListener.
+function dashboardNavigationOnClickListener() {
     
     // Change selected menu tab.
     $('.application_nav li[data=' + localStorage['content'] + ']').removeClass('selected');
@@ -100,16 +133,12 @@ function loadContent() {
 
     switch( localStorage['content'] ) {
         case 'repositories':
-            github.api.getAsync('repos', 'user/repos', displayRepositories);
             break;
         case 'watched':
-            github.api.getAsync('watched', 'user/watched', displayWatched);
             break;
         case 'following':
-            github.api.getAsync('following', 'user/following', displayFollowing);
             break;
         case 'followers':
-            github.api.getAsync('followers', 'user/followers', displayFollowers);
             break;
         default:
             break;
@@ -137,38 +166,7 @@ function displayContent(content) {
 };
 
 
-// Display user repositories.
-function displayRepositories() {
-	console.log("display repos");
-};
-
-
-// Displays users watched repositories.
-function displayWatched() {
-	console.log("display watched");
-};
-
-
-// Display followed users.
-function displayFollowing() {
-	console.log("display following");
-};
-
-
-// Display users followers.
-function displayFollowers() {
-	console.log("display followers");
-};
-
-
 // Start Application.
 $(document).ready(function() {
-	
-    // If an application access token exists get the user.
-    if( (token = github.getAccessToken()) ) {
-        github.api.getAsync('user', 'user', validateToken);
-    }
-    
-    // If no application access token exists show the authorization screen.
-    else { showAuthorizationScreen(); }
+	loadUser();
 });
