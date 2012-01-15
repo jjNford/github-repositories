@@ -186,7 +186,7 @@ function loadFollowing() {
 	if(following = cacheLoad("following")) {
 		if( (new Date().getTime()) - following.time < CACHE_FOLLOWING_TIME) { cached = true; }}
 
-	// If following is cached then display following
+	// If following is cached then display following.
 	// Else load following from GitHub then display.
 	if(cached) { displayFollowing(following.data); }
 	else { loadFollowingFromGitHub(); }
@@ -214,6 +214,7 @@ function loadFollowingFromGitHub(pageNumber, following) {
 			// If data is not returned get following user's names,
 			// cache the data and display following.
 			else { 
+				if(following.length == 0) { displayFollowing([]); }
 				for(var current in following) {
 					if(current < (following.length - 1)) {
 						loadUsersName(current, following);
@@ -239,9 +240,9 @@ function displayFollowing(following) {
 		user = following[current];
 		
 		html += '<li>';
-		html += '<a href="https://github.com/' + user.login + '">';
+		html += '<a href="https://github.com/' + user.login + '" target="_blank">';
 		html += '<img src="' + user.avatar_url + '" /></a>';
-		html += '<a href="https://github.com/' + user.login + '">';
+		html += '<a href="https://github.com/' + user.login + '" target="_blank">';
 		html += user.login + '</a>';
 		
 		if(user.name != undefined) { html += '<em> (' + user.name + ')</em>'; }
