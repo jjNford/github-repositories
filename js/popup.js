@@ -9,21 +9,14 @@ var GitHub = function() {
 	this.user    = undefined;
 };
 
-
-// Cache Object Constructor.
-var Cache = function() {	
-	if(!localStorage['cache_' + github.user.login]) { 
-		localStorage['cache_' + github.user.login] = "{}"; 
-	}	
-};
-
+		
 // Load data from cache.
-Cache.prototype.load = function(key) {
+function cacheLoad(key) {
 	return JSON.parse(localStorage['cache_' + github.user.login])[key];
 };
-
+	
 // Save data to cache.
-Cache.prototype.save = function(key, data) {
+function cacheSave(key, data) {
 	cache = JSON.parse(localStorage['cache_' + github.user.login]);
 	cache[key] = {"time" : new Date().getTime(), "data" : data};
 	localStorage['cache_' + github.user.login] = JSON.stringify(cache);
@@ -75,7 +68,8 @@ function showAuthorizationScreen() {
 function loadApplication() {
 	
 	// Enable cache.
-	cache = new Cache();
+	if(!localStorage['cache_' + github.user.login]) { 
+		localStorage['cache_' + github.user.login] = "{}"; }
 
     // Configure context switcher.
     $('.context_switcher .context').html('<img src="' + github.user.avatar_url + '" />' + github.user.login);
