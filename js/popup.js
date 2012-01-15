@@ -83,7 +83,7 @@ function loadApplication() {
 	// Display application
     $('body').removeClass('loading');
     $('#content').addClass('loading');
-    $('#application').removeClass('hidden');
+    $('#application').fadeIn(FADE_SPEED);
 
 	// Set selected navigation tab (must be after application is visible).
     if(!localStorage['content']) { localStorage['content'] = "repositories"; } 
