@@ -299,3 +299,35 @@ button:hover {
 	background: url('../img/nav_bar_background_highlight.png') 0 0 repeat-x!important;
 	color: #000000!important;
 }
+
+ul .following_list {
+	
+}
+
+.following_list li {
+	height: 24px;
+	padding: 5px 0;
+	border-bottom: 1px solid #dddddd;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 24px;
+}
+
+.following_list a {
+	color: #3183c4;
+	text-decoration: none;
+}
+
+.following_list img {
+	width: 20px;
+	height: 20px;
+	margin-right: 10px;
+	padding: 1px;
+	border: 1px solid #dddddd;
+	vertical-align: middle;
+}
+
+.following_list em {
+	color: #999999;
+	font-style: normal;
+}

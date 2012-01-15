@@ -1,6 +1,6 @@
 // Application Constants.
 var FADE_SPEED = 300;
-var CACHE_FOLLOWING_TIMEOUT = 5000;
+var CACHE_FOLLOWING_TIME = 1000000;
 
 
 // GitHub Object Constructor.
@@ -14,6 +14,7 @@ var GitHub = function() {
 function cacheLoad(key) {
 	return JSON.parse(localStorage['cache_' + github.user.login])[key];
 };
+
 	
 // Save data to cache.
 function cacheSave(key, data) {
@@ -120,6 +121,15 @@ function loadUser() {
 };
 
 
+function loadUsersName(index, users, callback) {
+	$.getJSON(github.api_url + 'users/' + users[index].login)
+		.success(function(json) {
+			users[index].name = json.name;
+			if( callback ) { callback(users); }
+		});
+};
+
+
 // Dashboard Navigation OnClickListener.
 function dashboardNavigationOnClickListener() {
     
@@ -169,15 +179,16 @@ function loadContent() {
 
 // Determine if following should be loaded from cache or GitHub.
 function loadFollowing() {
-	cached = false;
 	
+	cached = false;
+			
 	// Check for following in cache.
-	if(following = cache.load('following')) {
-		if( (new Date().getTime()) - following.time < CACHE_FOLLOWING_TIMEOUT) { cached = true; }}
+	if(following = cacheLoad("following")) {
+		if( (new Date().getTime()) - following.time < CACHE_FOLLOWING_TIME) { cached = true; }}
 
 	// If following is cached then display following
 	// Else load following from GitHub then display.
-	if(cached) { displayFollowing(following); }
+	if(cached) { displayFollowing(following.data); }
 	else { loadFollowingFromGitHub(); }
 }
 
@@ -192,25 +203,57 @@ function loadFollowingFromGitHub(pageNumber, following) {
 	
 	// Recursivly load following data from GitHub.
 	// If data is being returned keep recursing.  
-	// Else save data to cache and display following.
+	// Else load users names, save data to cache and display following.
 	$.getJSON(github.api_url + 'user/following?page=' + pageNumber, {access_token: oauth2.getAccessToken()})
 		.success(function(json) {
-			if(json.length > 0) {	
+			// If data is still being returned keep requesting for following.
+			if(json.length > 0) {				
 				following = following.concat(json);
 				loadFollowingFromGitHub(++pageNumber, following);
 			}
+			// If data is not returned get following user's names,
+			// cache the data and display following.
 			else { 
-				cache.save("following", following);
-				displayFollowing(following);
+				for(var current in following) {
+					if(current < (following.length - 1)) {
+						loadUsersName(current, following);
+					}
+					else {
+						loadUsersName(current, following, function(following) {
+							cacheSave('following', following);
+							displayFollowing(following);
+						});
+					}
+				}				
 			}
 		});
-}
+};
 
 
-
+// Display following users.
 function displayFollowing(following) {
-	console.log(following);
-}
+	html = '<ul class="following_list">';
+	
+	for(var current in following) {
+			
+		user = following[current];
+		
+		html += '<li>';
+		html += '<a href="https://github.com/' + user.login + '">';
+		html += '<img src="' + user.avatar_url + '" /></a>';
+		html += '<a href="https://github.com/' + user.login + '">';
+		html += user.login + '</a>';
+		
+		if(user.name != undefined) { html += '<em> (' + user.name + ')</em>'; }
+	
+		html += '</li>';
+	}
+	
+	html += '</ul>';
+
+	// Display content.
+	displayContent(html);
+};
 
 
 // Set content section display to loading.
@@ -218,7 +261,7 @@ function displayContentLoading() {
     var contentSection = $('#content');
     
     contentSection.fadeOut(FADE_SPEED, function() {
-        $('#content').html("").addClass('loading').fadeIn(FADE_SPEED).delay(FADE_SPEED);
+        contentSection.html("").addClass('loading').fadeIn(FADE_SPEED).delay(FADE_SPEED);
     });
 };
 
