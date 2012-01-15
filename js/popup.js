@@ -1,16 +1,106 @@
 // Application Constants.
 var FADE_SPEED = 300;
+var CACHE_FOLLOWING_TIMEOUT = 5000;
 
 
-// GitHub Object.
+// GitHub Object Constructor.
 var GitHub = function() {
 	this.api_url = "https://api.github.com/";
+	this.user    = undefined;
+};
+
+
+// Cache Object Constructor.
+var Cache = function() {	
+	if(!localStorage['cache_' + github.user.login]) { 
+		localStorage['cache_' + github.user.login] = "{}"; 
+	}	
+};
+
+// Load data from cache.
+Cache.prototype.load = function(key) {
+	return JSON.parse(localStorage['cache_' + github.user.login])[key];
+};
+
+// Save data to cache.
+Cache.prototype.save = function(key, data) {
+	cache = JSON.parse(localStorage['cache_' + github.user.login]);
+	cache[key] = {"time" : new Date().getTime(), "data" : data};
+	localStorage['cache_' + github.user.login] = JSON.stringify(cache);
 };
 
 
 // Application Globals
+var cache  = undefined;
 var oauth2 = new OAuth2();
 var github = new GitHub();
+
+
+// Create the user link tooltips.
+function createToolTips() {
+	// Set tooltip margins & hover effects.
+	$('.tooltip h1').each(function(){ 
+		$(this).css('margin-left', -$(this).width()/2-8);
+	});		
+	$('.user_links li').each(function(){
+		var menuItem = $(this);
+		var toolTips = $('.user_links .tooltip');
+		menuItem.hover(function(){ 
+			$('.' + menuItem.attr('class') + ' .tooltip').removeClass('invisible').hover(function(){ 
+				toolTips.addClass('invisible')
+			});}, 		
+			function(){ toolTips.addClass('invisible'); }
+		);
+	});
+}
+
+
+// Prompt user to authorize extension with GitHub.
+function showAuthorizationScreen() {
+
+    var popupAnimation = {width: "413px", height: "269px"};
+
+    $('.github_header').delay(500).fadeOut(200, function(){
+        $('body').removeClass('loading').animate(popupAnimation, function(){
+            $('#authorization').delay(750).fadeIn(FADE_SPEED);
+            $('#authorization button').click( function(){
+	 			oauth2.flow.begin();
+			});
+        });
+    });
+};
+
+
+// Load popup application.
+function loadApplication() {
+	
+	// Enable cache.
+	cache = new Cache();
+
+    // Configure context switcher.
+    $('.context_switcher .context').html('<img src="' + github.user.avatar_url + '" />' + github.user.login);
+    
+    // Set navigation tab onClickListeners.
+    $('.application_nav li').bind('click', dashboardNavigationOnClickListener);
+
+	// Set logout onClickListener.
+	$('.user_links .log_out').bind('click', logoutOnClickListener);
+
+	// Display application
+    $('body').removeClass('loading');
+    $('#content').addClass('loading');
+    $('#application').removeClass('hidden');
+
+	// Set selected navigation tab (must be after application is visible).
+    if(!localStorage['content']) { localStorage['content'] = "repositories"; } 
+    $('.application_nav li[data=' + localStorage['content'] + ']').addClass('selected');
+
+	// Create the user link tooltips.
+	createToolTips();
+    
+	// Load users content.
+    loadContent();
+};
 
 
 // Load GitHub user.
@@ -36,68 +126,17 @@ function loadUser() {
 };
 
 
-// Prompt user to authorize extension with GitHub.
-function showAuthorizationScreen() {
-
-    var popupAnimation = {width: "413px", height: "269px"};
-
-    $('.github_header').delay(500).fadeOut(200, function(){
-        $('body').removeClass('loading').animate(popupAnimation, function(){
-            $('#authorization').delay(750).fadeIn(FADE_SPEED);
-            $('#authorization button').click( function(){
-	 			oauth2.flow.begin();
-			});
-        });
-    });
-};
-
-
-// Load popup application.
-function loadApplication() {
+// Dashboard Navigation OnClickListener.
+function dashboardNavigationOnClickListener() {
     
-    // Configure context switcher.
-    $('.context_switcher .context').html('<img src="' + github.user.avatar_url + '" />' + github.user.login);
-    
-    // Set navigation tab onClickListeners.
-    $('.application_nav li').bind('click', dashboardNavigationOnClickListener);
-
-	// Set logout onClickListener.
-	$('.user_links .log_out').bind('click', logoutOnClickListener);
-
-	// Display application
-    $('body').removeClass('loading');
-    $('#content').addClass('loading');
-    $('#application').removeClass('hidden');
-
-	// Set selected navigation tab (must be after application is visible).
-    if(!localStorage['content']) { localStorage['content'] = "repositories"; } 
+    // Change selected menu tab.
+    $('.application_nav li[data=' + localStorage['content'] + ']').removeClass('selected');
+    localStorage['content'] = $(this).attr('data');
     $('.application_nav li[data=' + localStorage['content'] + ']').addClass('selected');
-
-	// Create the user link tooltips.
-	createUserLinkToolTips();
     
 	// Load users content.
     loadContent();
 };
-
-
-// Create the user link tooltips.
-function createUserLinkToolTips() {
-	// Set tooltip margins & hover effects.
-	$('.tooltip h1').each(function(){ 
-		$(this).css('margin-left', -$(this).width()/2-8);
-	});		
-	$('.user_links li').each(function(){
-		var menuItem = $(this);
-		var toolTips = $('.user_links .tooltip');
-		menuItem.hover(function(){ 
-			$('.' + menuItem.attr('class') + ' .tooltip').removeClass('invisible').hover(function(){ 
-				toolTips.addClass('invisible')
-			});}, 		
-			function(){ toolTips.addClass('invisible'); }
-		);
-	});
-}
 
 
 // Logout OnClickListener.
@@ -113,19 +152,6 @@ function logoutOnClickListener() {
 }
 
 
-// Dashboard Navigation OnClickListener.
-function dashboardNavigationOnClickListener() {
-    
-    // Change selected menu tab.
-    $('.application_nav li[data=' + localStorage['content'] + ']').removeClass('selected');
-    localStorage['content'] = $(this).attr('data');
-    $('.application_nav li[data=' + localStorage['content'] + ']').addClass('selected');
-    
-	// Load users content.
-    loadContent();
-};
-
-
 // Load content.
 function loadContent() {
 
@@ -137,6 +163,7 @@ function loadContent() {
         case 'watched':
             break;
         case 'following':
+			loadFollowing();
             break;
         case 'followers':
             break;
@@ -144,6 +171,52 @@ function loadContent() {
             break;
     }
 };
+
+
+// Determine if following should be loaded from cache or GitHub.
+function loadFollowing() {
+	cached = false;
+	
+	// Check for following in cache.
+	if(following = cache.load('following')) {
+		if( (new Date().getTime()) - following.time < CACHE_FOLLOWING_TIMEOUT) { cached = true; }}
+
+	// If following is cached then display following
+	// Else load following from GitHub then display.
+	if(cached) { displayFollowing(following); }
+	else { loadFollowingFromGitHub(); }
+}
+
+
+// Load following for current user from GitHub.
+function loadFollowingFromGitHub(pageNumber, following) {
+	
+	// If a page number is not defined set to page 1.
+	// Create following array to store followers.
+	if(!pageNumber) { pageNumber = 1; }
+	if(!following)  { following = []; }
+	
+	// Recursivly load following data from GitHub.
+	// If data is being returned keep recursing.  
+	// Else save data to cache and display following.
+	$.getJSON(github.api_url + 'user/following?page=' + pageNumber, {access_token: oauth2.getAccessToken()})
+		.success(function(json) {
+			if(json.length > 0) {	
+				following = following.concat(json);
+				loadFollowingFromGitHub(++pageNumber, following);
+			}
+			else { 
+				cache.save("following", following);
+				displayFollowing(following);
+			}
+		});
+}
+
+
+
+function displayFollowing(following) {
+	console.log(following);
+}
 
 
 // Set content section display to loading.
