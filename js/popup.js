@@ -219,7 +219,7 @@ function loadRepos() {
 	cached = false;
 			
 	// Check for repositories in cache.
-	if(repos = cacheLoad("repos")) {
+	if(repos = cacheLoad("repositories")) {
 		if( (new Date().getTime()) - repos.time < CACHE_REPOS_TIME) { cached = true; }}
 
 	// If repositories are cached then display repositories.
@@ -281,7 +281,17 @@ function loadForkedRepoParents(repos, index) {
 	
 	// If all repositories have been checked, cache them and display them.
 	else {
-		cacheSave('repos', repos);
+		
+		// Sort repo's by last updated.
+		repos.sort(function(a, b) {
+			a = new Date(a.updated_at).getTime();
+			b = new Date(b.updated_at).getTime();
+			if(a > b) return -1;
+			if(a < b) return 1;
+			return 0;
+		});
+		
+		cacheSave("repositories", repos);
 		displayRepos(repos);
 	}
 };
@@ -289,13 +299,13 @@ function loadForkedRepoParents(repos, index) {
 
 // Display users repositories.
 function displayRepos(repos) {
-		
+				
 	html = '<ul class="repo_list">';
 	
 	for(var current in repos) {
 		
 		repo = repos[current];
-		
+				
 		html += '<li class="' + (repos.private ? 'private' : 'public') + (repo.fork ? ' fork' : '') + '">';
 		html += '<ul class="repo_stats">';
 		html += '<li>' + (repo.language ? repo.language : "") + '</li>';
@@ -453,7 +463,7 @@ function loadFollowingFromGitHub(pageNumber, following) {
 					}
 					else {
 						loadUsersName(current, following, function(following) {
-							cacheSave('following', following);
+							cacheSave("following", following);
 							displayFollowing(following);
 						});
 					}
@@ -533,7 +543,7 @@ function loadFollowersFromGitHub(pageNumber, followers) {
 					}
 					else {
 						loadUsersName(current, followers, function(followers) {
-							cacheSave('followers', followers);
+							cacheSave("followers", followers);
 							displayFollowers(followers);
 						});
 					}
