@@ -25,6 +25,14 @@ function cacheSave(key, data) {
 };
 
 
+// Remove data from cache.
+function cacheRemove(key) {
+	cache = JSON.parse(localStorage['cache_' + github.user.login]);
+	delete cache[key];
+	localStorage['cache_' + github.user.login] = JSON.stringify(cache);
+};
+
+
 // Application Globals
 var cache  = undefined;
 var oauth2 = new OAuth2();
@@ -76,11 +84,10 @@ function loadApplication() {
     // Configure context switcher.
     $('.context_switcher .context').html('<img src="' + github.user.avatar_url + '" />' + github.user.login);
     
-    // Set navigation tab onClickListeners.
+    // Set onClickListeners.
     $('.application_nav li').bind('click', dashboardNavigationOnClickListener);
-
-	// Set logout onClickListener.
 	$('.user_links .log_out').bind('click', logoutOnClickListener);
+	$('.refresh').bind('click', refreshOnClickListener);
 
 	// Display application
     $('body').removeClass('loading');
@@ -153,7 +160,14 @@ function logoutOnClickListener() {
 	
 	// Close window when viewing from window.
 	chrome.tabs.getCurrent(function(thisTab) { chrome.tabs.remove(thisTab.id, function(){}); });
-}
+};
+
+
+// Refresh OnClickListener.
+function refreshOnClickListener() {
+	cacheRemove(localStorage['content']);
+	loadContent();
+};
 
 
 // Load content.

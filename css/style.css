@@ -191,6 +191,24 @@ button:hover {
 	white-space: nowrap;
 }
 
+.refresh {
+	width: 111px;
+	height: 25px;
+	margin-top: 6px;
+	color: #666666;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: center;
+	text-shadow: 1px 1px 0px #ffffff;
+	line-height: 25px;
+}
+
+.refresh:hover {
+	background: -webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#d1d1d1));
+	box-shadow: 0 1px 0 #eaeaea, inset 0 1px 0 #eaeaea;
+	cursor: pointer;
+}
+
 #application_footer {
 	clear: both;	
 	height: 39px;
