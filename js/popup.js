@@ -1,6 +1,7 @@
 // Application Constants.
 var FADE_SPEED = 300;
 var CACHE_REPOS_TIME = 1000000;
+var CACHE_WATCHED_TIME = 1000000;
 var CACHE_FOLLOWING_TIME = 1000000;
 var CACHE_FOLLOWERS_TIME = 1000000;
 
@@ -175,6 +176,7 @@ function loadContent() {
 			loadRepos();
             break;
         case 'watched':
+			loadWatched();
             break;
         case 'following':
 			loadFollowing();
@@ -318,6 +320,81 @@ function displayRepos(repos) {
 	html += '</ul>';
 	
 	// Display content.
+	displayContent(html);
+};
+
+
+// Determine if users watched repositories should be loaded from cache or GitHub.
+function loadWatched() {
+	
+	cached = false;
+			
+	// Check for watched repositories in cache.
+	if(watched = cacheLoad("watched")) {
+		if( (new Date().getTime()) - watched.time < CACHE_WATCHED_TIME) { cached = true; }}
+
+	// If watched repositories are cached then display them.
+	// Else load watched repositories from GitHub then display.
+	if(cached) { displayWatched(watched.data); }
+	else { loadWatchedFromGitHub(); }
+};
+
+
+// Load watched repositories from GitHub.
+function loadWatchedFromGitHub(pageNumber, watched) {
+	
+	// If a page number is not defined set to page 1.
+	// Create watched array to store watched repositories.
+	if(!pageNumber) { pageNumber = 1; }
+	if(!watched)  { watched = []; }
+	
+	// Recursivly load watched repositories from GitHub.
+	// If data is being returned keep recursing.  
+	// Else save data to cache and display watched repositories.
+	$.getJSON(github.api_url + 'user/watched?page=' + pageNumber, {access_token: oauth2.getAccessToken()})
+		.success(function(json) {
+			// If data is still being returned keep requesting.
+			if(json.length > 0) {		
+				watched = watched.concat(json);
+				loadWatchedFromGitHub(++pageNumber, watched);
+			}
+			// When all watched repositories have been received:
+			// Display nothing if there are no repositories or
+			// Filter out user owned repositories and display watched results.
+			else { 
+				if(watched.length == 0) { displayWatched([]); }
+				for(var i = (watched.length - 1); i >= 0; i--) {
+					if(watched[i].owner.login == github.user.login) {
+						watched.splice(i, 1);
+					}
+				}			
+				cacheSave("watched", watched);
+				displayWatched(watched);
+			}
+		});
+};
+
+
+// Display users watched repositories.
+function displayWatched(watched) {
+	
+	html = '<ul class="watched_list">';
+	
+	for(var current in watched) {
+		
+		repo = watched[current];
+		
+		html += '<li class="' + (repo.private ? 'private' : 'public') + '">';
+		html += '<a href="' + repo.html_url + '" target="_blank">';
+		html += '<span class="user">' + repo.owner.login + '</span>'; 
+		html += '/';
+		html += '<span class="repo">'+ repo.name + '</span>';
+		html += '</a>';
+		html += '</li>';
+	}
+	
+	html += '</ul>';
+	
 	displayContent(html);
 };
 
