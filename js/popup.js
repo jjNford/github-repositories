@@ -1,6 +1,7 @@
 // Application Constants.
 var FADE_SPEED = 300;
 var CACHE_FOLLOWING_TIME = 1000000;
+var CACHE_FOLLOWERS_TIME = 1000000;
 
 
 // GitHub Object Constructor.
@@ -109,7 +110,6 @@ function loadUser() {
 				loadApplication();
 			})
 			.error(function(json){
-				console.log(json);
 				// Do nothing if there is no connection.
 				if(json.readyState == 0 && json.status == 0) {}
 				else {showAuthorizationScreen();}
@@ -170,6 +170,7 @@ function loadContent() {
 			loadFollowing();
             break;
         case 'followers':
+			loadFollowers();
             break;
         default:
             break;
@@ -190,6 +191,22 @@ function loadFollowing() {
 	// Else load following from GitHub then display.
 	if(cached) { displayFollowing(following.data); }
 	else { loadFollowingFromGitHub(); }
+}
+
+
+// Determine if followers should be loaded from cache or GitHub.
+function loadFollowers() {
+
+	cached = false;
+			
+	// Check for followers in cache.
+	if(followers = cacheLoad("followers")) {
+		if( (new Date().getTime()) - followers.time < CACHE_FOLLOWERS_TIME) { cached = true; }}
+
+	// If followers is cached then display followers.
+	// Else load followers from GitHub then display.
+	if(cached) { displayFollowers(followers.data); }
+	else { loadFollowersFromGitHub(); }
 }
 
 
@@ -231,6 +248,44 @@ function loadFollowingFromGitHub(pageNumber, following) {
 };
 
 
+// Load followers for current user from GitHub.
+function loadFollowersFromGitHub(pageNumber, followers) {
+		
+	// If a page number is not defined set to page 1.
+	// Create followers array to store followers.
+	if(!pageNumber) { pageNumber = 1; }
+	if(!followers)  { followers = []; }
+	
+	// Recursivly load followers data from GitHub.
+	// If data is being returned keep recursing.  
+	// Else load users names, save data to cache and display followers.
+	$.getJSON(github.api_url + 'user/followers?page=' + pageNumber, {access_token: oauth2.getAccessToken()})
+		.success(function(json) {
+			// If data is still being returned keep requesting for followers.
+			if(json.length > 0) {			
+				followers = followers.concat(json);
+				loadFollowersFromGitHub(++pageNumber, followers);
+			}
+			// If data is not returned get followers user's names,
+			// cache the data and display followers.
+			else { 
+				if(followers.length == 0) { displayFollowers([]); }
+				for(var current in followers) {
+					if(current < (followers.length - 1)) {
+						loadUsersName(current, followers);
+					}
+					else {
+						loadUsersName(current, followers, function(followers) {
+							cacheSave('followers', followers);
+							displayFollowers(followers);
+						});
+					}
+				}				
+			}
+		});
+};
+
+
 // Display following users.
 function displayFollowing(following) {
 	html = '<ul class="following_list">';
@@ -238,6 +293,32 @@ function displayFollowing(following) {
 	for(var current in following) {
 			
 		user = following[current];
+		
+		html += '<li>';
+		html += '<a href="https://github.com/' + user.login + '" target="_blank">';
+		html += '<img src="' + user.avatar_url + '" /></a>';
+		html += '<a href="https://github.com/' + user.login + '" target="_blank">';
+		html += user.login + '</a>';
+		
+		if(user.name != undefined) { html += '<em> (' + user.name + ')</em>'; }
+	
+		html += '</li>';
+	}
+	
+	html += '</ul>';
+
+	// Display content.
+	displayContent(html);
+};
+
+
+// Display followers users.
+function displayFollowers(followers) {
+	html = '<ul class="following_list">';
+	
+	for(var current in followers) {
+			
+		user = followers[current];
 		
 		html += '<li>';
 		html += '<a href="https://github.com/' + user.login + '" target="_blank">';
