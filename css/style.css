@@ -204,8 +204,12 @@ button:hover {
 }
 
 .refresh:hover {
-	background: -webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#d1d1d1));
-	box-shadow: 0 1px 0 #eaeaea, inset 0 1px 0 #eaeaea;
+	background: #438BB1;
+    background: -webkit-gradient(linear, left top, left bottom, from(#0CA6DD), to(#0770A0));
+	border-color: #0770A0;
+	color: #FFFFFF;
+    text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
+	box-shadow: rgba(0, 0, 0, 0.3) 0 1px 4px 0;	
 	cursor: pointer;
 }
 
