@@ -318,8 +318,108 @@ button:hover {
 	color: #000000!important;
 }
 
-ul .following_list {
+.repo_list {
+	margin-top: 10px;
+}
+
+.repo_list .public, .repo_list .private {
+	margin-bottom: 10px;
+	padding: 8px 10px 0 10px;
+	border: 1px solid #dddddd;
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.repo_list .public {
+	background: url('../img/repo_public.png') 6px 9px no-repeat;
+}
+
+.repo_list .public.fork {
+	background-image: url('../img/repo_public_fork.png');
+}
+
+.repo_list .private {
+	background: url('../img/repo_private.png') 6px 9px no-repeat;
+}
+
+.repo_list .private.fork {
+	background-image: url('../img/repo_private_fork.png');
+}
+
+.repo_stats {
+	float: right;
+	padding-right: 10px;
+	padding-left: 15px;
+	font-size: 11px;
+	font-weight: bold;
 	
+}
+
+.repo_stats li {
+	display: inline-block;
+	color: #666666;
+}
+
+.repo_stats li.watchers a, .repo_stats li.forks a {
+	height: 21px;
+	display: inline-block;
+	padding-right: 5px;
+	padding-left: 23px;
+	color: #666666;
+	text-decoration: none;
+	line-height: 21px;
+}
+
+.repo_stats li.watchers a {
+	background: url('../img/repo_stat_watchers.png') 5px -2px no-repeat;
+}
+
+.repo_stats li.forks a {
+	background: url('../img/repo_stat_forks.png') 5px -2px no-repeat;
+}
+
+.repo_list h3 {
+	display: block;
+	padding-left: 18px;
+	font-size: 14px;
+	white-space: nowrap;
+	line-height: 19px;
+}
+
+.repo_list h3 a {
+	color: #4183c3;
+	text-decoration: none;
+}
+
+.repo_list div {
+	margin: 8px -10px 0 -10px;
+	padding: 5px 10px;
+	background: -webkit-gradient(linear,left top,left bottom,from(#fafafa),to(#efefef));
+	border-top: 1px solid #eeeeee;
+}
+
+
+.repo_list .description {
+	margin-bottom: 3px;
+	color: #444;
+	font-size: 12px;
+}
+
+.repo_list .updated {
+	color: #888;
+	font-size: 11px;
+}
+
+.repo_list .fork_flag {
+	padding-left: 18px;
+	color: #777;
+	font-size: 11px;
+	white-space: nowrap;
+}
+
+.repo_list .fork_flag a {
+	color: #4183c4;
+	text-decoration: none;
 }
 
 .following_list li {

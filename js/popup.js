@@ -1,5 +1,6 @@
 // Application Constants.
 var FADE_SPEED = 300;
+var CACHE_REPOS_TIME = 1000000;
 var CACHE_FOLLOWING_TIME = 1000000;
 var CACHE_FOLLOWERS_TIME = 1000000;
 
@@ -11,13 +12,13 @@ var GitHub = function() {
 };
 
 		
-// Load data from cache.
+// Load data from application cache.
 function cacheLoad(key) {
 	return JSON.parse(localStorage['cache_' + github.user.login])[key];
 };
 
 	
-// Save data to cache.
+// Save data to application cache.
 function cacheSave(key, data) {
 	cache = JSON.parse(localStorage['cache_' + github.user.login]);
 	cache[key] = {"time" : new Date().getTime(), "data" : data};
@@ -25,8 +26,8 @@ function cacheSave(key, data) {
 };
 
 
-// Remove data from cache.
-function cacheRemove(key) {
+// Delete data from application cache.
+function cacheDelete(key) {
 	cache = JSON.parse(localStorage['cache_' + github.user.login]);
 	delete cache[key];
 	localStorage['cache_' + github.user.login] = JSON.stringify(cache);
@@ -34,15 +35,15 @@ function cacheRemove(key) {
 
 
 // Application Globals
-var cache  = undefined;
 var oauth2 = new OAuth2();
 var github = new GitHub();
 
 
-// Create the user link tooltips.
+// Create tooltips.
 function createToolTips() {
-	// Set tooltip margins & hover effects.
-	$('.tooltip h1').each(function(){ 
+	
+	// Set tooltip margins & hover effects for user links.
+	$('.user_links .tooltip h1').each(function(){ 
 		$(this).css('margin-left', -$(this).width()/2-8);
 	});		
 	$('.user_links li').each(function(){
@@ -55,7 +56,7 @@ function createToolTips() {
 			function(){ toolTips.addClass('invisible'); }
 		);
 	});
-}
+};
 
 
 // Prompt user to authorize extension with GitHub.
@@ -74,14 +75,14 @@ function showAuthorizationScreen() {
 };
 
 
-// Load popup application.
+// Load application.
 function loadApplication() {
 	
-	// Enable cache.
+	// If application cache has not been created then do so.
 	if(!localStorage['cache_' + github.user.login]) { 
 		localStorage['cache_' + github.user.login] = "{}"; }
 
-    // Configure context switcher.
+    // Apply user data to context switcher.
     $('.context_switcher .context').html('<img src="' + github.user.avatar_url + '" />' + github.user.login);
     
     // Set onClickListeners.
@@ -89,16 +90,16 @@ function loadApplication() {
 	$('.user_links .log_out').bind('click', logoutOnClickListener);
 	$('.refresh').bind('click', refreshOnClickListener);
 
-	// Display application
+	// Display application.
     $('body').removeClass('loading');
     $('#content').addClass('loading');
     $('#application').fadeIn(FADE_SPEED);
 
-	// Set selected navigation tab (must be after application is visible).
+	// Set selected navigation tab.
     if(!localStorage['content']) { localStorage['content'] = "repositories"; } 
     $('.application_nav li[data=' + localStorage['content'] + ']').addClass('selected');
 
-	// Create the user link tooltips.
+	// Create tooltips.
 	createToolTips();
     
 	// Load users content.
@@ -106,7 +107,7 @@ function loadApplication() {
 };
 
 
-// Load GitHub user.
+// Load user data.
 function loadUser() {
 	
     // If an application access token exists get the user.
@@ -116,6 +117,8 @@ function loadUser() {
 				github.user = json;
 				loadApplication();
 			})
+			// If there is an error the user is not authorized.
+			// Show authorization screen.
 			.error(function(json){
 				// Do nothing if there is no connection.
 				if(json.readyState == 0 && json.status == 0) {}
@@ -125,15 +128,6 @@ function loadUser() {
     
     // If no application access token exists show the authorization screen.
     else { showAuthorizationScreen(); }	
-};
-
-
-function loadUsersName(index, users, callback) {
-	$.getJSON(github.api_url + 'users/' + users[index].login)
-		.success(function(json) {
-			users[index].name = json.name;
-			if( callback ) { callback(users); }
-		});
 };
 
 
@@ -152,6 +146,7 @@ function dashboardNavigationOnClickListener() {
 
 // Logout OnClickListener.
 function logoutOnClickListener() {
+	// Clear access token and cache.
 	oauth2.clearAccessToken();
 	localStorage.clear();
 	
@@ -165,7 +160,7 @@ function logoutOnClickListener() {
 
 // Refresh OnClickListener.
 function refreshOnClickListener() {
-	cacheRemove(localStorage['content']);
+	cacheDelete(localStorage['content']);
 	loadContent();
 };
 
@@ -177,6 +172,7 @@ function loadContent() {
 
     switch( localStorage['content'] ) {
         case 'repositories':
+			loadRepos();
             break;
         case 'watched':
             break;
@@ -189,6 +185,150 @@ function loadContent() {
         default:
             break;
     }
+};
+
+
+// Set content section display to loading.
+function displayContentLoading() {
+    var contentSection = $('#content');
+    
+    contentSection.fadeOut(FADE_SPEED, function() {
+        contentSection.html("").addClass('loading').fadeIn(FADE_SPEED).delay(FADE_SPEED);
+    });
+};
+
+
+// Set content section to display content.
+function displayContent(content) {
+    var contentSection = $('#content');
+    
+    contentSection.fadeOut(FADE_SPEED, function(){
+        contentSection.removeClass('loading').html(content).fadeIn(FADE_SPEED);
+
+		// User relative times.
+		jQuery("time.timeago").timeago();
+    });
+};
+
+
+// Determine if user repositories should be loaded from cache or GitHub.
+function loadRepos() {
+	
+	cached = false;
+			
+	// Check for repositories in cache.
+	if(repos = cacheLoad("repos")) {
+		if( (new Date().getTime()) - repos.time < CACHE_REPOS_TIME) { cached = true; }}
+
+	// If repositories are cached then display repositories.
+	// Else load repositories from GitHub then display.
+	if(cached) { displayRepos(repos.data); }
+	else { loadReposFromGitHub(); }
+};
+
+
+// Load repositories for current user from GitHub.
+function loadReposFromGitHub(pageNumber, repos) {
+	
+	// If a page number is not defined set to page 1.
+	// Create repos array to store repositories.
+	if(!pageNumber) { pageNumber = 1; }
+	if(!repos)  { repos = []; }
+	
+	// Recursivly load repositories from GitHub.
+	// If data is being returned keep recursing.  
+	// Else save data to cache and display repositories.
+	$.getJSON(github.api_url + 'user/repos?page=' + pageNumber, {access_token: oauth2.getAccessToken()})
+		.success(function(json) {
+			// If data is still being returned keep requesting.
+			if(json.length > 0) {			
+				repos = repos.concat(json);
+				loadReposFromGitHub(++pageNumber, repos);
+			}
+			// When all repositories have been received:
+			// Display nothing if there are no repositories or
+			// Loaded forked repositories parent information.
+			else { 
+				if(repos.length == 0) { displayRepos([]); }
+				loadForkedRepoParents(repos);
+			}
+		});
+};
+
+
+// Load forked repositories parent information.
+function loadForkedRepoParents(repos, index) {
+
+	// If an index is not defined set it to 0.
+	if(!index) { index = 0; }
+
+	// While index is less than the amount of repositories
+	// check if the index repository is forked and if so
+	// request the repositories parent information to be saved.
+	if(index < repos.length) {
+		if(repos[index].fork) {
+			$.getJSON(github.api_url + 'repos/' + github.user.login + '/' + repos[index].name, {access_token: oauth2.getAccessToken()})
+				.success(function(json) {
+					repos[index].parent = json.parent.owner;
+					loadForkedRepoParents(repos, ++index);
+				});
+		}
+		// If not a forked repository move to the next repository.
+		else { loadForkedRepoParents(repos, ++index); }
+	}	
+	
+	// If all repositories have been checked, cache them and display them.
+	else {
+		cacheSave('repos', repos);
+		displayRepos(repos);
+	}
+};
+
+
+// Display users repositories.
+function displayRepos(repos) {
+		
+	html = '<ul class="repo_list">';
+	
+	for(var current in repos) {
+		
+		repo = repos[current];
+		
+		html += '<li class="' + (repos.private ? 'private' : 'public') + (repo.fork ? ' fork' : '') + '">';
+		html += '<ul class="repo_stats">';
+		html += '<li>' + (repo.language ? repo.language : "") + '</li>';
+		html += '<li class="watchers"><a href="' + repo.html_url + '/watchers" target="_blank">' + repo.watchers + '</a></li>';
+		html += '<li class="forks"><a href="' + repo.html_url + '/network" target="_blank">' + repo.forks + '</a></li>';
+		html += '</ul>';
+		html += '<h3><a href="' + repo.html_url + '" target="_blank">' + repo.name + '</a></h3>';
+	
+		// If forked display parent information.
+		if(repo.fork) { html += '<p class="fork_flag">Forked from <a href="https://github.com/' + repo.parent.login + '/' + repo.name 
+		                     + '" target="_blank">' + repo.parent.login + '/' + repo.name + '</a></p>'}
+		
+		html += '<div>';
+		html += '<p class="description">' + repo.description + '</p>';
+		html += '<p class="updated">Last updated ';
+		html += '<time class="timeago" datetime="' + repo.updated_at + '">' + repo.updated_at + '</time>';
+		html += '</p>';
+		html += '</div>';
+		html += '</li>';
+	}
+	
+	html += '</ul>';
+	
+	// Display content.
+	displayContent(html);
+};
+
+
+// Get user's name from GitHub based on login name.
+function loadUsersName(index, users, callback) {
+	$.getJSON(github.api_url + 'users/' + users[index].login)
+		.success(function(json) {
+			users[index].name = json.name;
+			if( callback ) { callback(users); }
+		});
 };
 
 
@@ -205,26 +345,10 @@ function loadFollowing() {
 	// Else load following from GitHub then display.
 	if(cached) { displayFollowing(following.data); }
 	else { loadFollowingFromGitHub(); }
-}
+};
 
 
-// Determine if followers should be loaded from cache or GitHub.
-function loadFollowers() {
-
-	cached = false;
-			
-	// Check for followers in cache.
-	if(followers = cacheLoad("followers")) {
-		if( (new Date().getTime()) - followers.time < CACHE_FOLLOWERS_TIME) { cached = true; }}
-
-	// If followers is cached then display followers.
-	// Else load followers from GitHub then display.
-	if(cached) { displayFollowers(followers.data); }
-	else { loadFollowersFromGitHub(); }
-}
-
-
-// Load following for current user from GitHub.
+// Load following of user from GitHub.
 function loadFollowingFromGitHub(pageNumber, following) {
 	
 	// If a page number is not defined set to page 1.
@@ -259,6 +383,48 @@ function loadFollowingFromGitHub(pageNumber, following) {
 				}				
 			}
 		});
+};
+
+
+// Display following users.
+function displayFollowing(following) {
+	html = '<ul class="following_list">';
+	
+	for(var current in following) {
+			
+		user = following[current];
+		
+		html += '<li>';
+		html += '<a href="https://github.com/' + user.login + '" target="_blank">';
+		html += '<img src="' + user.avatar_url + '" /></a>';
+		html += '<a href="https://github.com/' + user.login + '" target="_blank">';
+		html += user.login + '</a>';
+		
+		if(user.name != undefined) { html += '<em> (' + user.name + ')</em>'; }
+	
+		html += '</li>';
+	}
+	
+	html += '</ul>';
+
+	// Display content.
+	displayContent(html);
+};
+
+
+// Determine if followers should be loaded from cache or GitHub.
+function loadFollowers() {
+
+	cached = false;
+			
+	// Check for followers in cache.
+	if(followers = cacheLoad("followers")) {
+		if( (new Date().getTime()) - followers.time < CACHE_FOLLOWERS_TIME) { cached = true; }}
+
+	// If followers is cached then display followers.
+	// Else load followers from GitHub then display.
+	if(cached) { displayFollowers(followers.data); }
+	else { loadFollowersFromGitHub(); }
 };
 
 
@@ -300,32 +466,6 @@ function loadFollowersFromGitHub(pageNumber, followers) {
 };
 
 
-// Display following users.
-function displayFollowing(following) {
-	html = '<ul class="following_list">';
-	
-	for(var current in following) {
-			
-		user = following[current];
-		
-		html += '<li>';
-		html += '<a href="https://github.com/' + user.login + '" target="_blank">';
-		html += '<img src="' + user.avatar_url + '" /></a>';
-		html += '<a href="https://github.com/' + user.login + '" target="_blank">';
-		html += user.login + '</a>';
-		
-		if(user.name != undefined) { html += '<em> (' + user.name + ')</em>'; }
-	
-		html += '</li>';
-	}
-	
-	html += '</ul>';
-
-	// Display content.
-	displayContent(html);
-};
-
-
 // Display followers users.
 function displayFollowers(followers) {
 	html = '<ul class="following_list">';
@@ -349,26 +489,6 @@ function displayFollowers(followers) {
 
 	// Display content.
 	displayContent(html);
-};
-
-
-// Set content section display to loading.
-function displayContentLoading() {
-    var contentSection = $('#content');
-    
-    contentSection.fadeOut(FADE_SPEED, function() {
-        contentSection.html("").addClass('loading').fadeIn(FADE_SPEED).delay(FADE_SPEED);
-    });
-};
-
-
-// Set content section to display content.
-function displayContent(content) {
-    var contentSection = $('#content');
-    
-    contentSection.fadeOut(FADE_SPEED, function(){
-        contentSection.removeClass('loading').html(content).fadeIn(FADE_SPEED);
-    });
 };
 
 
