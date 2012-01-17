@@ -229,8 +229,9 @@ button:hover {
 
 .refresh:hover {
 	background: #438BB1;
-    background: -webkit-gradient(linear, left top, left bottom, from(#0CA6DD), to(#0770A0));
-	border-color: #0770A0;
+    background: -webkit-gradient(linear, left top, left bottom, from(#599bdc), to(#3173b4));
+	border: 1px solid #518cc6;
+	border-bottom-color: #2a65a0;
 	color: #FFFFFF;
     text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
 	box-shadow: rgba(0, 0, 0, 0.3) 0 1px 4px 0;	
@@ -267,24 +268,21 @@ button:hover {
 	margin-top: 79.3px;
 }
 
-.context_switcher {
-	width: 173px;
+.context_switcher_button {
+	width: 142px;
 	height: 27px;
-	margin-left: auto;
-	margin-right: auto;
+	margin: 0 auto;
+	padding: 0 28px 0 3px;
 	background: url('../img/context_switcher.png') 100% -2px no-repeat,
 	            -webkit-gradient(linear, left top, left bottom, from(#f4f4f4), to(#ececec));
 	border: 1px solid #d4d4d4;
 	border-radius: 3px;
-	color: #333333;
 	font-size: 13px;
 	font-weight: bold;
-	text-align: left;
-	text-shadow: 1px 1px 0 #ffffff;
-	line-height: 27px;
+	text-shadow: 1px 1px 0 #fff;
 }
 
-.context_switcher:hover {
+.context_switcher_button:hover {
     background: url("../img/context_switcher.png") 100% -32px no-repeat, 
                 -webkit-gradient(linear, left top, left bottom, from(#599bdc), to(#3173b4));
 	border: 1px solid #518cc6;
@@ -294,8 +292,8 @@ button:hover {
 }
 
 .context_switcher .context {
-	display: block;
-	padding: 0 28px 0 3px;
+	line-height: 27px;
+	overflow: hidden;
 }
 
 .context_switcher .context img {
