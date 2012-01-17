@@ -28,13 +28,37 @@
 	background: url('../img/loading.gif') center center no-repeat;
 }
 
+.github_logo {
+	width: 70px;
+	height: 30px;
+	display: block;
+	background: url('../img/header_logo.png') 0 0 no-repeat;
+}
+
 .github_header {
 	height: 46px;
 	background: #fafafa;
-	background: url("../img/header_logo.png") 91.5px center no-repeat,
-	            -webkit-gradient(linear, left top, left bottom, from(#fafafa), to(#eaeaea));
+	background: -webkit-gradient(linear, left top, left bottom, from(#fafafa), to(#eaeaea));
 	border-bottom: 1px solid #cacaca;
 	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.adapter .github_header .github_logo {
+	margin: 0 auto;
+	width: 920px;
+	height: 46px;
+	background-position: 0 center;
+}
+
+.popup .github_header .github_logo {
+	position: relative;
+	top: 8px;
+	left: 90px;
+	cursor: pointer;
+}
+
+.popup .github_header .github_logo:hover, .popup .github_header .github_logo .selected {
+	background: url('../img/header_logo_hover.png') 0 0 no-repeat;
 }
 
 button {
