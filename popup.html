@@ -32,6 +32,7 @@
     
     <!-- application -->
     <article id="application" class="hidden">
+	
 		<!-- header -->
 		<header id="application_header">
 			<ul class="user_links">
@@ -50,15 +51,22 @@
 			</ul>
 		</header>
 		<!-- end header -->
+		
 		<!-- dashboard -->
 		<section id="dashboard">
+			
 			<!-- context switcher -->
+			<div class="context_overlay"></div>
 			<div class="context_switcher">
-				<div class="context_switcher_button">
-					<span class="context"></span>
+				<span class="context_switcher_button"></span>
+				<div class="context_switcher_panel hidden">
+					<span class="close"></span>
+					<header>Switch account context</header>
+					<a href="https://github.com/account/organizations" target="_blank" class="manage_organizations">Manage Organizations</a>
 				</div>
 			</div>
 			<!-- end context switcher -->
+			
 			<!-- navigation -->
 			<nav class="application_nav">
 				<ul>
@@ -69,16 +77,20 @@
 				</ul>
 			</nav>	
 			<!-- end navigation -->
+			
 		</section>
 		<!-- end dashboard -->
+		
 		<!-- content -->
 		<section id="content"></section>
 		<!-- end content -->
+		
 		<!-- footer -->
 		<footer id="application_footer">
 			<span class="user_links refresh">Refresh</span>
 		</footer>
 		<!-- end footer -->
+		
     </article>
     <!-- end application -->
     

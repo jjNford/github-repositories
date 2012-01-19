@@ -133,6 +133,8 @@ button:hover {
 }
 
 .user_links {
+	z-index: 30;
+	position: relative;
 	float: right;
 	margin: 10px 10px 0 0;
 	background: #f1f1f1;
@@ -218,6 +220,8 @@ button:hover {
 .refresh {
 	width: 111px;
 	height: 25px;
+	z-index: 0;
+	position: relative;
 	margin-top: 6px;
 	color: #666666;
 	font-size: 12px;
@@ -264,13 +268,25 @@ button:hover {
 	padding: 0 10px;
 }
 
+.context_overlay {
+	width: 100%;
+	height: 100%;
+	z-index: 20;
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: none;
+	background: transparent;
+}
+
 .context_switcher, .application_nav {
 	margin-top: 79.3px;
 }
 
-.context_switcher_button {
+.context_switcher .context_switcher_button {
 	width: 142px;
 	height: 27px;
+	display: block;
 	margin: 0 auto;
 	padding: 0 28px 0 3px;
 	background: url('../img/context_switcher.png') 100% -2px no-repeat,
@@ -280,9 +296,22 @@ button:hover {
 	font-size: 13px;
 	font-weight: bold;
 	text-shadow: 1px 1px 0 #fff;
+	line-height: 27px;
+	overflow: hidden;
+	white-space: nowrap;
+	cursor: pointer;
 }
 
-.context_switcher_button:hover {
+.context_switcher .context_switcher_button img {
+	width: 20px;
+	height: 20px;
+	margin-top: -2px;
+	padding-right: 7px;
+	border-radius: 2px;
+	vertical-align: middle;
+}
+
+.context_switcher .context_switcher_button:hover {
     background: url("../img/context_switcher.png") 100% -32px no-repeat, 
                 -webkit-gradient(linear, left top, left bottom, from(#599bdc), to(#3173b4));
 	border: 1px solid #518cc6;
@@ -291,18 +320,75 @@ button:hover {
 	text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);	
 }
 
-.context_switcher .context {
-	line-height: 27px;
+.context_switcher .context_switcher_button_mousedown:hover {
+	border-color: #2165a0;
+	border-bottom-color: #518cc6;
+	background: url("../img/context_switcher.png") 100% -32px no-repeat,
+			    -webkit-gradient(linear, left top, left bottom, from(#3072b3), to(#599bdc));
+	color: #ffffff;
+	text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.context_switcher .active, .context_switcher .show:active {
+	background: url("../img/context_switcher.png") 100% -32px no-repeat,
+	            -webkit-gradient(linear,left top,left bottom,from(#767676),to(#9E9E9E));
+	border-color: #686868;
+	color: #fff;
+	text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.context_switcher .context_switcher_panel {
+	width: 300px;
+	z-index: 21;
+	position: absolute;
+	margin: 5px 0 0 37px;
+	background: #fff;
+	border: 1px solid #c1c1c1;
+	border-radius: 4px;
+	box-shadow: 0 0 13px rgba(0, 0, 0, 0.31);
 	overflow: hidden;
 }
 
-.context_switcher .context img {
-	width: 20px;
-	height: 20px;
-	margin-top: -2px;
-	padding-right: 7px;
-	border-radius: 2px;
-	vertical-align: middle;
+.context_switcher_panel .close {
+	width: 8px;
+	height: 8px;
+	float: right;
+	display: block;
+	margin-top: 8px;
+	margin-right: 8px;
+	background: url('../img/panel_close.png') 0 0 no-repeat;
+}
+
+.context_switcher_panel .close:hover {
+	background-position: 0 -16px;
+	cursor: pointer;
+}
+
+.context_switcher_panel header {
+	padding: 12px 10px 9px 10px;
+	background: #f6f8f8;
+	background: -webkit-gradient(linear,left top,left bottom,from(#f6f8f8),to(#e9eeee));
+	border-bottom: 1px solid #f0f3f3;
+	color: #111;
+	font-size: 12px;
+	font-weight: bold;
+	text-shadow: 1px 1px 0 rgba(255, 255, 255, 1.0);
+}
+
+.context_switcher_panel a.manage_organizations {
+	display: block;
+	padding: 10px;
+	background: url('../img/organizations.png') 95% 6px no-repeat;
+	border-top: 1px solid #eee;
+	color: #4183c4;
+	font-size: 13.34px;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.context_switcher_panel a.manage_organizations:hover {
+	background-position: 95% -19px;
+	text-decoration: underline;
 }
 
 .application_nav ul {
