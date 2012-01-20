@@ -1,9 +1,6 @@
 // Application Constants.
-var FADE_SPEED = 300;
-var CACHE_REPOS_TIME = 1000000;
-var CACHE_WATCHED_TIME = 1000000;
-var CACHE_FOLLOWING_TIME = 1000000;
-var CACHE_FOLLOWERS_TIME = 1000000;
+var ANIMATION_SPEED = 300;
+var CACHE_TIME = 900000; // 15 minutes
 
 // GitHub Object.
 var GitHub = function() {
@@ -40,8 +37,8 @@ function cacheSave(key, data) {
 function displayContent(content) {
     var contentSection = $('#content');
     
-    contentSection.fadeOut(FADE_SPEED, function(){
-        contentSection.removeClass('loading').html(content).fadeIn(FADE_SPEED);
+    contentSection.fadeOut(ANIMATION_SPEED, function(){
+        contentSection.removeClass('loading').html(content).fadeIn(ANIMATION_SPEED);
 
 		// User relative times.
 		jQuery("time.timeago").timeago();
@@ -52,8 +49,8 @@ function displayContent(content) {
 function displayContentLoading() {
     var contentSection = $('#content');
     
-    contentSection.fadeOut(FADE_SPEED, function() {
-        contentSection.html("").addClass('loading').fadeIn(FADE_SPEED).delay(FADE_SPEED);
+    contentSection.fadeOut(ANIMATION_SPEED, function() {
+        contentSection.html("").addClass('loading').fadeIn(ANIMATION_SPEED).delay(ANIMATION_SPEED);
     });
 };
 
@@ -232,7 +229,7 @@ function loadApplication() {
 	// Display application.
     $('body').removeClass('loading');
     $('#content').addClass('loading');
-    $('#application').fadeIn(FADE_SPEED);
+    $('#application').fadeIn(ANIMATION_SPEED);
 
 	// Set user link tooltips.
 	$('.user_links .tooltip h1').each(function(){ 
@@ -286,7 +283,7 @@ function loadFollowing() {
 			
 	// Check for following in cache.
 	if(following = cacheLoad("following")) {
-		if( (new Date().getTime()) - following.time < CACHE_FOLLOWING_TIME) { cached = true; }}
+		if( (new Date().getTime()) - following.time < CACHE_TIME) { cached = true; }}
 
 	// If following is cached then display following.
 	// Else load following from GitHub then display.
@@ -339,7 +336,7 @@ function loadFollowers() {
 			
 	// Check for followers in cache.
 	if(followers = cacheLoad("followers")) {
-		if( (new Date().getTime()) - followers.time < CACHE_FOLLOWERS_TIME) { cached = true; }}
+		if( (new Date().getTime()) - followers.time < CACHE_TIME) { cached = true; }}
 
 	// If followers is cached then display followers.
 	// Else load followers from GitHub then display.
@@ -429,7 +426,7 @@ function loadRepos() {
 			
 	// Check for repositories in cache.
 	if(repos = cacheLoad("repositories")) {
-		if( (new Date().getTime()) - repos.time < CACHE_REPOS_TIME) { cached = true; }}
+		if( (new Date().getTime()) - repos.time < CACHE_TIME) { cached = true; }}
 
 	// If repositories are cached then display repositories.
 	// Else load repositories from GitHub then display.
@@ -506,7 +503,7 @@ function loadWatched() {
 			
 	// Check for watched repositories in cache.
 	if(watched = cacheLoad("watched")) {
-		if( (new Date().getTime()) - watched.time < CACHE_WATCHED_TIME) { cached = true; }}
+		if( (new Date().getTime()) - watched.time < CACHE_TIME) { cached = true; }}
 
 	// If watched repositories are cached then display them.
 	// Else load watched repositories from GitHub then display.
@@ -556,7 +553,7 @@ function showAuthorizationScreen() {
 
     $('.github_header').delay(500).fadeOut(200, function(){
         $('body').removeClass('loading').animate(popupAnimation, function(){
-            $('#authorization').delay(750).fadeIn(FADE_SPEED);
+            $('#authorization').delay(750).fadeIn(ANIMATION_SPEED);
             $('#authorization button').click( function(){
 	 			oauth2.flow.begin();
 			});
