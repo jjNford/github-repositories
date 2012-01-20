@@ -8,10 +8,6 @@
 	display: none;
 }
 
-.invisible {
-	visibility: hidden;
-}
-
 .adapter {
 	width: 100%;
 	height: 100%;
@@ -84,6 +80,17 @@ button:hover {
     text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
 }
 
+#settings {
+	width: 720px;
+	height: 453px;
+	z-index: 40;
+	position: absolute;
+	display: none;
+	background: #dfdfdf;
+}
+
+
+
 #authorization h1 {
     height: 38px;
     display: block;
@@ -134,7 +141,7 @@ button:hover {
 }
 
 .user_links {
-	z-index: 30;
+	z-index: 50;
 	position: relative;
 	float: right;
 	margin: 10px 10px 0 0;
@@ -194,6 +201,7 @@ button:hover {
 .tooltip {
 	display: block;
 	position: absolute;
+	visibility: hidden;
 	border-left: 5px solid transparent;
 	border-right: 5px solid transparent;
 	border-bottom: 5px solid rgba(0, 0, 0, .77);
@@ -239,13 +247,21 @@ button:hover {
 	cursor: pointer;
 }
 
-#application_footer {
+#application_footer, #settings_footer {
 	clear: both;	
 	height: 39px;
 	background: #fafafa;
 	background: -webkit-gradient(linear, left top, left bottom, from(#fafafa), to(#eaeaea));
 	border-top: 1px solid #cacaca;	
 	box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.4), 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#settings_footer {
+	position: absolute;
+	bottom: 0;
+	display: block;
+	width: 100%;
+	box-shadow: none;
 }
 
 #dashboard, #content {	

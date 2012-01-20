@@ -269,10 +269,10 @@ function loadApplication() {
 		var menuItem = $(this);
 		var toolTips = $('.user_links .tooltip');
 		menuItem.hover(function(){ 
-			$('.' + menuItem.attr('class') + ' .tooltip').removeClass('invisible').hover(function(){ 
-				toolTips.addClass('invisible')
+			$('.' + menuItem.attr('class') + ' .tooltip').css('visibility', 'visible').hover(function(){ 
+				toolTips.css('visibility', 'hidden')
 			});}, 		
-			function(){ toolTips.addClass('invisible'); }
+			function(){ toolTips.css('visibility', 'hidden'); }
 		);
 	});
 	
@@ -280,7 +280,12 @@ function loadApplication() {
 	$('.extension_settings').on('click', function() {
 		settingsPanel = $('#settings');
 		if(!settingsPanel.is(':visible')) {
-			settingsPanel.slideDown(ANIMATION_SPEED);
+			settingsPanel.slideDown(ANIMATION_SPEED * 3);
+			$('#content').css('overflow-y', 'hidden');
+		}
+		else { 
+			settingsPanel.slideUp(ANIMATION_SPEED * 3); 
+			$('#content').css('overflow-y', 'scroll');
 		}
 	});
 	
