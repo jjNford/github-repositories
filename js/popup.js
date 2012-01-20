@@ -147,9 +147,9 @@ function displayWatched(watched) {
 	
 	html += '</ul>';
 	
+	// Display content.
 	displayContent(html, function() {		
-		$('.watched_filter li span[rel="' + filter + '"]').addClass('filter_selected');
-		
+		$('.watched_filter li span[rel="' + filter + '"]').addClass('filter_selected');	
 		$('.watched_filter li span').on('click', function() {
 			localStorage['watched_filter'] = $(this).attr('rel');
 			loadContent();

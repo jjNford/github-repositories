@@ -530,9 +530,11 @@ button:hover {
 }
 
 .watched_filter {
-	margin: 5px -10px 0 -10px;
+	margin-top: 10px;
+	padding-top: 5px;
 	background: #fafafb;
-	border-bottom: 1px solid #ddd;
+	border: 1px solid #ddd;
+	border-radius: 4px;
 }
 
 .watched_filter ul {
