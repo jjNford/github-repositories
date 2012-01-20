@@ -36,77 +36,6 @@ function cacheSave(key, data) {
 	localStorage['cache_' + github.user.login] = JSON.stringify(cache);
 };
 
-// Create context menu.
-function createContextMenu() {
-	
-	contextSwitcherButton = $('.context_switcher .context_switcher_button');
-	contextSwitcherPanel  = $('.context_switcher .context_switcher_panel');
-	contextSwitcherOverlay= $('.context_overlay');
-	
-	// Apply user data to context switcher.
-    contextSwitcherButton.html('<img src="' + github.user.avatar_url + '" />' + github.user.login);
-	
-	// Create button press effect.
-	contextSwitcherButton.on('mousedown', function() {
-		contextSwitcherButton.addClass('context_switcher_button_mousedown');
-	});
-	contextSwitcherButton.on('mouseup', function() {
- 		contextSwitcherButton.removeClass('context_switcher_button_mousedown');
-	});
-	
-	// Show the context menu.
-	function showContextMenu() {
-		contextSwitcherButton.addClass('active');
-		contextSwitcherPanel.show();
-		contextSwitcherOverlay.show();
-		contextSwitcherOverlay.on('click', closeContextMenu);
-		$('.context_switcher .context_switcher_panel .close').on('click', closeContextMenu);
-	};
-	
-	// Close the context menu.
-	function closeContextMenu() {
-		contextSwitcherButton.removeClass('active');
-		contextSwitcherPanel.hide();
-		contextSwitcherOverlay.hide();
-		contextSwitcherOverlay.off();
-		$('.context_switcher .context_switcher_panel .close').off();
-	};
-	
-	// Create event for context switcher button.
-	contextSwitcherButton.bind('click', showContextMenu);
-};
-
-// Create tooltips.
-function createToolTips() {
-	
-	// Set tooltip margins & hover effects for user links.
-	$('.user_links .tooltip h1').each(function(){ 
-		$(this).css('margin-left', -$(this).width()/2-8);
-	});		
-	$('.user_links li').each(function(){
-		var menuItem = $(this);
-		var toolTips = $('.user_links .tooltip');
-		menuItem.hover(function(){ 
-			$('.' + menuItem.attr('class') + ' .tooltip').removeClass('invisible').hover(function(){ 
-				toolTips.addClass('invisible')
-			});}, 		
-			function(){ toolTips.addClass('invisible'); }
-		);
-	});
-};
-
-// Dashboard Navigation OnClickListener.
-function dashboardNavigationOnClickListener() {
-    
-    // Change selected menu tab.
-    $('.application_nav li[data=' + localStorage['content'] + ']').removeClass('selected');
-    localStorage['content'] = $(this).attr('data');
-    $('.application_nav li[data=' + localStorage['content'] + ']').addClass('selected');
-    
-	// Load users content.
-    loadContent();
-};
-
 // Set content section to display content.
 function displayContent(content) {
     var contentSection = $('#content');
@@ -240,27 +169,87 @@ function displayRepos(repos) {
 // Load application.
 function loadApplication() {
 	
-	// If application cache has not been created then do so.
+	// Initialize cache.
 	if(!localStorage['cache_' + github.user.login]) { 
-		localStorage['cache_' + github.user.login] = "{}"; }
+		localStorage['cache_' + github.user.login] = "{}"; 
+	}
 
-	createContextMenu();
-
-    // Set onClickListeners.
-    $('.application_nav li').bind('click', dashboardNavigationOnClickListener);
-	$('.user_links .log_out').bind('click', logoutOnClickListener);
-	$('.refresh').bind('click', refreshOnClickListener);
-
-	// Display application.
-    $('body').removeClass('loading');
-    $('#content').addClass('loading');
-    $('#application').fadeIn(FADE_SPEED);
+	// Create context switcher.
+	contextSwitcherButton = $('.context_switcher .context_switcher_button');
+	contextSwitcherPanel  = $('.context_switcher .context_switcher_panel');
+	contextSwitcherOverlay= $('.context_overlay');
+	contextSwitcherButton.html('<img src="' + github.user.avatar_url + '" />' + github.user.login);
+	contextSwitcherButton.on('mousedown', function() {
+		contextSwitcherButton.addClass('context_switcher_button_mousedown');
+	});
+	contextSwitcherButton.on('mouseup', function() {
+ 		contextSwitcherButton.removeClass('context_switcher_button_mousedown');
+	});	
+	contextSwitcherButton.bind('click', function() {
+		
+		function closeContextMenu() {
+			contextSwitcherButton.removeClass('active');
+			contextSwitcherPanel.hide();
+			contextSwitcherOverlay.hide();
+			contextSwitcherOverlay.off();
+			$('.context_switcher .context_switcher_panel .close').off();
+		};
+		
+		contextSwitcherButton.addClass('active');
+		contextSwitcherPanel.show();
+		contextSwitcherOverlay.show();
+		contextSwitcherOverlay.on('click', closeContextMenu);
+		$('.context_switcher .context_switcher_panel .close').on('click', closeContextMenu);
+	});
 
 	// Set selected navigation tab.
     if(!localStorage['content']) { localStorage['content'] = "repositories"; } 
     $('.application_nav li[data=' + localStorage['content'] + ']').addClass('selected');
 
-	createToolTips();
+	// Navigation OnClick.
+	$('.application_nav li').on('click', function() {
+	    $('.application_nav li[data=' + localStorage['content'] + ']').removeClass('selected');
+		clickedElement = $(this);
+	    localStorage['content'] = clickedElement.attr('data');
+	    clickedElement.addClass('selected');
+	    loadContent();
+	});
+		
+	// Logout OnClick.
+	$('.user_links .log_out').on('click', function() {
+		oauth2.clearAccessToken();
+		localStorage.clear();
+		self.close();
+		chrome.tabs.getCurrent(function(thisTab) { chrome.tabs.remove(thisTab.id, function(){}); });
+	});
+	
+	// Refresh OnClick.
+	$('.refresh').on('click', function() {
+		cacheDelete(localStorage['content']);
+		loadContent();
+	});
+	
+	// Display application.
+    $('body').removeClass('loading');
+    $('#content').addClass('loading');
+    $('#application').fadeIn(FADE_SPEED);
+
+	// Set user link tooltips.
+	$('.user_links .tooltip h1').each(function(){ 
+		$(this).css('margin-left', -$(this).width()/2-8);
+	});		
+	$('.user_links li').each(function(){
+		var menuItem = $(this);
+		var toolTips = $('.user_links .tooltip');
+		menuItem.hover(function(){ 
+			$('.' + menuItem.attr('class') + ' .tooltip').removeClass('invisible').hover(function(){ 
+				toolTips.addClass('invisible')
+			});}, 		
+			function(){ toolTips.addClass('invisible'); }
+		);
+	});
+	
+	// Load content.	
     loadContent();
 };
 
@@ -282,6 +271,9 @@ function loadContent() {
         case 'followers':
 			loadFollowers();
             break;
+		case 'settings':
+			loadSettings();
+			break;
         default:
             break;
     }
@@ -495,9 +487,7 @@ function loadUser() {
 		}
 		    
 		// If no application access token exists show the authorization screen.
-		else { showAuthorizationScreen(); }	
-	
-	loadApplication();
+		else { showAuthorizationScreen(); }			
 };
 
 // Get user's name from GitHub based on login name.
@@ -559,25 +549,6 @@ function loadWatchedFromGitHub(pageNumber, watched) {
 		});
 };
 
-// Logout OnClickListener.
-function logoutOnClickListener() {
-	// Clear access token and cache.
-	oauth2.clearAccessToken();
-	localStorage.clear();
-	
-	// Close popup.
-	self.close();
-	
-	// Close window when viewing from window.
-	chrome.tabs.getCurrent(function(thisTab) { chrome.tabs.remove(thisTab.id, function(){}); });
-};
-
-// Refresh OnClickListener.
-function refreshOnClickListener() {
-	cacheDelete(localStorage['content']);
-	loadContent();
-};
-
 // Prompt user to authorize extension with GitHub.
 function showAuthorizationScreen() {
 
@@ -593,7 +564,7 @@ function showAuthorizationScreen() {
     });
 };
 
-// Start Application.
+// On Document Ready.
 $(document).ready(function() {
 	loadUser();
 });

@@ -31,7 +31,7 @@
 .github_logo {
 	width: 70px;
 	height: 30px;
-	display: block;
+	display: inline-block;
 	background: url('../img/header_logo.png') 0 0 no-repeat;
 }
 
@@ -54,10 +54,10 @@
 	position: relative;
 	top: 8px;
 	left: 90px;
-	cursor: pointer;
 }
 
-.popup .github_header .github_logo:hover, .popup .github_header .github_logo .selected {
+.popup .github_header .github_logo:hover {
+	cursor: pointer;
 	background: url('../img/header_logo_hover.png') 0 0 no-repeat;
 }
 
@@ -144,7 +144,7 @@ button:hover {
 	box-shadow: 0 1px 0 #fafafa, inset 0 1px 0 #fafafa;
 }
 
-.user_links li, .user_links a {
+.user_links li, .user_links .link {
 	display: inline-block;
 }
 
@@ -153,7 +153,11 @@ button:hover {
 	margin-left: 10px;
 }
 
-.user_links a {
+.user_links li:hover {
+	cursor: pointer;
+}
+
+.user_links .link {
 	width: 16px;
 	height: 16px;
 	padding: 0 5px;
@@ -162,31 +166,23 @@ button:hover {
 	text-decoration: none;
 }
 
-.user_links li:first-child a {
+.user_links li:first-child .link {
 	padding-left: 0;
 }
 
-.user_links .notifications a {
-	background-position: -32px 4px;
-}
-
-.user_links .notifications:hover a {
-	background-position-y: -34px;
-}
-
-.user_links .account_settings a {
+.user_links .extension_settings .link {
 	background-position: -92px 4px;
 }
 
-.user_links .account_settings:hover a {
+.user_links .extension_settings:hover .link {
 	background-position-y: -36px;
 }
 
-.user_links .log_out a {
+.user_links .log_out .link {
 	background-position: -66px 4px;
 }
 
-.user_links .log_out:hover a {
+.user_links .log_out:hover .link {
 	background-position-y: -33px;
 }
 
@@ -218,7 +214,7 @@ button:hover {
 }
 
 .refresh {
-	width: 111px;
+	width: 73px;
 	height: 25px;
 	z-index: 0;
 	position: relative;
@@ -251,7 +247,7 @@ button:hover {
 	box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.4), 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-#dashboard, #content {	
+#dashboard, #content, #settings {	
 	height: 413px;
 	float: left;
 	overflow-x: hidden;
@@ -263,7 +259,7 @@ button:hover {
 	border-right: 1px solid #cacaca;
 }
 
-#content {
+#content, #settings {
 	width: 450px;
 	padding: 0 10px;
 }
@@ -431,7 +427,7 @@ button:hover {
 }
 
 .repo_list {
-	margin: 10px;
+	margin-top: 10px;
 }
 
 .repo_list .public, .repo_list .private {
