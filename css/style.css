@@ -22,6 +22,7 @@
 	height: 500px;
 	color: #000000;
 	font-family: helvetica, arial, freesans, clean, sans-serif;
+	overflow: hidden;
 }
 
 .loading {

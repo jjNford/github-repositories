@@ -276,6 +276,14 @@ function loadApplication() {
 		);
 	});
 	
+	// Settings OnClick.
+	$('.extension_settings').on('click', function() {
+		settingsPanel = $('#settings');
+		if(!settingsPanel.is(':visible')) {
+			settingsPanel.slideDown(ANIMATION_SPEED);
+		}
+	});
+	
 	// Load content.	
     loadContent();
 };
