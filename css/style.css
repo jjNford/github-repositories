@@ -506,7 +506,6 @@ button:hover {
 	border-top: 1px solid #eeeeee;
 }
 
-
 .repo_list .description {
 	margin-bottom: 3px;
 	color: #444;
@@ -530,10 +529,50 @@ button:hover {
 	text-decoration: none;
 }
 
+.watched_filter {
+	margin: 5px -10px 0 -10px;
+	background: #fafafb;
+	border-bottom: 1px solid #ddd;
+}
+
+.watched_filter ul {
+	display: block;
+	padding: 0 10px;
+	text-align: right;
+	overflow: none;
+}
+
+.watched_filter li {
+	display: inline;
+	margin-left: 15px;
+}
+
+.watched_filter li span {
+	display: inline-block;
+	padding-bottom: 8px;
+	color: #777;
+	font-size: 11px;
+}
+
+.watched_filter li span:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.watched_filter .filter_selected {
+	background: url('../img/filter_selected_bit.gif') 50% 100% no-repeat;
+	color: #000;
+	font-weight: bold;
+}
+
 .watched_list li {
 	height: 30px;
 	border-bottom: 1px solid #ddd;
 	overflow: hidden;
+}
+
+.watched_list {
+	clear: both;
 }
 
 .watched_list li:last-child {

@@ -34,14 +34,15 @@ function cacheSave(key, data) {
 };
 
 // Set content section to display content.
-function displayContent(content) {
+function displayContent(content, callback) {
     var contentSection = $('#content');
     
     contentSection.fadeOut(ANIMATION_SPEED, function(){
         contentSection.removeClass('loading').html(content).fadeIn(ANIMATION_SPEED);
 
-		// User relative times.
+		// User relative times and trigger callback.
 		jQuery("time.timeago").timeago();
+		if(callback) {callback();}
     });
 };
 
@@ -106,8 +107,30 @@ function displayFollowers(followers) {
 
 // Display users watched repositories.
 function displayWatched(watched) {
+
+	filter = localStorage['watched_filter'] ? localStorage['watched_filter'] : 'added';
+
+	// Sort watched by last updated.
+	if(filter == 'updated') {
+		watched.sort(function(a, b) {
+			a = new Date(a.updated_at).getTime();
+			b = new Date(b.updated_at).getTime();
+			if(a > b) return -1;
+			if(a < b) return 1;
+			return 0;
+		});
+	}
 	
-	html = '<ul class="watched_list">';
+	// Create filter.
+	html = '<div class="watched_filter">';
+	html += '<ul>';
+	html += '<li><span rel="added">Date Added</span></li>';
+	html += '<li><span rel="updated">Last Updated</span></li>';
+	html += '</ul>';
+	html += '</div>';
+	
+	// Create content.
+	html += '<ul class="watched_list">';
 	
 	for(var current in watched) {
 		
@@ -124,7 +147,14 @@ function displayWatched(watched) {
 	
 	html += '</ul>';
 	
-	displayContent(html);
+	displayContent(html, function() {		
+		$('.watched_filter li span[rel="' + filter + '"]').addClass('filter_selected');
+		
+		$('.watched_filter li span').on('click', function() {
+			localStorage['watched_filter'] = $(this).attr('rel');
+			loadContent();
+		});
+	});
 };
 
 // Display users repositories.
