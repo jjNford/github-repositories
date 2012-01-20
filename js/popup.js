@@ -121,10 +121,12 @@ function displayWatched(watched) {
 		});
 	}
 	
+	console.log(watched);
+	
 	// Create filter.
 	html = '<div class="watched_filter">';
 	html += '<ul>';
-	html += '<li><span rel="added">Date Added</span></li>';
+	html += '<li><span rel="added">Last Added</span></li>';
 	html += '<li><span rel="updated">Last Updated</span></li>';
 	html += '</ul>';
 	html += '</div>';
