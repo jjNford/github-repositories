@@ -120,9 +120,7 @@ function displayWatched(watched) {
 			return 0;
 		});
 	}
-	
-	console.log(watched);
-	
+		
 	// Create filter.
 	html = '<div class="watched_filter">';
 	html += '<ul>';
