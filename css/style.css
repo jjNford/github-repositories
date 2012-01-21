@@ -80,16 +80,67 @@ button:hover {
     text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
 }
 
+.button {
+	height: 34px;
+	display: inline-block;
+	padding: 0 13px;
+	border: none;
+	border-bottom: 1px solid #ebebeb;
+	border-radius: 4px;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+	color: #333;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 36px;
+	text-align: center;
+	text-shadow: 1px 1px 0 #fff;
+	cursor: pointer;
+}
+
+
+
+.button.positive {
+	background: #8add6d;
+	background: linear-gradient(#8ADD6D,#60B044);
+	background: -webkit-linear-gradient(#8ADD6D,#60B044);
+	border-bottom-color: #509338;
+	color: #fff;
+	text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.button.negative {
+	background: #dc5f59;
+	background: linear-gradient(#dc5f59,#b33630);
+	background: -webkit-linear-gradient(#dc5f59,#b33630);
+	border-bottom-color: #cd504a;
+	color: #fff;
+	text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
+}
+
 #settings {
 	width: 720px;
 	height: 453px;
 	z-index: 40;
 	position: absolute;
 	display: none;
-	background: #dfdfdf;
+	background: #efefef;
 }
 
+#settings .caching {
+	display: block;
+	margin: 0 auto;
+	padding: 50px;
+	color: #333;
+	font-size: 11px;
+	text-align: center;
+	text-shadow: 1px 1px 0 #fff;
+}
 
+#settings .cache_button {
+	display: block;
+	margin: 10px auto;
+	width: 75px;
+}
 
 #authorization h1 {
     height: 38px;

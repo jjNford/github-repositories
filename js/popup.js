@@ -1,5 +1,5 @@
 // Application Constants.
-var ANIMATION_SPEED = 300;
+var ANIMATION_SPEED = 225;
 var CACHE_TIME      = 900000;
 var CACHE			= "_cache";
 var FILTERS			= "_filters";
@@ -82,9 +82,11 @@ function cacheLoad(key) {
 // Save data to cache.
 function cacheSave(key, data) {
 	try {
-		var cache = JSON.parse(localStorage.getItem(github.user.login + CACHE));
-		cache[key] = {"time" : new Date().getTime(), "cache" : data};
-		localStorage.setItem(github.user.login + CACHE, JSON.stringify(cache));
+		if(localStorage['caching'] == "on") {
+			var cache = JSON.parse(localStorage.getItem(github.user.login + CACHE));
+			cache[key] = {"time" : new Date().getTime(), "cache" : data};
+			localStorage.setItem(github.user.login + CACHE, JSON.stringify(cache));
+		}
 	}
 	
 	// If cache does not exist create it and try again.
@@ -198,7 +200,7 @@ function displayFollowing(following) {
 	// Create filter box.
 	// Filter following.
 	if( !getFilter( localStorage['content'] )) { setFilter( localStorage['content'], "date"); }
-	var html = createFilter({"date" : "Date Followed", "alphabetical_following" : "ABC"});
+	var html = createFilter({"date" : "Date Followed", "alphabetical_following" : "Abc"});
 	following = filter(following);
 
 	html += '<ul class="following_list">';
@@ -308,7 +310,7 @@ function displayWatched(repos) {
 	if( !getFilter('watched')) { setFilter("watched", "last_watched"); }
 	var html = createFilter({ "last_watched" : "Last Watched", 
 	 						  "last_updated" : "Last Updated", 
-	                          "alphabetical_repos" : "ABC"
+	                          "alphabetical_repos" : "Abc"
 							});
 	repos = filter(repos);
 
@@ -529,6 +531,9 @@ function getUserName(following, index, callback) {
 // Load application.
 function loadApplication() {
 
+	// Set caching if not yet done.
+	if( localStorage.getItem('caching') == undefined) { localStorage.setItem('caching', "on"); }
+
 	// Create context switcher.
 	// 
 	// Set context switcher image and context name.
@@ -620,8 +625,14 @@ function loadApplication() {
 	
 	// Bind Settings click.
 	// Content overflow is hidden to remove scroll bar showing up.
+	// Set caching button to caching settings.
+	// Set caching button on click.
+	//
 	$('.extension_settings').on('click', function() {
-		settingsPanel = $('#settings');
+		
+		var settingsPanel = $('#settings');
+		var cache_button  = $('#settings .caching .cache_button');
+		
 		if(!settingsPanel.is(':visible')) {
 			settingsPanel.slideDown(ANIMATION_SPEED * 3);
 			$('#content').css('overflow-y', 'hidden');
@@ -630,6 +641,29 @@ function loadApplication() {
 			settingsPanel.slideUp(ANIMATION_SPEED * 3); 
 			$('#content').css('overflow-y', 'auto');
 		}
+		
+		if(localStorage['caching'] == "on") { cache_button.removeClass('negative').addClass('positive').html("Caching On"); }
+		else { cache_button.removeClass('positive').addClass('negative').html("Caching Off"); }
+		
+		cache_button.on('click', function() {
+			if(localStorage['caching'] == "on") { 
+				cache_button.removeClass('positive').addClass('negative').html("Caching Off");
+				localStorage['caching'] = "off";		
+						
+				var regExp = new RegExp(CACHE);
+				for(var i = 0; i < localStorage.length; i++) {
+					var key = localStorage.key(i);
+					if(key.match(regExp)) {
+						delete localStorage[key];
+					}
+				}
+			}
+			else {
+				cache_button.removeClass('negative').addClass('positive').html("Caching On");
+				localStorage['caching'] = "on";
+			}
+		});
+		
 	});
 	
 	// Load content.	
