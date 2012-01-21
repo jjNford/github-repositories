@@ -142,6 +142,19 @@ button:hover {
 	width: 75px;
 }
 
+#settings .contribute {
+	width: 450px;
+	margin: 0 auto;
+	margin-top: 50px;
+	border: 2px solid #fff;
+	border-radius: 4px;
+	box-shadow: 0 0 2px #4191D4;
+}
+
+#settings .contribute .repo_list, #settings .contribute .repo_list li {
+	margin: 0;
+}
+
 #authorization h1 {
     height: 38px;
     display: block;

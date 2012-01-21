@@ -627,11 +627,41 @@ function loadApplication() {
 	});
 	
 	// Bind Settings click.
+	// Get contribution repo data.
 	// Content overflow is hidden to remove scroll bar showing up.
 	// Set caching button to caching settings.
 	// Set caching button on click.
 	//
 	$('.extension_settings').on('click', function() {
+		
+		function contribute(repo) {
+			var html = '<ul class="repo_list">';
+			html += '<li class="public">';
+			html += '<ul class="repo_stats">';
+			html += '<li>' + (repo.language ? repo.language : "") + '</li>';
+			html += '<li class="watchers">';
+			html += '<a href="' + repo.html_url + '/watchers" target="_blank">' + repo.watchers + '</a>';
+			html += '</li>';
+			html += '<li class="forks">';
+			html += '<a href="' + repo.html_url + '/network" target="_blank">' + repo.forks + '</a>';
+			html += '</li>';
+			html += '</ul>';
+			html += '<h3>';
+			html += '<a href="' + repo.html_url + '" target="_blank" class="item">' + repo.name + '</a>';
+			html += '</h3>';
+			html += '<div>';
+			html += '<p class="description">' + repo.description + '</p>';
+			html += '<p class="updated">Last updated ';
+			html += '<time class="timeago" datetime="' + repo.updated_at + '">' + repo.updated_at + '</time>';
+			html += '</p>';
+			html += '</div>';
+			html += '</li>';
+			html += '</ul>';
+			
+			$('#settings .contribute').html(html);
+			jQuery("time.timeago").timeago();
+		};
+		loadContributeRepo(contribute);
 		
 		var settingsPanel = $('#settings');
 		var cache_button  = $('#settings .caching .cache_button');
@@ -709,6 +739,18 @@ function loadContent() {
         default:
             break;
     }
+};
+
+
+
+
+
+// Load contribution repository.
+function loadContributeRepo(callback) {
+	$.getJSON(github.api_url + 'repos/jjNford/github-repositories')
+		.success( function(json) {
+			callback(json);
+		});
 };
 
 
