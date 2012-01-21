@@ -146,9 +146,9 @@ button:hover {
 	width: 450px;
 	margin: 0 auto;
 	margin-top: 50px;
-	border: 2px solid #fff;
-	border-radius: 4px;
-	box-shadow: 0 0 2px #4191D4;
+	border: 3px solid #fff;
+	border-radius: 3px;
+	box-shadow: 1px 1px 0 #ddd, -1px -1px #ddd;
 }
 
 #settings .contribute .repo_list, #settings .contribute .repo_list li {
