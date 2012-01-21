@@ -164,15 +164,18 @@ function createFilterOnClick() {
 
 
 // Set content section to display content.
-function displayContent(content, callback) {
+function displayContent(type, content, callback) {
     var contentSection = $('#content');
     
+	// Use type as a semaphore to stop asyn calls from being displayed out of turn.
 	// Fade content, remove loading class, add html content and fade back in.
 	// If a callback exists, use it.
-    contentSection.fadeOut(ANIMATION_SPEED, function(){
-        contentSection.removeClass('loading').html(content).fadeIn(ANIMATION_SPEED);
-		if(callback) {callback();}
-    });
+	if(type == localStorage['content']) {
+    	contentSection.fadeOut(ANIMATION_SPEED, function() {
+        	contentSection.removeClass('loading').html(content).fadeIn(ANIMATION_SPEED);
+			if(callback) { callback(); }
+		});
+	}
 };
 
 
@@ -194,7 +197,7 @@ function displayContentLoading() {
 
 
 // Display following.
-function displayFollowing(following) {
+function displayFollowing(type, following) {
 
 	// Set default filter.
 	// Create filter box.
@@ -227,7 +230,7 @@ function displayFollowing(following) {
 	};
 	
 	// Display content.
-	displayContent(html, callback);
+	displayContent(type, html, callback);
 };
 
 
@@ -294,7 +297,7 @@ function displayRepos(repos) {
 
 	// Display content.
 	// Have callback set relative times.
-	displayContent(html, callback);
+	displayContent("repos", html, callback);
 };
 
 
@@ -338,7 +341,7 @@ function displayWatched(repos) {
 	};
 
 	// Display content.
-	displayContent(html, callback);
+	displayContent("watched", html, callback);
 };
 
 
@@ -720,7 +723,7 @@ function loadFollowing(type) {
 	
 	// If following is cached then display following.
 	// If not load following from GitHub.
-	if(following) { displayFollowing(following); }
+	if(following) { displayFollowing(type, following); }
 	else { loadFromGitHub([], 1); }
 	
 	// Use recursion to load all following from GitHub.
@@ -742,7 +745,7 @@ function loadFollowing(type) {
 						 	else { 
 								var callback = function(completeData) {
 						 							cacheSave(type, completeData);
-						 							displayFollowing(completeData);
+						 							displayFollowing(type, completeData);
 						 		};
 						 	}
 							
@@ -750,7 +753,7 @@ function loadFollowing(type) {
 							getUserName(following, current, callback);
 						}
 					}
-					else { displayFollowing(following); }
+					else { displayFollowing(type, following); }
 				}
 			});
 	};
