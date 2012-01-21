@@ -105,6 +105,7 @@ function createFilter(filters) {
 	var selected = getFilter( localStorage.getItem('content') );
 	
 	html  = '<div class="filter">';
+	html += '<input type="text" class="filter_search" />';
 	html += '<ul>';
 	
 	for(var current in filters) {
@@ -124,9 +125,35 @@ function createFilter(filters) {
 
 // Create filter onclick to be set after filter is rendered.
 function createFilterOnClick() {
+	
+	// Set current filter.
 	$('.filter li span').on('click', function() {
 		setFilter(localStorage.getItem('content'), $(this).attr('rel'));
 		loadContent();
+	});
+	
+	// Set filter background.
+	filterInput = $('.filter_search');
+	filterInput.focusin( function() {
+		filterInput.addClass('active'); 
+	});
+	filterInput.focusout( function() {
+		if( !filterInput.val()) {
+			filterInput.removeClass('active');
+		}
+	});
+		
+	// Instant search.
+	filterInput.keyup(function() {
+		var regExp = new RegExp($(this).val(), 'i');
+		$('#content ul .item').each( function() {
+			if( $(this).html().match(regExp) ) {
+				$(this).closest('li').show();
+			}
+			else {
+				$(this).closest('li').hide();
+			}
+		});
 	});
 };
 
@@ -170,8 +197,8 @@ function displayFollowing(following) {
 	// Set default filter.
 	// Create filter box.
 	// Filter following.
-	if( !getFilter( localStorage['content'] )) { setFilter( localStorage['content'], "date")}
-	var html = createFilter({"date" : "Date", "alphabetical_following" : "ABC"});
+	if( !getFilter( localStorage['content'] )) { setFilter( localStorage['content'], "date"); }
+	var html = createFilter({"date" : "Date Followed", "alphabetical_following" : "ABC"});
 	following = filter(following);
 
 	html += '<ul class="following_list">';
@@ -183,9 +210,9 @@ function displayFollowing(following) {
 		html += '<a href="https://github.com/' + user.login + '" target="_blank">';
 		html += '<img src="' + user.avatar_url + '" />';
 		html += '</a>';
-		html += '<a href="https://github.com/' + user.login + '" target="_blank">' + user.login + '</a>';
+		html += '<a href="https://github.com/' + user.login + '" target="_blank" class="item">' + user.login + '</a>';
 		
-		if(user.name != undefined) { html += '<em> (' + user.name + ')</em>'; }
+		if(user.name != undefined) { html += '<em class="item"> (' + user.name + ')</em>'; }
 		
 		html += '</li>';
 	}
@@ -208,7 +235,19 @@ function displayFollowing(following) {
 // Display User Repos.
 function displayRepos(repos) {
 
-	var html = '<ul class="repo_list">';
+	// Set default filter.
+	// Create filter box.
+	// Filter repos (already sorted by last updated).
+	if( !getFilter( localStorage['content'] )) { setFilter( localStorage['content'], "all_repositories"); }
+	var html = createFilter({ "all_repositories" : "All", 
+	                          "public"           : "Public", 
+							  "private"          : "Private", 
+							  "source"           : "Source", 
+							  "forks"            : "Forks" 
+							});
+	repos = filter(repos);
+
+	html += '<ul class="repo_list">';
 
 	for(var current in repos) {
 		repo = repos[current];
@@ -224,7 +263,7 @@ function displayRepos(repos) {
 		html += '</li>';
 		html += '</ul>';
 		html += '<h3>';
-		html += '<a href="' + repo.html_url + '" target="_blank">' + repo.name + '</a>';
+		html += '<a href="' + repo.html_url + '" target="_blank" class="item">' + repo.name + '</a>';
 		html += '</h3>';
 
 		// If forked display parent information.
@@ -245,11 +284,15 @@ function displayRepos(repos) {
 
 	html += '</ul>';
 
+	// Create callback to be run after content is rendered.
+	function callback() {
+		jQuery("time.timeago").timeago();
+		createFilterOnClick();
+	};
+
 	// Display content.
 	// Have callback set relative times.
-	displayContent(html, function() {
-		jQuery("time.timeago").timeago();
-	});
+	displayContent(html, callback);
 };
 
 
@@ -263,7 +306,10 @@ function displayWatched(repos) {
 	// Create filter box.
 	// Filter repos.
 	if( !getFilter('watched')) { setFilter("watched", "last_watched"); }
-	var html = createFilter({"last_watched" : "Last Watched", "last_updated" : "Last Updated", "alphabetical_repos" : "ABC"});
+	var html = createFilter({ "last_watched" : "Last Watched", 
+	 						  "last_updated" : "Last Updated", 
+	                          "alphabetical_repos" : "ABC"
+							});
 	repos = filter(repos);
 
 	// Create content.
@@ -277,7 +323,7 @@ function displayWatched(repos) {
 		html += '<a href="' + repo.html_url + '" target="_blank">';
 		html += '<span class="user">' + repo.owner.login + '</span>'; 
 		html += '/';
-		html += '<span class="repo">'+ repo.name + '</span>';
+		html += '<span class="repo item">'+ repo.name + '</span>';
 		html += '</a>';
 		html += '</li>';
 	}
@@ -301,8 +347,28 @@ function displayWatched(repos) {
 function filter(data) {
 	
 	var filter = getFilter( localStorage.getItem('content') );
-	
+
 	switch(filter) {
+		
+		// Filter all but private repos.
+		case "private":
+			filterPrivateReposOnly(data);
+			break;
+			
+		// Filter all but public repos.
+		case "public":
+			filterPublicReposOnly(data);
+			break;
+		
+		// Filter all but public repos.
+		case "source":
+			filterSourceReposOnly(data);
+			break;
+				
+		// Filter all but public repos.
+		case "forks":
+			filterForkedReposOnly(data);
+			break;
 		
 		// Filter repos alphebetically
 		case "alphabetical_repos":
@@ -325,6 +391,70 @@ function filter(data) {
 	}
 	
 	return data;
+};
+
+
+
+
+
+// Filter out all repos exept private.
+function filterForkedReposOnly(repos) {
+	if(repos.length == 0) return repos;
+
+	for(var i = (repos.length - 1); i >= 0; i--) {
+		if(!repos[i].fork) {
+			repos.splice(i, 1);
+		}
+	}
+	return repos;
+};
+
+
+
+
+
+// Filter out all repos exept private.
+function filterPrivateReposOnly(repos) {
+	if(repos.length == 0) return repos;
+
+	for(var i = (repos.length - 1); i >= 0; i--) {
+		if(!repos[i].private) {
+			repos.splice(i, 1);
+		}
+	}
+	return repos;
+};
+
+
+
+
+
+// Filter out all repos exept public.
+function filterPublicReposOnly(repos) {
+	if(repos.length == 0) return repos;
+	
+	for(var i = (repos.length - 1); i >= 0; i--) {
+		if(repos[i].private) {
+			repos.splice(i, 1);
+		}
+	}
+	return repos;
+};
+
+
+
+
+
+// Filter out all repos exept private.
+function filterSourceReposOnly(repos) {
+	if(repos.length == 0) return repos;
+
+	for(var i = (repos.length - 1); i >= 0; i--) {
+		if(repos[i].fork) {
+			repos.splice(i, 1);
+		}
+	}
+	return repos;
 };
 
 
@@ -398,7 +528,7 @@ function getUserName(following, index, callback) {
 
 // Load application.
 function loadApplication() {
-	
+
 	// Create context switcher.
 	// 
 	// Set context switcher image and context name.

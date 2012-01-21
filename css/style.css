@@ -549,15 +549,32 @@ button:hover {
 
 .filter {
 	margin-top: 10px;
-	padding-top: 5px;
+	padding: 5px 10px 0 10px;
 	background: #fafafb;
 	border: 1px solid #ddd;
 	border-radius: 4px;
 }
 
+.filter_search {
+	width: 181px;
+	height: 15px;
+	float: left;
+	margin-top: 1px;
+	padding: 2px 12px;
+	background: url('../img/filter_input.png') 0 0 no-repeat;
+	border:none;
+	outline: none;
+	color: #444;
+	font-size: 11px;
+	font: 99%;
+}
+
+.filter_search.active {
+	background: url('../img/filter_input.png') 0 -19px no-repeat;
+}
+
 .filter ul {
 	display: block;
-	padding: 0 10px;
 	text-align: right;
 	overflow: none;
 }
