@@ -142,10 +142,23 @@ button:hover {
 	width: 75px;
 }
 
-#settings .contribute {
-	width: 450px;
-	margin: 0 auto;
+#settings .contribute {	
 	margin-top: 50px;
+}
+
+#settings .contribute h1 {
+	padding: 10px 0;
+	font-size: 13px;
+	color: #333;
+	font-weight: normal;
+	text-shadow: 1px 1px 0 #fff;
+	text-align: center;
+}
+
+#settings .contribute span {
+	width: 450px;
+	display: block;
+	margin: 0 auto;
 	border: 3px solid #fff;
 	border-radius: 3px;
 	box-shadow: 1px 1px 0 #ddd, -1px -1px #ddd;

@@ -658,7 +658,7 @@ function loadApplication() {
 			html += '</li>';
 			html += '</ul>';
 			
-			$('#settings .contribute').html(html);
+			$('#settings .contribute span').html(html);
 			jQuery("time.timeago").timeago();
 		};
 		loadContributeRepo(contribute);
