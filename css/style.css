@@ -268,7 +268,7 @@ button:hover {
 	height: 413px;
 	float: left;
 	overflow-x: hidden;
-	overflow-y: auto;
+	overflow-y: hidden;
 }
 
 #dashboard {
@@ -279,6 +279,7 @@ button:hover {
 #content {
 	width: 450px;
 	padding: 0 10px;
+	overflow-y: auto;
 }
 
 .context_overlay {
@@ -546,7 +547,7 @@ button:hover {
 	text-decoration: none;
 }
 
-.watched_filter {
+.filter {
 	margin-top: 10px;
 	padding-top: 5px;
 	background: #fafafb;
@@ -554,31 +555,31 @@ button:hover {
 	border-radius: 4px;
 }
 
-.watched_filter ul {
+.filter ul {
 	display: block;
 	padding: 0 10px;
 	text-align: right;
 	overflow: none;
 }
 
-.watched_filter li {
+.filter li {
 	display: inline;
 	margin-left: 15px;
 }
 
-.watched_filter li span {
+.filter li span {
 	display: inline-block;
 	padding-bottom: 8px;
 	color: #777;
 	font-size: 11px;
 }
 
-.watched_filter li span:hover {
+.filter li span:hover {
 	text-decoration: underline;
 	cursor: pointer;
 }
 
-.watched_filter .filter_selected {
+.filter .selected {
 	background: url('../img/filter_selected_bit.gif') 50% 100% no-repeat;
 	color: #000;
 	font-weight: bold;
