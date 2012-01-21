@@ -320,10 +320,10 @@ function displayWatched(repos) {
 		repo = repos[current];
 
 		html += '<li class="' + (repo.private ? 'private' : 'public') + '">';
-		html += '<a href="' + repo.html_url + '" target="_blank">';
+		html += '<a href="' + repo.html_url + '" target="_blank" class="item">';
 		html += '<span class="user">' + repo.owner.login + '</span>'; 
 		html += '/';
-		html += '<span class="repo item">'+ repo.name + '</span>';
+		html += '<span class="repo">'+ repo.name + '</span>';
 		html += '</a>';
 		html += '</li>';
 	}
