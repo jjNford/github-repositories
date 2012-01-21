@@ -212,7 +212,7 @@ function displayFollowing(following) {
 		html += '</a>';
 		html += '<a href="https://github.com/' + user.login + '" target="_blank" class="item">' + user.login + '</a>';
 		
-		if(user.name != undefined) { html += '<em class="item"> (' + user.name + ')</em>'; }
+		if(user.name != undefined) { html += '<em> (' + user.name + ')</em>'; }
 		
 		html += '</li>';
 	}
