@@ -1,3 +1,5 @@
+// MAKE SURE CONTEXT TRYING TO GET EXISTS OR JUST LOAD USER THEN
+
 // Application Constants.
 var ANIMATION_SPEED = 225;
 var CACHE_TIME      = 900000;
@@ -9,6 +11,7 @@ var GitHub = function() {
 				this.api_url = "https://api.github.com/";
 				this.user    = undefined;
 				this.context = undefined;
+				this.orgs    = [];
 			};
 
 // Global Objects
@@ -27,7 +30,14 @@ function authenticate() {
 			$.getJSON(github.api_url + 'user', {access_token: oauth2.getAccessToken()})
 				.success(function(json, textStatus, jqXHR) {
 					github.user = json;
-					loadApplication();
+					
+					// User data obtained, now get user orgs.
+					// On success save data, render context menu and load application.
+					$.getJSON(github.api_url + 'user/orgs', {access_token: oauth2.getAccessToken()})
+						.success(function(json) {
+							github.orgs = json;
+							loadApplication();
+						});
 				})
 				
 			// If there is an error the user is not authorized.
@@ -47,12 +57,96 @@ function authenticate() {
 
 
 
+// Update the extension to use the current context.
+function updateContext() {
+	
+	github.context = contextLoad();
+	
+	// We need to update github.context to be the context user object
+	// not just a string, giving us access to all context data.
+	//
+	// Check the basecase and make sure the logged user is not the context.
+	if(github.user.login == github.context) {
+		github.context = github.user;
+	}
+	
+	// If the logged user is not the context, place all organization
+	// context in a sorted array and run a binary search on 
+	// it to find the context user object.
+	//
+	else {
+		var sortedOrgs = github.orgs.sort( function(a, b) {
+			a = a.login.toLowerCase();
+			b = b.login.toLowerCase();
+			if(a < b) return -1;
+			if(a > b) return 1;
+			return 0;
+		});
+		
+		// Use a binary search to find the context user object.
+		function binarySearch(orgs, low, high, key) {
+			var mid = Math.floor( (low + high) / 2 );		
+			if( low > high) return github.user.login;
+			else if ( key == orgs[mid].login) return orgs[mid];
+			else if ( key < orgs[mid].login) return binarySearch(temp, low, mid-1, key);
+			else return binarySearch(temp, mid+1, high, key);
+		};
+	
+		github.context = binarySearch(sortedOrgs, 0, sortedOrgs.length - 1, github.context);
+	}
+ 	
+	// Set the context switcher avatar and name.
+	$('.context_switcher .context_switcher_button').html('<img src="' + github.context.avatar_url + '" />' + github.context.login);
+		
+	// Create a stack that holds the org and user contexts in order.
+	// Push the current context onto the stack.
+	// If the user is not the current context push the user onto the stack.
+	// Then push the orgs given in order from GitHub onto the stack.
+	var orderedContexts = [];
+	orderedContexts.push(github.user);
+	
+	// If the logged user is not the current context push context onto array.
+	if(github.user.login != github.context.login) { orderedContexts.push(github.user); }
+	
+	// Push ordered organization contexts onto array that are not the current context.
+	for(var current in github.orgs) {
+		if(github.context.login != github.orgs[current].login) {
+			orderedContexts.push( github.orgs[current] );
+		}
+	}
+
+	// Create Context Menu Items.
+	var html = "";
+	html += '<li class="selected">';
+	html += '<img src="' + github.context.avatar_url + '" />';
+	html += '<span class="context">';
+	html += orderedContexts[0].login;
+	html += '</span>';
+	html += '</li>';
+
+	for(var i = 1; i < orderedContexts.length; i++) {
+		html += '<li rel="' + orderedContexts[i].login + '">';
+		html += '<img src="' + orderedContexts[i].avatar_url + '" />';
+		html += '<span>';
+		html += orderedContexts[i].login;
+		html += '</span>';
+		html += '</li>';
+	}
+	
+	// Place contexts in context panel.
+	$('.context_switcher .context_switcher_panel .orgs').html(html);
+};
+
+
+
+
+
 // Delete data from cache.
 function cacheDelete(key) {
 	try {
-		var cache = JSON.parse(localStorage.getItem(github.user.login + CACHE));
+		var cache = JSON.parse(localStorage.getItem(github.context.login + CACHE));
 		delete cache[key]
-		localStorage.setItem(github.user.login + CACHE, JSON.stringify(cache));
+		localStorage.setItem(github.context.login + CACHE, JSON.stringify(cache));
 	}
 	catch(error) {}
 };
@@ -64,7 +158,7 @@ function cacheDelete(key) {
 // Load data from cache.
 function cacheLoad(key) {
 	try { 
-		var data = JSON.parse(localStorage.getItem(github.user.login + CACHE))[key]; 
+		var data = JSON.parse(localStorage.getItem(github.context.login + CACHE))[key]; 
 		var time = new Date().getTime();
 		
 		// Make sure cache time has not expired.
@@ -83,19 +177,47 @@ function cacheLoad(key) {
 function cacheSave(key, data) {
 	try {
 		if(localStorage['caching'] == "on") {
-			var cache = JSON.parse(localStorage.getItem(github.user.login + CACHE));
+			var cache = JSON.parse(localStorage.getItem(github.context.login + CACHE));
 			cache[key] = {"time" : new Date().getTime(), "cache" : data};
-			localStorage.setItem(github.user.login + CACHE, JSON.stringify(cache));
+			localStorage.setItem(github.context.login + CACHE, JSON.stringify(cache));
 		}
 	}
 	
 	// If cache does not exist create it and try again.
 	catch(error) {
-		localStorage.setItem(github.user.login + CACHE, "{}");
+		localStorage.setItem(github.context.login + CACHE, "{}");
 		cacheSave(key, data);
 	}
 };
 
+
+
+
+
+// Load context from local storage.
+function contextLoad() {	
+	try {
+		var context = localStorage['context'];
+		if(context == undefined) throw "Undefined Context";
+		return context;
+	}
+	
+	// If loading a context fails set the context to 
+	// the logged user and reload it.
+	catch(error) {
+		localStorage['context'] = github.user.login;
+		return contextLoad();
+	}
+};
+
+
+
+
+
+// Save the current context to local storage.
+function contextSave(context) {
+	localStorage['context'] = context;
+};
 
 
 
@@ -203,7 +325,7 @@ function displayFollowing(type, following) {
 	// Create filter box.
 	// Filter following.
 	if( !getFilter( localStorage['content'] )) { setFilter( localStorage['content'], "date"); }
-	var html = createFilter({"date" : "Date Followed", "alphabetical_following" : "Abc"});
+	var html = createFilter({"alphabetical_following" : "Abc", "date" : "Date Followed"});
 	following = filter(following);
 
 	html += '<ul class="following_list">';
@@ -311,9 +433,9 @@ function displayWatched(repos) {
 	// Create filter box.
 	// Filter repos.
 	if( !getFilter('watched')) { setFilter("watched", "last_watched"); }
-	var html = createFilter({ "last_watched" : "Last Watched", 
-	 						  "last_updated" : "Last Updated", 
-	                          "alphabetical_repos" : "Abc"
+	var html = createFilter({ "alphabetical_repos" : "Abc",
+							  "last_updated" : "Last Updated",
+							  "last_watched" : "Last Watched" 
 							});
 	repos = filter(repos);
 
@@ -471,7 +593,7 @@ function filterUserRepos(repos) {
 	if(repos.length == 0) return repos;
 	
 	for(var i = (repos.length - 1); i>= 0; i--) {
-		if(repos[i].owner.login == github.user.login) {
+		if(repos[i].owner.login == github.context.login) {
 			repos.splice(i, 1);
 		}
 	}
@@ -501,7 +623,7 @@ function getForkedRepoParents(repos, index, callback) {
 	// If so get their parent information.
 	if(index < repos.length) {
 		if(repos[index].fork) {
-			$.getJSON(github.api_url + 'repos/' + github.user.login + '/' + repos[index].name, {access_token: oauth2.getAccessToken()})
+			$.getJSON(github.api_url + 'repos/' + github.context.login + '/' + repos[index].name, {access_token: oauth2.getAccessToken()})
 				.success(function(json) {
 					repos[index].parent = json.parent.owner;
 					getForkedRepoParents(repos, ++index, callback);
@@ -543,13 +665,12 @@ function loadApplication() {
 	// Add mouse down and mouse up styleing to context switcher.
 	// Set on click binding to context button.
 	// 
+	updateContext();
 	contextSwitcherButton = $('.context_switcher .context_switcher_button');
 	contextSwitcherPanel  = $('.context_switcher .context_switcher_panel');
 	contextSwitcherClose  = $('.context_switcher .context_switcher_panel .close');
 	contextSwitcherOverlay= $('.context_overlay');
-	
-	contextSwitcherButton.html('<img src="' + github.user.avatar_url + '" />' + github.user.login);
-	
+		
 	contextSwitcherButton.on('mousedown', function() {
 		contextSwitcherButton.addClass('context_switcher_button_mousedown');
 	});
@@ -573,6 +694,13 @@ function loadApplication() {
 		contextSwitcherOverlay.on('click', closeContextMenu);
 		contextSwitcherClose.on('click', closeContextMenu);
 	});	
+	
+	// Set onclick for contexts.
+	$('.context_switcher_panel .orgs li').each( function() {
+		$(this).on('click', function() {
+			
+		});
+	});
 
 	// Bind Navigation clicks.
 	// Set selected navigation button to selected.
@@ -628,75 +756,74 @@ function loadApplication() {
 	
 	// Bind Settings click.
 	// Get contribution repo data.
-	// Content overflow is hidden to remove scroll bar showing up.
 	// Set caching button to caching settings.
 	// Set caching button on click.
+	// Content overflow is hidden to remove scroll bar showing up.
 	//
+	var settingsPanel = $('#settings');
+	var cache_button  = $('#settings .caching .cache_button');
+	
+	loadContributeRepo( function(repo) {
+		var html = '<ul class="repo_list">';
+		html += '<li class="public">';
+		html += '<ul class="repo_stats">';
+		html += '<li>' + (repo.language ? repo.language : "") + '</li>';
+		html += '<li class="watchers">';
+		html += '<a href="' + repo.html_url + '/watchers" target="_blank">' + repo.watchers + '</a>';
+		html += '</li>';
+		html += '<li class="forks">';
+		html += '<a href="' + repo.html_url + '/network" target="_blank">' + repo.forks + '</a>';
+		html += '</li>';
+		html += '</ul>';
+		html += '<h3>';
+		html += '<a href="' + repo.html_url + '" target="_blank" class="item">' + repo.name + '</a>';
+		html += '</h3>';
+		html += '<div>';
+		html += '<p class="description">' + repo.description + '</p>';
+		html += '<p class="updated">Last updated ';
+		html += '<time class="timeago" datetime="' + repo.updated_at + '">' + repo.updated_at + '</time>';
+		html += '</p>';
+		html += '</div>';
+		html += '</li>';
+		html += '</ul>';
+		
+		$('#settings .contribute span').html(html);
+		jQuery("time.timeago").timeago();
+	});	
+
+	if(localStorage['caching'] == "on") { cache_button.removeClass('negative').addClass('positive').html("Caching On"); }
+	else { cache_button.removeClass('positive').addClass('negative').html("Caching Off"); }
+	
+	cache_button.on('click', function() {
+		if(localStorage['caching'] == "on") { 
+			cache_button.removeClass('positive').addClass('negative').html("Caching Off");
+			localStorage['caching'] = "off";		
+					
+			var regExp = new RegExp(CACHE);
+			for(var i = 0; i < localStorage.length; i++) {
+				var key = localStorage.key(i);
+				if(key.match(regExp)) {
+					delete localStorage[key];
+				}
+			}
+		}
+		else {
+			cache_button.removeClass('negative').addClass('positive').html("Caching On");
+			localStorage['caching'] = "on";
+		}
+	});
+	
 	$('.extension_settings').on('click', function() {
-		
-		function contribute(repo) {
-			var html = '<ul class="repo_list">';
-			html += '<li class="public">';
-			html += '<ul class="repo_stats">';
-			html += '<li>' + (repo.language ? repo.language : "") + '</li>';
-			html += '<li class="watchers">';
-			html += '<a href="' + repo.html_url + '/watchers" target="_blank">' + repo.watchers + '</a>';
-			html += '</li>';
-			html += '<li class="forks">';
-			html += '<a href="' + repo.html_url + '/network" target="_blank">' + repo.forks + '</a>';
-			html += '</li>';
-			html += '</ul>';
-			html += '<h3>';
-			html += '<a href="' + repo.html_url + '" target="_blank" class="item">' + repo.name + '</a>';
-			html += '</h3>';
-			html += '<div>';
-			html += '<p class="description">' + repo.description + '</p>';
-			html += '<p class="updated">Last updated ';
-			html += '<time class="timeago" datetime="' + repo.updated_at + '">' + repo.updated_at + '</time>';
-			html += '</p>';
-			html += '</div>';
-			html += '</li>';
-			html += '</ul>';
-			
-			$('#settings .contribute span').html(html);
-			jQuery("time.timeago").timeago();
-		};
-		loadContributeRepo(contribute);
-		
-		var settingsPanel = $('#settings');
-		var cache_button  = $('#settings .caching .cache_button');
-		
 		if(!settingsPanel.is(':visible')) {
+			$('.user_links .extension_settings .link').addClass("opened");
 			settingsPanel.slideDown(ANIMATION_SPEED * 3);
 			$('#content').css('overflow-y', 'hidden');
 		}
 		else { 
+			$('.user_links .extension_settings .link').removeClass("opened");
 			settingsPanel.slideUp(ANIMATION_SPEED * 3); 
 			$('#content').css('overflow-y', 'auto');
 		}
-		
-		if(localStorage['caching'] == "on") { cache_button.removeClass('negative').addClass('positive').html("Caching On"); }
-		else { cache_button.removeClass('positive').addClass('negative').html("Caching Off"); }
-		
-		cache_button.on('click', function() {
-			if(localStorage['caching'] == "on") { 
-				cache_button.removeClass('positive').addClass('negative').html("Caching Off");
-				localStorage['caching'] = "off";		
-						
-				var regExp = new RegExp(CACHE);
-				for(var i = 0; i < localStorage.length; i++) {
-					var key = localStorage.key(i);
-					if(key.match(regExp)) {
-						delete localStorage[key];
-					}
-				}
-			}
-			else {
-				cache_button.removeClass('negative').addClass('positive').html("Caching On");
-				localStorage['caching'] = "on";
-			}
-		});
-		
 	});
 	
 	// Load content.	
@@ -906,13 +1033,15 @@ function showAuthorizationScreen() {
 
 // Sort following alphabetically.
 function sortFollowingAlphabetically(following) {
-	following.sort( function(a, b) {
-		var a = a.login.toLowerCase();
-		var b = b.login.toLowerCase();
-		if(a > b) return 1;
-		if(a < b) return -1;
-		return 0;
-	});
+	if(following && following.length > 0) {
+		following.sort( function(a, b) {
+			var a = a.login.toLowerCase();
+			var b = b.login.toLowerCase();
+			if(a > b) return 1;
+			if(a < b) return -1;
+			return 0;
+		});
+	}
 	return following;
 };
 
@@ -922,13 +1051,15 @@ function sortFollowingAlphabetically(following) {
 
 // Sort repos alphabetically.
 function sortReposAlphabetically(repos) {
-	repos.sort( function(a, b) {
-		var a = a.name.toLowerCase();
-		var b = b.name.toLowerCase();
-		if(a > b) return 1;
-		if(a < b) return -1;
-		return 0;
-	});
+	if(repos && repos.length > 0) {
+		repos.sort( function(a, b) {
+			var a = a.name.toLowerCase();
+			var b = b.name.toLowerCase();
+			if(a > b) return 1;
+			if(a < b) return -1;
+			return 0;
+		});
+	}
 	return repos;
 };
 
@@ -938,13 +1069,15 @@ function sortReposAlphabetically(repos) {
 
 // Sort repositories by last updated.
 function sortReposByLastUpdated(repos) {
-	repos.sort( function(a, b) {
-		var a = new Date(a.updated_at).getTime();
-		var b = new Date(b.updated_at).getTime();
-		if(a > b) return -1;
-		if(a < b) return 1;
-		return 0;
-	});
+	if(repos && repos.length > 0) {
+		repos.sort( function(a, b) {
+			var a = new Date(a.updated_at).getTime();
+			var b = new Date(b.updated_at).getTime();
+			if(a > b) return -1;
+			if(a < b) return 1;
+			return 0;
+		});
+	}
 	return repos;
 };
 

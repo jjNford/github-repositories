@@ -13,8 +13,7 @@
 var OAuth2 = function() {
 		
 	// Local storage entries.
-	access_token_key      = "oauth2_access_token";
-	access_token_date_key = "oauth2_access_token_date";
+	access_token_key      = "oauth2";
 	
 	// GitHub OAuth2 data.
 	client_id         = "911fa741a8b8dac7d28c";
@@ -106,7 +105,6 @@ OAuth2.prototype.flow = {
 		// Save token information in local storage.
 		// API V3 does not support expiration date or refresh token.
 		localStorage[access_token_key] = accessToken;
-		localStorage[access_token_date_key] = (new Date).getTime();
 		
 		// Close the current page.
 		chrome.tabs.getCurrent(function(thisTab) {
@@ -125,5 +123,4 @@ OAuth2.prototype.getAccessToken = function() {
 // Clear GitHub OAuth2 access tokens.
 OAuth2.prototype.clearAccessToken = function() {
 	delete localStorage[access_token_key];
-	delete localStorage[access_token_date_key];
 };
