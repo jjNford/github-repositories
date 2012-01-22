@@ -58,9 +58,12 @@ function authenticate() {
 
 
 // Update the extension to use the current context.
-function updateContext() {
+function updateContext(context) {
 	
-	github.context = contextLoad();
+	var container = [];
+	
+	if(!context) { github.context = contextLoad(); }
+	else { github.context = context; }
 	
 	// We need to update github.context to be the context user object
 	// not just a string, giving us access to all context data.
@@ -75,7 +78,15 @@ function updateContext() {
 	// it to find the context user object.
 	//
 	else {
-		var sortedOrgs = github.orgs.sort( function(a, b) {
+		
+		// To keep default order of github orgs we must copy
+		// to the correct array to be sorted.
+		for(var i = 0; i < github.orgs.length; i++) {
+			container[i] = github.orgs[i];
+		}
+		
+		// Sort orgs.
+		container.sort( function(a, b) {
 			a = a.login.toLowerCase();
 			b = b.login.toLowerCase();
 			if(a < b) return -1;
@@ -86,55 +97,64 @@ function updateContext() {
 		// Use a binary search to find the context user object.
 		function binarySearch(orgs, low, high, key) {
 			var mid = Math.floor( (low + high) / 2 );		
-			if( low > high) return github.user.login;
+			if( low > high) return github.user;
 			else if ( key == orgs[mid].login) return orgs[mid];
-			else if ( key < orgs[mid].login) return binarySearch(temp, low, mid-1, key);
-			else return binarySearch(temp, mid+1, high, key);
+			else if ( key < orgs[mid].login) return binarySearch(orgs, low, mid-1, key);
+			else return binarySearch(orgs, mid+1, high, key);
 		};
 	
-		github.context = binarySearch(sortedOrgs, 0, sortedOrgs.length - 1, github.context);
+		github.context = binarySearch(container, 0, container.length - 1, github.context);
 	}
- 	
+	 	
 	// Set the context switcher avatar and name.
-	$('.context_switcher .context_switcher_button').html('<img src="' + github.context.avatar_url + '" />' + github.context.login);
+	$('.context_switcher .context_switcher_button').html('<img src="' + github.context.avatar_url + '" />' + '<span>' + github.context.login + '</span>');
 		
 	// Create a stack that holds the org and user contexts in order.
 	// Push the current context onto the stack.
 	// If the user is not the current context push the user onto the stack.
 	// Then push the orgs given in order from GitHub onto the stack.
-	var orderedContexts = [];
-	orderedContexts.push(github.user);
+	container = [];
+	container.push(github.context);
 	
 	// If the logged user is not the current context push context onto array.
-	if(github.user.login != github.context.login) { orderedContexts.push(github.user); }
+	if(github.user.login != github.context.login) { container.push(github.user); }
 	
 	// Push ordered organization contexts onto array that are not the current context.
 	for(var current in github.orgs) {
 		if(github.context.login != github.orgs[current].login) {
-			orderedContexts.push( github.orgs[current] );
+			container.push( github.orgs[current] );
 		}
 	}
 
 	// Create Context Menu Items.
 	var html = "";
-	html += '<li class="selected">';
-	html += '<img src="' + github.context.avatar_url + '" />';
-	html += '<span class="context">';
-	html += orderedContexts[0].login;
-	html += '</span>';
-	html += '</li>';
-
-	for(var i = 1; i < orderedContexts.length; i++) {
-		html += '<li rel="' + orderedContexts[i].login + '">';
-		html += '<img src="' + orderedContexts[i].avatar_url + '" />';
+	for(var i = 0; i < container.length; i++) {
+		html += '<li rel="' + container[i].login + '" class="' + ((i == 0) ? "selected" : "" ) + '">';
+		html += '<img src="' + container[i].avatar_url + '" />';
 		html += '<span>';
-		html += orderedContexts[i].login;
+		html += container[i].login;
 		html += '</span>';
 		html += '</li>';
 	}
 	
 	// Place contexts in context panel.
 	$('.context_switcher .context_switcher_panel .orgs').html(html);
+	
+	// Set onclick for contexts.
+	// Close panel.
+	// Get context.
+	// Update context.
+	$('.context_switcher_panel .orgs li').each( function() {
+		$(this).on('click', function() {
+			
+			var newContext = $(this).attr('rel');
+			if(newContext && newContext != github.context.login) {
+				contextSave(newContext);
+				toggleContextMenu();
+				updateContext(newContext); 
+			}
+		});
+	});
 };
 
 
@@ -656,55 +676,25 @@ function getUserName(following, index, callback) {
 // Load application.
 function loadApplication() {
 
-	// Set caching if not yet done.
-	if( localStorage.getItem('caching') == undefined) { localStorage.setItem('caching', "on"); }
+	// Set caching & content if not yet done.
+	if( localStorage.getItem('caching') == undefined) { localStorage.setItem('caching', "on"); }	
+	if(!localStorage['content']) {localStorage['content'] = "repos";}
 
 	// Create context switcher.
-	// 
-	// Set context switcher image and context name.
-	// Add mouse down and mouse up styleing to context switcher.
-	// Set on click binding to context button.
-	// 
 	updateContext();
-	contextSwitcherButton = $('.context_switcher .context_switcher_button');
-	contextSwitcherPanel  = $('.context_switcher .context_switcher_panel');
-	contextSwitcherClose  = $('.context_switcher .context_switcher_panel .close');
-	contextSwitcherOverlay= $('.context_overlay');
 		
-	contextSwitcherButton.on('mousedown', function() {
-		contextSwitcherButton.addClass('context_switcher_button_mousedown');
-	});
+	// Bind context switcher events.
+	contextButton = $('.context_switcher .context_switcher_button');		
+	contextButton.on('mousedown', function() { contextButton.addClass('down'); });
+	contextButton.on('mouseup', function() { contextButton.removeClass('down'); });	
+	contextButton.bind('click', function() { toggleContextMenu(); });
 	
-	contextSwitcherButton.on('mouseup', function() {
- 		contextSwitcherButton.removeClass('context_switcher_button_mousedown');
-	});	
+	// Bind context panel and overlay events.
+	$('.context_overlay').on('click', toggleContextMenu);
+	$('.context_switcher .context_switcher_panel .close').on('click', toggleContextMenu);
 	
-	contextSwitcherButton.bind('click', function() {	
-		function closeContextMenu() {
-			contextSwitcherButton.removeClass('active');
-			contextSwitcherPanel.hide();
-			contextSwitcherOverlay.hide();
-			contextSwitcherOverlay.off();
-			contextSwitcherClose.off();
-		};
-		
-		contextSwitcherPanel.show();
-		contextSwitcherOverlay.show();
-		contextSwitcherButton.addClass('active');
-		contextSwitcherOverlay.on('click', closeContextMenu);
-		contextSwitcherClose.on('click', closeContextMenu);
-	});	
-	
-	// Set onclick for contexts.
-	$('.context_switcher_panel .orgs li').each( function() {
-		$(this).on('click', function() {
-			
-		});
-	});
-
-	// Bind Navigation clicks.
-	// Set selected navigation button to selected.
-	//
+	// Set and Bind Navigation.
+	$('.application_nav li[data=' + localStorage['content'] + ']').addClass('selected');
 	$('.application_nav li').on('click', function() {
 	    $('.application_nav li[data=' + localStorage['content'] + ']').removeClass('selected');
 		clickedElement = $(this);
@@ -713,10 +703,7 @@ function loadApplication() {
 	    loadContent();
 	});
 	
-	if(!localStorage['content']) {localStorage['content'] = "repos";}
-	$('.application_nav li[data=' + localStorage['content'] + ']').addClass('selected');
-		
-	// Bind Logout click.
+	// Bind Logout.
 	$('.user_links .log_out').on('click', function() {
 		oauth2.clearAccessToken();
 		localStorage.clear();
@@ -724,13 +711,13 @@ function loadApplication() {
 		chrome.tabs.getCurrent(function(thisTab) { chrome.tabs.remove(thisTab.id, function(){}); });
 	});
 	
-	// Bind Refresh click.
+	// Bind Refresh.
 	$('.refresh').on('click', function() {
 		cacheDelete(localStorage['content']);
 		loadContent();
 	});
 	
-	// Display GitHub Repositories.
+	// Display Main Application.
     $('body').removeClass('loading');
     $('#content').addClass('loading');
     $('#application').fadeIn(ANIMATION_SPEED);
@@ -754,15 +741,11 @@ function loadApplication() {
 		);
 	});
 	
-	// Bind Settings click.
-	// Get contribution repo data.
-	// Set caching button to caching settings.
-	// Set caching button on click.
-	// Content overflow is hidden to remove scroll bar showing up.
-	//
+	// Configure Settings.
 	var settingsPanel = $('#settings');
 	var cache_button  = $('#settings .caching .cache_button');
 	
+	// Get contribution repository.
 	loadContributeRepo( function(repo) {
 		var html = '<ul class="repo_list">';
 		html += '<li class="public">';
@@ -791,18 +774,20 @@ function loadApplication() {
 		jQuery("time.timeago").timeago();
 	});	
 
+	// Set caching button.
 	if(localStorage['caching'] == "on") { cache_button.removeClass('negative').addClass('positive').html("Caching On"); }
 	else { cache_button.removeClass('positive').addClass('negative').html("Caching Off"); }
 	
+	// Bind caching button.
 	cache_button.on('click', function() {
+		// If caching is turned off delete cached data from local storage.
 		if(localStorage['caching'] == "on") { 
 			cache_button.removeClass('positive').addClass('negative').html("Caching Off");
 			localStorage['caching'] = "off";		
 					
-			var regExp = new RegExp(CACHE);
-			for(var i = 0; i < localStorage.length; i++) {
+			for(var i = localStorage.length - 1; i >= 0; i--) {
 				var key = localStorage.key(i);
-				if(key.match(regExp)) {
+				if( new RegExp(CACHE).test(key)) {
 					delete localStorage[key];
 				}
 			}
@@ -813,6 +798,7 @@ function loadApplication() {
 		}
 	});
 	
+	// Bind settings click event.
 	$('.extension_settings').on('click', function() {
 		if(!settingsPanel.is(':visible')) {
 			$('.user_links .extension_settings .link').addClass("opened");
@@ -1080,6 +1066,31 @@ function sortReposByLastUpdated(repos) {
 	}
 	return repos;
 };
+
+
+
+
+
+// Toggle the context menu.
+function toggleContextMenu() {	
+	
+	// If context menu is visible.
+	// Remove active button class, hide panel, and hide overlay.
+	if($('.context_switcher .context_switcher_panel').is(':visible')) {
+		$('.context_switcher .context_switcher_button').removeClass('active');
+		$('.context_switcher .context_switcher_panel').hide();
+		$('.context_overlay').hide();
+	}
+	
+	// If context menu is not visible.
+	// Add active button class, show panel and show overlay.
+	else {
+		$('.context_switcher .context_switcher_button').addClass('active');
+		$('.context_switcher .context_switcher_panel').show();
+		$('.context_overlay').show();	
+	}
+};
+
 
 
 

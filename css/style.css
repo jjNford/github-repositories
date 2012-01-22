@@ -123,7 +123,7 @@ button:hover {
 	z-index: 40;
 	position: absolute;
 	display: none;
-	background: #efefef;
+	background: #dfdfdf;
 }
 
 #settings .caching {
@@ -390,7 +390,7 @@ button:hover {
 	line-height: 27px;
 	overflow: hidden;
 	white-space: nowrap;
-	cursor: pointer;
+	cursor: pointer;	
 }
 
 .context_switcher .context_switcher_button img {
@@ -402,6 +402,12 @@ button:hover {
 	vertical-align: middle;
 }
 
+.context_switcher .context_switcher_button span {
+	max-width: 120px;
+	display: inline-block;
+	overflow: hidden;
+}
+
 .context_switcher .context_switcher_button:hover {
     background: url("../img/context_switcher.png") 100% -32px no-repeat, 
                 -webkit-gradient(linear, left top, left bottom, from(#599bdc), to(#3173b4));
@@ -411,7 +417,7 @@ button:hover {
 	text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);	
 }
 
-.context_switcher .context_switcher_button_mousedown:hover {
+.context_switcher .down:hover {
 	border-color: #2165a0;
 	border-bottom-color: #518cc6;
 	background: url("../img/context_switcher.png") 100% -32px no-repeat,
@@ -489,11 +495,11 @@ button:hover {
 }
 
 .context_switcher_panel .orgs li.selected {
+	color: #000;
 	background: url('../img/context_check.png') 5px 11px no-repeat;
 }
 
 .context_switcher_panel .orgs li.selected:hover {
-	color: #666;
 	background: url('../img/context_check_highlight.png') 0 0 no-repeat;
 }
 
