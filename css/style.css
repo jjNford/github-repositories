@@ -503,6 +503,14 @@ button:hover {
 	background: url('../img/context_check_highlight.png') 0 0 no-repeat;
 }
 
+.context_switcher_panel .orgs .no_orgs {
+	padding: 20px 0;
+	color: #888;
+	font-size: 14px;
+	font-weight: normal;
+	text-align: center;
+}
+
 .context_switcher_panel .orgs img {
 	width: 18px;
 	height: 18px;
