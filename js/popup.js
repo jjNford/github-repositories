@@ -1139,7 +1139,7 @@ function loadRepos(type) {
     // the last repo of the current request.
     // A context is required so callback knows what cache to save to.
     function loadOrgReposFromGitHub(context, repos, pageNumber, lastRepo) {
-        $.getJSON(mGitHub.api_url + 'orgs/' + mGitHub.context.login + '/repos?page=' + pageNumber, {access_token: mOAuth2.getAccessToken()} )
+        $.getJSON(mGitHub.api_url + 'orgs/' + context + '/repos?page=' + pageNumber, {access_token: mOAuth2.getAccessToken()} )
             .success( function(json) {
 
                 // Make sure repos exist.
