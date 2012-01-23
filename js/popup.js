@@ -1245,8 +1245,8 @@ function onCreate() {
 
     // Load application state filters.
     var filters      = JSON.parse( localStorage[FILTERS] );
-    mFilterFollowers = filters[FOLLOWERS] ? filters[FOLLOWERS] : "date";
-    mFilterFollowing = filters[FOLLOWING] ? filters[FOLLOWING] : "date";
+    mFilterFollowers = filters[FOLLOWERS] ? filters[FOLLOWERS] : "recently_followed";
+    mFilterFollowing = filters[FOLLOWING] ? filters[FOLLOWING] : "recently_followed";
     mFilterRepos     = filters[REPOS] ? filters[REPOS] : "all_repositories";
     mFilterWatched   = filters[WATCHED] ? filters[WATCHED] : "last_watched";
 };
