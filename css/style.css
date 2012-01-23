@@ -150,8 +150,8 @@ button:hover {
 	padding: 10px 0;
 	font-size: 13px;
 	color: #333;
-	font-weight: normal;
-	text-shadow: 1px 1px 0 #fff;
+	font-weight: bold;
+	text-shadow: 0 1px 0 #fff;
 	text-align: center;
 }
 
@@ -159,7 +159,7 @@ button:hover {
 	width: 450px;
 	display: block;
 	margin: 0 auto;
-	border: 3px solid #fff;
+	border: 2px solid #fff;
 	border-radius: 3px;
 	box-shadow: 1px 1px 0 #ddd, -1px -1px #ddd;
 }
