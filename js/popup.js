@@ -1034,7 +1034,7 @@ function loadFollowing(type) {
     // Use recursion to load all following from GitHub.
     // A context parameter is required to make sure cache is saved with correct context.
     function loadFromGitHub(context, following, pageNumber) {
-        $.getJSON(mGitHub.api_url + 'user/' + type + '?page=' + pageNumber, {access_token: mOAuth2.getAccessToken()})
+        $.getJSON(mGitHub.api_url + 'user/' + type, {access_token: mOAuth2.getAccessToken(), page: pageNumber})
             .success( function(json) {
 
                 // If data is being returned keep recursing.
@@ -1118,7 +1118,7 @@ function loadRepos(type) {
 
     // User recursion to load all of a Users repos from GitHub.
     function loadUserReposFromGitHub(context, repos, pageNumber) {
-        $.getJSON(mGitHub.api_url + 'user/' + type + '?page=' + pageNumber, {access_token: mOAuth2.getAccessToken()})
+        $.getJSON(mGitHub.api_url + 'user/' + type, {access_token: mOAuth2.getAccessToken(), page: pageNumber})
             .success( function(json) {
 
                 // If data is still being returned from GitHub keep
@@ -1139,7 +1139,7 @@ function loadRepos(type) {
     // the last repo of the current request.
     // A context is required so callback knows what cache to save to.
     function loadOrgReposFromGitHub(context, repos, pageNumber, lastRepo) {
-        $.getJSON(mGitHub.api_url + 'orgs/' + context + '/repos?page=' + pageNumber, {access_token: mOAuth2.getAccessToken()} )
+        $.getJSON(mGitHub.api_url + 'orgs/' + context + '/repos', {access_token: mOAuth2.getAccessToken(), page: pageNumber} )
             .success( function(json) {
 
                 // Make sure repos exist.
