@@ -1008,6 +1008,9 @@ function loadContext(context) {
 	
 	// Set currently selected navication tab.
 	$('.application_nav li[data=' + mContent + ']').addClass('selected');
+	
+	// Load content.
+	loadContent();
 };
  
 
@@ -1108,10 +1111,13 @@ function loadRepos(type) {
     // If the repos are found then trigger callback.
     // If they are not found then load them from GitHub.
     if(repos) callback(repos);
-    else loadFromGitHub([], 1);
+    else {
+        // If we the context type is "User"
+        if(mGitHub.context.type == "User") loadUserReposFromGitHub([], 1);
+    }
 
     // User recursion to load all the repos from GitHub.
-    function loadFromGitHub(repos, pageNumber) {
+    function loadUserReposFromGitHub(repos, pageNumber) {
         $.getJSON(mGitHub.api_url + 'user/' + type + '?page=' + pageNumber, {access_token: mOAuth2.getAccessToken()})
             .success(function(json) {
 
@@ -1119,7 +1125,7 @@ function loadRepos(type) {
                 // recursing to make sure all repos are retreived.
                 if(json.length > 0) {
                     repos = repos.concat(json);
-                    loadFromGitHub(repos, ++pageNumber);
+                    loadUserReposFromGitHub(repos, ++pageNumber);
                 }
 
                 else callback(repos);
