@@ -210,7 +210,6 @@ function bootstrap() {
     // Now the Extension Application can be displayed.
     // Remove the popup loading class, add the loading class to teh content window.
     // Fade the application in.
-    displayContentLoading();
 	$('body').removeClass('loading');
 	$('#application').fadeIn(ANIMATION_SPEED);
 	
@@ -873,6 +872,8 @@ function loadContent() {
  */
 function loadContext(context) {
 
+    displayContentLoading();
+
     // If the User has no organizations then the context panel
 	// and navigation do not need to be updated.
 	// The current context will be the User.
@@ -1028,17 +1029,18 @@ function loadFollowing(type) {
     // If following is cached then display them.
     // If not load following from GitHub.
     if(following) displayFollowing(type, following);
-    else loadFromGitHub([], 1);
+    else loadFromGitHub(mGitHub.context.login, [], 1);
 
     // Use recursion to load all following from GitHub.
-    function loadFromGitHub(following, pageNumber) {
+    // A context parameter is required to make sure cache is saved with correct context.
+    function loadFromGitHub(context, following, pageNumber) {
         $.getJSON(mGitHub.api_url + 'user/' + type + '?page=' + pageNumber, {access_token: mOAuth2.getAccessToken()})
             .success( function(json) {
 
                 // If data is being returned keep recursing.
                 if(json.length > 0) {
                     following = following.concat(json);
-                    loadFromGitHub(following, ++pageNumber);
+                    loadFromGitHub(context, following, ++pageNumber);
                 }
 
                 // If data is not returned:
@@ -1054,7 +1056,7 @@ function loadFollowing(type) {
                         for(var current in following) {
                             if(current == following.length -1) {
                                 callback = function(data) {
-                                    cacheSave(mGitHub.context.login, type, data);
+                                    cacheSave(context, type, data);
                                     displayFollowing(type, data);
                                 }
                             }
@@ -1107,26 +1109,26 @@ function loadRepos(type) {
 
     // If the repos are found then trigger callback.
     // If they are not found then load them from GitHub.
-    if(repos) callback(repos);
+    if(repos) callback(mGitHub.context.login, repos);
     else {
         // If we the context type is "User"
-        if(mGitHub.context.type == "User") loadUserReposFromGitHub([], 1);
-        else loadOrgReposFromGitHub([], 1, null);
+        if(mGitHub.context.type == "User") loadUserReposFromGitHub(mGitHub.context.login, [], 1);
+        else loadOrgReposFromGitHub(mGitHub.context.login, [], 1, null);
     }
 
     // User recursion to load all of a Users repos from GitHub.
-    function loadUserReposFromGitHub(repos, pageNumber) {
+    function loadUserReposFromGitHub(context, repos, pageNumber) {
         $.getJSON(mGitHub.api_url + 'user/' + type + '?page=' + pageNumber, {access_token: mOAuth2.getAccessToken()})
             .success( function(json) {
 
                 // If data is still being returned from GitHub keep
                 // recursing to make sure all repos are retreived.
-                //if(json.length > 0) {
-                //    repos = repos.concat(json);
-                //    loadUserReposFromGitHub(repos, ++pageNumber);
-                //}
+                if(json.length > 0) {
+                    repos = repos.concat(json);
+                    loadUserReposFromGitHub(context, repos, ++pageNumber);
+                }
 
-                //else callback(repos);
+                else callback(context, repos);
         });
     };
 
@@ -1135,22 +1137,28 @@ function loadRepos(type) {
     // no repos exist on the page, thus to stop from infinite recurrsion
     // we must make sure the last repo from the last request is not equal to
     // the last repo of the current request.
-    function loadOrgReposFromGitHub(repos, pageNumber, lastRepo) {
+    // A context is required so callback knows what cache to save to.
+    function loadOrgReposFromGitHub(context, repos, pageNumber, lastRepo) {
         $.getJSON(mGitHub.api_url + 'orgs/' + mGitHub.context.login + '/repos?page=' + pageNumber, {access_token: mOAuth2.getAccessToken()} )
             .success( function(json) {
 
                 // Make sure repos exist.
-                if(json.length == 0) {console.log("calling back"); callback(repos);}
-                else if(repos.length > 0 && json[json.length - 1] == lastRepo) callback(repos);
+                if(json.length == 0) {callback(context, repos);}
+
+                // Check that new repos are still be retreived.
+                else if(repos.length > 0 && json[json.length - 1].clone_url == lastRepo.clone_url) callback(context, repos);
+
+                // Recurse.
                 else {
                     repos = repos.concat(json);
-                    loadOrgReposFromGitHub(repos, ++pageNumber, repos[repos.length - 1]);
+                    loadOrgReposFromGitHub(context, repos, ++pageNumber, repos[repos.length - 1]);
                 }
             });
     };
 
     // Callback from the repository loading.
-    function callback(repos) {
+    // A context is needed to make sure caching is handled correctly.
+    function callback(context, repos) {
 
         // Take action according to repo type.
         switch(type) {
