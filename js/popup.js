@@ -232,9 +232,6 @@ function bootstrap() {
 	         );
 	     });
      })();
-
-	//Load content.    
-	loadContent();
 };
 
 
@@ -1104,7 +1101,7 @@ function loadForkedRepoParent(repos, index, callback) {
  * 
  */
 function loadRepos(type) {
- 
+
     // Attempt to load the repos from the cache.
     var repos = cacheLoad(mGitHub.context.login, type);
 
@@ -1114,22 +1111,42 @@ function loadRepos(type) {
     else {
         // If we the context type is "User"
         if(mGitHub.context.type == "User") loadUserReposFromGitHub([], 1);
+        else loadOrgReposFromGitHub([], 1, null);
     }
 
-    // User recursion to load all the repos from GitHub.
+    // User recursion to load all of a Users repos from GitHub.
     function loadUserReposFromGitHub(repos, pageNumber) {
         $.getJSON(mGitHub.api_url + 'user/' + type + '?page=' + pageNumber, {access_token: mOAuth2.getAccessToken()})
-            .success(function(json) {
+            .success( function(json) {
 
-                // If data is still being returned fomr GitHub keep
+                // If data is still being returned from GitHub keep
                 // recursing to make sure all repos are retreived.
-                if(json.length > 0) {
-                    repos = repos.concat(json);
-                    loadUserReposFromGitHub(repos, ++pageNumber);
-                }
+                //if(json.length > 0) {
+                //    repos = repos.concat(json);
+                //    loadUserReposFromGitHub(repos, ++pageNumber);
+                //}
 
-                else callback(repos);
+                //else callback(repos);
         });
+    };
+
+    // Use recursion to load all of an organizations repos from GitHub.
+    // For some reason GitHub API v3 does not return an empty set if 
+    // no repos exist on the page, thus to stop from infinite recurrsion
+    // we must make sure the last repo from the last request is not equal to
+    // the last repo of the current request.
+    function loadOrgReposFromGitHub(repos, pageNumber, lastRepo) {
+        $.getJSON(mGitHub.api_url + 'orgs/' + mGitHub.context.login + '/repos?page=' + pageNumber, {access_token: mOAuth2.getAccessToken()} )
+            .success( function(json) {
+
+                // Make sure repos exist.
+                if(json.length == 0) {console.log("calling back"); callback(repos);}
+                else if(repos.length > 0 && json[json.length - 1] == lastRepo) callback(repos);
+                else {
+                    repos = repos.concat(json);
+                    loadOrgReposFromGitHub(repos, ++pageNumber, repos[repos.length - 1]);
+                }
+            });
     };
 
     // Callback from the repository loading.
