@@ -692,7 +692,7 @@ button:hover {
 }
 
 .filter_search {
-	width: 181px;
+	width: 166px;
 	height: 15px;
 	float: left;
 	margin-top: 1px;
@@ -712,12 +712,12 @@ button:hover {
 .filter ul {
 	display: block;
 	text-align: right;
-	overflow: none;
+	overflow: hidden;
 }
 
 .filter li {
 	display: inline;
-	margin-left: 15px;
+	margin-left: 13px;
 }
 
 .filter li span {
