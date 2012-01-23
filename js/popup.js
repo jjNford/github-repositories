@@ -1170,7 +1170,7 @@ function loadRepos(type) {
             case REPOS :
                 if(repos.length == 0) displayRepos(repos);
                 else {
-
+console.log(repos);
                     // Only make a callback for last repo.
                     var callback = null;
                     for(var current in repos) {

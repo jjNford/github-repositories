@@ -688,6 +688,7 @@ button:hover {
 	background: #fafafb;
 	border: 1px solid #ddd;
 	border-radius: 4px;
+	overflow: hidden;
 }
 
 .filter_search {
