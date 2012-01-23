@@ -408,11 +408,11 @@ function displayFollowing(type, following) {
     var filterSelected = window["mFilter" + type.charAt(0).toUpperCase() + type.slice(1)];
 
     // Filter the repos.
-    repos = filter(filterSelected, following);
+    following = filter(filterSelected, following);
 
     // Create HTML for Repos.
     // Create a filter box for sorting Repos.
-    var filters = {"alphabetical_following":"Abc", "date":"Date Followed"};
+    var filters = {"alphabetical_following":"Abc", "recently_followed":"Most Recent"};
     var html = createFilterHTML(filters, filterSelected);
 
     html += '<ul class="following_list">';
@@ -424,7 +424,7 @@ function displayFollowing(type, following) {
               + '<a href="https://github.com/' + user.login + '" target="_blank">'
               + '<img src="' + user.avatar_url + '" />'
               + '</a>'
-              + '<a href="https://github.com/' + user.login + '" target="_blank" class="item">' 
+              + '<a href="https://github.com/' + user.login + '" target="_blank" class="filter_item">' 
               + user.login 
               + '</a>';
 
@@ -480,13 +480,15 @@ function displayRepos(repos) {
               + '</li>'
               + '</ul>'
               + '<h3>'
-              + '<a href="' + repo.html_url + '" target="_blank" class="item">' + repo.name + '</a>'
+              + '<a href="' + repo.html_url + '" target="_blank" class="filter_item">' + repo.name + '</a>'
               + '</h3>';
 
         // If repo is forked display parent information.
         if(repo.fork) { 
             html += '<p class="fork_flag">'
-                  + 'Forked from <a href="https://github.com/' + repo.parent.login + '/' + repo.name + '" target="_blank">' + repo.parent.login + '/' + repo.name + '</a>'
+                  + 'Forked from <a href="https://github.com/' + ((repo.parent != undefined) ? repo.parent.login : "") + '/' + repo.name + '" target="_blank">' 
+                  + ((repo.parent != undefined) ? repo.parent.login : "") + '/' + repo.name 
+                  + '</a>'
                   + '</p>';
         }
 
@@ -538,7 +540,7 @@ function displayWatched(repos) {
         repo = repos[current];
 
         html += '<li class="' + (repo.private ? 'private' : 'public') + '">'
-              + '<a href="' + repo.html_url + '" target="_blank" class="item">'
+              + '<a href="' + repo.html_url + '" target="_blank" class="filter_item">'
               + '<span class="user">' + repo.owner.login + '</span>'
               + '/'
               + '<span class="repo">'+ repo.name + '</span>'
@@ -573,24 +575,9 @@ function filter(filter, data) {
 
     switch(filter) {
 
-        // Filter out all but private repos.
-        case "private":
-            filterPrivateReposOnly(data);
-            break;
- 
-        // Filter all but public repos.
-        case "public":
-            filterPublicReposOnly(data);
-            break;
-
-            // Filter all but public repos.
-        case "source":
-            filterSourceReposOnly(data);
-            break;
-
-            // Filter all but public repos.
-        case "forks":
-            filterForkedReposOnly(data);
+        // Filter following alphebetically
+        case "alphabetical_following":
+            data = sortFollowingAlphabetically(data);
             break;
 
         // Filter repos alphebetically
@@ -598,14 +585,34 @@ function filter(filter, data) {
             data = sortReposAlphabetically(data);
             break;
 
-        // Filter following alphebetically
-        case "alphabetical_following":
-            data = sortFollowingAlphabetically(data);
+        // Filter all but public repos.
+        case "forks":
+            data = filterForkedReposOnly(data);
             break;
-
+ 
         // Filter by last updated.
         case "last_updated":
             data = sortReposByLastUpdated(data);
+            break;
+ 
+        // Filter all but public repos.
+        case "public":
+            data = filterPublicReposOnly(data);
+            break;
+
+        // Filter out all but private repos.
+        case "private":
+            data = filterPrivateReposOnly(data);
+            break;
+
+        // Sort by most recently followed
+        case "recently_followed":
+            data = sortFollowingByMostRecent(data);
+            break;
+
+            // Filter all but public repos.
+        case "source":
+            data = filterSourceReposOnly(data);
             break;
 
         // Default case returns repos in current order.
@@ -672,7 +679,7 @@ function filterOnClickListener() {
     // On key up pattern match all available data in the content.
     filterInput.keyup(function() {
         var regExp = new RegExp($(this).val(), 'i');
-        $('#content ul .item').each( function() {
+        $('#content ul .filter_item').each( function() {
             if( $(this).html().match(regExp) ) {
                 $(this).closest('li').show();
             }
@@ -794,7 +801,7 @@ function injectContributionRepoHTML(element) {
                      + '</li>'
                      + '</ul>'
                      + '<h3>'
-                     + '<a href="' + repo.html_url + '" target="_blank" class="item">' + repo.name + '</a>'
+                     + '<a href="' + repo.html_url + '" target="_blank" class="filter_item">' + repo.name + '</a>'
                      + '</h3>'
                      + '<div>'
                      + '<p class="description">' + repo.description + '</p>'
@@ -1311,6 +1318,29 @@ function sortFollowingAlphabetically(following) {
 
 
 
+/**
+ * Sort Following By Most Recent.
+ * 
+ * Following / Followers are given in order of first followed to last followed.
+ * Just reverse the list.
+ * 
+ * @param following - Group of users to sort.
+ * @return sorted - Sorted users.
+ * 
+ */
+ function sortFollowingByMostRecent(following) {
+     if(following && following.length > 0) {
+         var sorted = [];
+         for(var i = following.length - 1, j=0; i >= 0; i--, j++) {
+             sorted[j] = following[i];
+         }
+         return sorted;
+     }
+     return following;
+ }
+ 
+ 
+ 
 /**
  * Sort Repos Alphabetically
  * 
