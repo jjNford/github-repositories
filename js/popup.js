@@ -354,18 +354,18 @@ function createFilterHTML(filters, selected) {
 /**
  * Display Content
  * 
- * @param user - Current user (acts as a semaphore for late async callbacks after switching context).
+ * @param context - Current user context (acts as a semaphore for late async callbacks after switching context).
  * @param type - Type of content to display (acts as a semaphore for last sync callbacks when chaning content).
  * @param content - Content to display.
  * @param callback - Callback to be run after content is rendered.
  * 
  */
-function displayContent(user, type, content, callback) {
+function displayContent(context, type, content, callback) {
 
     var contentSection = $('#content');
 
     // Check semaphore locks.
-    if(type == localStorage['content'] && user == mGitHub.context.login) {
+    if(type == localStorage[CONTENT] && context == mGitHub.context.login) {
 
         // If content is not locked, fade out loading and fade in content.
         contentSection.fadeOut(ANIMATION_SPEED, function() {
@@ -398,7 +398,7 @@ function displayContentLoading() {
  * @param following - Group of users to display.
  * 
  */
-function displayFollowing(type, following) {
+function displayFollowing(context, type, following) {
 
     // Get filter for type.
     var filterSelected = window["mFilter" + type.charAt(0).toUpperCase() + type.slice(1)];
@@ -450,7 +450,7 @@ function displayFollowing(type, following) {
  * @param repos - User repositories to display.
  * 
  */
-function displayRepos(repos) {
+function displayRepos(context, repos) {
 
     // Filter the repos.
     repos = filter(mFilterRepos, repos);
@@ -465,7 +465,7 @@ function displayRepos(repos) {
     for(var current in repos) {
         repo = repos[current];
 
-        html += '<li class="' + (repos.private ? 'private' : 'public') + (repo.fork ? ' fork' : '') + '">'
+        html += '<li class="' + (repo.private ? 'private' : 'public') + (repo.fork ? ' fork' : '') + '">'
               + '<ul class="repo_stats">'
               + '<li>' + (repo.language ? repo.language : "") + '</li>'
               + '<li class="watchers">'
@@ -482,8 +482,8 @@ function displayRepos(repos) {
         // If repo is forked display parent information.
         if(repo.fork) { 
             html += '<p class="fork_flag">'
-                  + 'Forked from <a href="https://github.com/' + ((repo.parent != undefined) ? repo.parent.login : "") + '/' + repo.name + '" target="_blank">' 
-                  + ((repo.parent != undefined) ? repo.parent.login : "") + '/' + repo.name 
+                  + 'Forked from <a href="https://github.com/' + repo.parent.login + '/' + repo.name + '" target="_blank">' 
+                  + repo.parent.login + '/' + repo.name 
                   + '</a>'
                   + '</p>';
         }
@@ -507,7 +507,7 @@ function displayRepos(repos) {
     };
 
     // Display content.
-    displayContent(mGitHub.context.login, REPOS, html, callback);
+    displayContent(context, REPOS, html, callback);
 };
 
 
@@ -520,7 +520,7 @@ function displayRepos(repos) {
  * @param repos - Repositories to be displayed.
  * 
  */
-function displayWatched(repos) {
+function displayWatched(context, repos) {
 
     // Filter the repos.
     repos = filter(mFilterWatched, repos);
@@ -552,7 +552,7 @@ function displayWatched(repos) {
     };
 
     // Display content.
-    displayContent(mGitHub.context.login, WATCHED, html, callback);
+    displayContent(context, WATCHED, html, callback);
 };
 
 
@@ -561,6 +561,7 @@ function displayWatched(repos) {
  * Filter
  * 
  * Filter the current data based on the filter type.
+ * As of now filter settings apply accross all Contexts.
  * 
  * @param filter - Filter to be used.
  * @param data - Data to be filtered.
@@ -823,6 +824,10 @@ function injectContributionRepoHTML(element) {
  * 
  */
 function loadContent() {
+
+    // Hold a context for this action to create a semephore for
+    // caching and displaying data.
+    var context = mGitHub.context.login;
  
     // Remove content data and display loading class.
     displayContentLoading();
@@ -832,22 +837,22 @@ function loadContent() {
  
         // Load Context Repositories.
         case REPOS:
-            loadRepos(REPOS);
+            loadRepos(context, REPOS);
             break;
 
         // Load Users Watched Repositories.
-        case 'watched':
-            loadRepos("watched");
+        case WATCHED:
+            loadRepos(context, WATCHED);
             break;
 
         // Load Users Following.
-        case 'following':
-            loadFollowing("following");
+        case FOLLOWING:
+            loadFollowing(context, FOLLOWING);
             break;
 
         // Load Users Followers.
-        case 'followers':
-            loadFollowing("followers");
+        case FOLLOWERS:
+            loadFollowing(context, FOLLOWERS);
             break;
 
         // Load Extension Settings.
@@ -927,6 +932,7 @@ function loadContext(context) {
             mGitHub.context = userObjectBinarySearch(theOtherArray, context, 0, theOtherArray.length - 1);
         }
 
+        // The Context Has Been Update:
         // Now all the context must be ordered to display in the context menu panel.
         // If no other context exists, nothing is added to the panel (and we wouldn't get to this code).
         // If multiple context exists the currently used context is first,
@@ -1021,18 +1027,17 @@ function loadContext(context) {
  * @param type - Following or Followers.
  * 
  */
-function loadFollowing(type) {
+function loadFollowing(context, type) {
 
-    // Check for following in cache.
-    var following = cacheLoad(mGitHub.context.login, type);
+    // Attempt to load following from cache.
+    var following = cacheLoad(context, type);
 
-    // If following is cached then display them.
-    // If not load following from GitHub.
-    if(following) displayFollowing(type, following);
-    else loadFromGitHub(mGitHub.context.login, [], 1);
+    // If following are found then display them.
+    // If they are not then load them from GitHub.
+    if(following) displayFollowing(context, type, following);
+    else loadFromGitHub(context, [], 1);
 
     // Use recursion to load all following from GitHub.
-    // A context parameter is required to make sure cache is saved with correct context.
     function loadFromGitHub(context, following, pageNumber) {
         $.getJSON(mGitHub.api_url + 'user/' + type, {access_token: mOAuth2.getAccessToken(), page: pageNumber})
             .success( function(json) {
@@ -1043,53 +1048,25 @@ function loadFollowing(type) {
                     loadFromGitHub(context, following, ++pageNumber);
                 }
 
-                // If data is not returned:
+                // When all data has been retreived:
                 else {
 
-                    // // If any following exists then load user names and diplay following.
-                    // // After user names are returned save following to cache then display them.
-                    if(following.length == 0) displayFollowing(type, following);
-                    else {
-
-                        // Make callback null, when last follower get name create a callback.
-                        var callback = null;
-                        for(var current in following) {
-                            if(current == following.length -1) {
-                                callback = function(data) {
-                                    cacheSave(context, type, data);
-                                    displayFollowing(type, data);
-                                }
+                    // If any following exists then load user names and diplay following.
+                    // After user names are returned save following to cache then display them.
+                    // Make callback null, when last follower get name create a callback.
+                    for(var current in following) {
+                        if(current == following.length -1) {
+                            callback = function(context, following) {
+                                cacheSave(context, type, following);
+                                displayFollowing(context, type, following);
                             }
-                            loadUserName(following, current, callback);
                         }
+                        else var callback = null;
+                        loadUserName(context, following, current, callback);
                     }
                 }
             });
     };
-};
-
-
-
-/**
- * Load Forked Repo Parent
- * 
- * Load the parent of a forked repo.
- * 
- * @param repos - Set to get repo from.
- * @param index - Index of repo to load parent for.
- * @param callback - Callback function when loading complete.
- * 
- */
-function loadForkedRepoParent(repos, index, callback) {
-    if(repos[index].fork) {
-        $.getJSON(mGitHub.api_url + 'repos/' + mGitHub.context.login + '/' + repos[index].name, {access_token: mOAuth2.getAccessToken()})
-            .success(function(json) {
-                repos[index].parent = json.parent.owner;
-
-                if(callback) callback(repos);
-            });
-    }
-    else { if(callback) callback(repos) };
 };
 
 
@@ -1102,34 +1079,30 @@ function loadForkedRepoParent(repos, index, callback) {
  * @param type - Type of repositories to load.
  * 
  */
-function loadRepos(type) {
+function loadRepos(context, type) {
 
     // Attempt to load the repos from the cache.
-    var repos = cacheLoad(mGitHub.context.login, type);
+    var repos = cacheLoad(context, type);
 
     // If the repos are found then trigger callback.
     // If they are not found then load them from GitHub.
-    if(repos) callback(mGitHub.context.login, repos);
+    if(repos) display(repos);
     else {
-        // If we the context type is "User"
-        if(mGitHub.context.type == "User") loadUserReposFromGitHub(mGitHub.context.login, [], 1);
-        else loadOrgReposFromGitHub(mGitHub.context.login, [], 1, null);
+
+        // If we the context type is "User" then load the users repositories.
+        if(mGitHub.context.type == "User") loadUserReposFromGitHub([], 1);
+        else loadOrgReposFromGitHub(context, [], 1, null);
     }
 
     // User recursion to load all of a Users repos from GitHub.
-    function loadUserReposFromGitHub(context, repos, pageNumber) {
+    function loadUserReposFromGitHub(repos, pageNumber) {
         $.getJSON(mGitHub.api_url + 'user/' + type, {access_token: mOAuth2.getAccessToken(), page: pageNumber})
             .success( function(json) {
+                // If data is still being returned from GitHub keep recursing to make sure all repos are retreived.
+                if(json.length > 0) loadUserReposFromGitHub(repos.concat(json), ++pageNumber);
+                else callback(repos);
+            });
 
-                // If data is still being returned from GitHub keep
-                // recursing to make sure all repos are retreived.
-                if(json.length > 0) {
-                    repos = repos.concat(json);
-                    loadUserReposFromGitHub(context, repos, ++pageNumber);
-                }
-
-                else callback(context, repos);
-        });
     };
 
     // Use recursion to load all of an organizations repos from GitHub.
@@ -1143,59 +1116,92 @@ function loadRepos(type) {
             .success( function(json) {
 
                 // Make sure repos exist.
-                if(json.length == 0) {callback(context, repos);}
+                if(json.length == 0) callback(repos);
 
                 // Check that new repos are still be retreived.
-                else if(repos.length > 0 && json[json.length - 1].clone_url == lastRepo.clone_url) callback(context, repos);
+                else if(repos.length > 0 && json[json.length - 1].clone_url == lastRepo.clone_url) callback(repos);
 
                 // Recurse.
                 else {
                     repos = repos.concat(json);
                     loadOrgReposFromGitHub(context, repos, ++pageNumber, repos[repos.length - 1]);
                 }
-            });
+        });
     };
 
-    // Callback from the repository loading.
-    // A context is needed to make sure caching is handled correctly.
-    function callback(context, repos) {
+    // Callback function from async tasks used to clean up retreived 
+    // data before caching and displaying it.
+    function callback(repos) {
 
-        // Take action according to repo type.
         switch(type) {
 
-            // If users repos are being loaded from GitHub
-            // then sort them by last updated, retreive the
-            // forked repositories parent information, 
-            // save them to cache and then display them.
-            case REPOS :
-                if(repos.length == 0) displayRepos(repos);
-                else {
+            // If repositories belong to a context then
+            // the forked parent information needs to be
+            // retrieved and they need to be sorted in order
+            // of last updated.
+            case REPOS:
 
-                    // Only make a callback for last repo.
-                    var callback = null;
-                    for(var current in repos) {
-                        if(current == repos.length - 1) {
-                            callback = function(data) {
-                                data = sortReposByLastUpdated(data);
-                                cacheSave(mGitHub.context.login, REPOS, data);
-                                displayRepos(data);
-                            }
+                // Forked repository data cannot be loaded in async like following
+                // because the last repo is not always guarenteed to be a fork and
+                // require an aync call.
+                function getForkedParents(repos, index, callback) {
+                    if(index < repos.length) {
+
+                        // If repo is forked get its parent.
+                        if(repos[index].fork) {
+                            $.getJSON(mGitHub.api_url + 'repos/' + context + '/' + repos[index].name, {access_token: mOAuth2.getAccessToken()})
+                                .success( function(json) {
+
+                                    // If forked repo does not have a parent it was forked from an owner.
+                                    repos[index].parent = (json.parent ? json.parent.owner : json.owner);
+                                    getForkedParents(repos, ++index, callback);
+                                });
                         }
-                        loadForkedRepoParent(repos, current, callback);
+                        else getForkedParents(repos, ++index, callback);
                     }
-                }
-                break;
- 
-            // If watched repos are being loaded from GitHub
-            // then filter out your own repos.  Save the repos
-            // to cache then display them.
-            case WATCHED : 
-                repos = filterUserRepos(repos);
-                cacheSave(mGitHub.context.login, WATCHED, repos);
-                displayWatched(repos);
+
+                    // When all repos processed, callback.
+                    else callback(repos);
+                };
+
+                // Get forked repos parents.  After all parents retrieved sort
+                // repositories by last updated, save them to cache, then display them.
+                getForkedParents(repos, 0, function(repos) {
+                    repos = sortReposByLastUpdated(repos);
+                    cacheSave(context, REPOS, repos);
+                    display(repos);
+                });
+
                 break;
 
-            // WTF...
+            // If repositories are just being watched they need to be
+            // filtered so owned repositories do not show up in them.
+            // Then they can be cached and displayed.
+            case WATCHED:
+                repos = filterUserRepos(repos);
+                cacheSave(context, WATCHED, repos);
+                display(repos);
+                break;
+
+            // OMG...
+            default:
+                break;
+        }
+    };
+
+    // Adapter function used to display repositories based on type.
+    function display(repos) {
+
+        switch(type) {
+
+            case REPOS :
+                displayRepos(context, repos);
+                break;
+
+            case WATCHED : 
+                displayWatched(context, repos);
+                break;
+
             default: 
                 break;
         }
@@ -1207,18 +1213,18 @@ function loadRepos(type) {
 /**
  * Load User Name
  * 
- * Load a user name based on a login. (Saved to user object).
+ * Load a user name into a group based on a login. (Saved to user object).
  * 
- * @param group - Group to get user name from.
+ * @param group - Group to get user name from (Passed by reference).
  * @param index - Index of user in group.
  * @param callback - Callback when complete.
+ * 
  */
-function loadUserName(group, index, callback) {
+function loadUserName(context, group, index, callback) {
     $.getJSON(mGitHub.api_url + 'users/' + group[index].login)
         .success( function(json) {
             group[index].name = json.name;
-
-            if(callback) callback(group);
+            if(callback) callback(context, group);
         });
 };
 

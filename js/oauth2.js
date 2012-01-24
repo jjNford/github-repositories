@@ -11,7 +11,7 @@
 
 // OAuth2 Object Constructor.
 var OAuth2 = function() {
-		
+
 	// Local storage entries.
 	access_token_key      = "oauth2";
 	
@@ -21,7 +21,7 @@ var OAuth2 = function() {
 	redirect_url      = "https://github.com/robots.txt";
 	access_token_url  = "https://github.com/login/oauth/access_token";
 	authorization_url = "https://github.com/login/oauth/authorize";
-	scopes            = [];
+	scopes            = ['repo'];
 };
 
 
@@ -40,29 +40,29 @@ OAuth2.prototype.flow = {
 
 	// Create url, add scopes to url, redirect to GitHub authorization page.
 	begin: function() {
-		
+	
 		var url = authorization_url
-		        + "?client_id="    + client_id
+		        + "?client_id=" + client_id
 		        + "&redirect_uri=" + redirect_url
 		        + "&scope=";
-		
+
 		// Add access scopes.
-		for(var scope in scopes) { url += scope + ","; }
-		
+		for(var scope in scopes) { url += scopes[scope] + ","; }	
+	
 		chrome.tabs.create({url: url, selected: true}, function(dataFromTab){});
 		self.close();
 	},
 	
 	// Injected script will get access code and redirect to adapter page.
 	getAccessCode : function(url) {
-		
+	
 		// Check for application access error.
 		if( url.match(/\?error=(.+)/) ) {
 			chrome.tabs.getCurrent(function(thisTab) {
 				chrome.tabs.remove(thisTab.id, function(){});
 			});
 		}
-		
+	
 		// If code received.
 		else {
 			code = url.match(/\?code=([\w\/\-]+)/)[1];
@@ -73,15 +73,15 @@ OAuth2.prototype.flow = {
 	// Send request for access token to GitHub with access code and application
 	// secret.  Finish OAuth2 when successful response has returned.
 	getAccessToken : function(code) {
-		
+	
 	 	var that = this;
-	 	
+	
 	 	// Create form data for request.
 	 	var formData = new FormData();
 	 	formData.append('client_id', client_id);
 	 	formData.append('client_secret', client_secret);
-	 	formData.append('code', code);
-	 	
+	 	formData.append('code', code); 
+	
 	 	var xhr = new XMLHttpRequest();
 	 	xhr.addEventListener('readystatechange', function(event) {
 	 		if(xhr.readyState == 4) {
@@ -92,7 +92,7 @@ OAuth2.prototype.flow = {
 	 				chrome.tabs.getCurrent(function(thisTab) {
 	 					chrome.tabs.remove(thisTab.id, function(){});
 	 				});
-	 			}	 			
+	 			}	
 	 		}
 	 	});
 	 	xhr.open('POST', access_token_url, true);
@@ -101,11 +101,11 @@ OAuth2.prototype.flow = {
 	
 	// Finish the OAuth2 flow by saving the access token and closing the adapter page.
 	finish :  function(accessToken) {
-		
+	
 		// Save token information in local storage.
 		// API V3 does not support expiration date or refresh token.
 		localStorage[access_token_key] = accessToken;
-		
+
 		// Close the current page.
 		chrome.tabs.getCurrent(function(thisTab) {
 			chrome.tabs.remove(thisTab.id, function() {});
