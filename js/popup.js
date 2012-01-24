@@ -361,7 +361,7 @@ function createFilterHTML(filters, selected) {
  * 
  */
 function displayContent(context, type, content, callback) {
-    console.log(context);
+
     var contentSection = $('#content');
 
     // Check semaphore locks.
