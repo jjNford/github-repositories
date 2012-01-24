@@ -475,6 +475,7 @@ function displayRepos(context, repos) {
               + '<a href="' + repo.html_url + '/network" target="_blank">' + repo.forks + '</a>'
               + '</li>'
               + '</ul>'
+              + '<span class="repo_id">'
               + '<h3>'
               + '<a href="' + repo.html_url + '" target="_blank" class="filter_item">' + repo.name + '</a>'
               + '</h3>';
@@ -488,7 +489,23 @@ function displayRepos(context, repos) {
                   + '</p>';
         }
 
-        html += '<div>'
+        // Create HTTP URL
+        var urlTail = repo.clone_url.split("https://");
+        var httpURL = "https://" + mGitHub.context.login + "@" + urlTail[1];
+
+        html += '</span>'
+              + '<div class="repo_clone">'
+              + '<a class="zip" href="' + repo.html_url + '/zipball/master" target="_blank">ZIP</a>'
+              + '<ul class="links">'
+              + '<li rel="ssh" data="' + repo.ssh_url + '" class="selected">SSH</li>'
+              + '<li rel="http" data="' + httpURL + '">HTTP</li>';
+
+        if(repo.private == false) html += '<li rel="git" data="' + repo.git_url + '">Git Read-Only</li>';
+
+        html += '<li rel="input"><input type="text" value="' + repo.ssh_url + '"/></li>'
+              + '</ul>'
+              + '</div>'
+              + '<div class="repo_about">'
               + '<p class="description">' + repo.description + '</p>'
               + '<p class="updated">Last updated '
               + '<time class="timeago" datetime="' + repo.updated_at + '">' + repo.updated_at + '</time>'
@@ -504,6 +521,47 @@ function displayRepos(context, repos) {
     function callback() {
         jQuery("time.timeago").timeago();
         filterOnClickListener();
+
+        // Add click events for clones buttons.
+        $('.repo_list .repo_about').each( function() {
+            $(this).on('click', function() {
+
+                // Set button down class on zip button clicks.
+                $('.repo_list .repo_clone .zip').on('mousedown', function() {
+                    $(this).addClass('down');
+
+                });
+                $('.repo_list .repo_clone .zip').on('mouseleave', function() {
+                    $(this).removeClass('down'); 
+                });
+                $('.repo_list .repo_clone .zip').on('mouseup', function() {
+                    $(this).removeClass('down');
+                });
+
+
+
+                // Find the repositories cloning center.
+                var cloneCenter = $(this).parent().find('.repo_clone');
+                cloneCenter.slideToggle(ANIMATION_SPEED);
+
+                // Find repositories clone inputer box.
+                var inputBox = cloneCenter.children().find('input');
+
+                // When box is clicked select all text.
+                inputBox.on('click', function() {
+                    $(this).select();
+                });
+
+                // Add on clicks to each clone type button.
+                cloneCenter.find('li').each( function() {
+                    if( $(this).attr("rel") != "input" ) {
+                        $(this).on('click', function() {
+                            inputBox.val( $(this).attr('data') );
+                        })
+                    }
+                });
+            });
+        });
     };
 
     // Display content.

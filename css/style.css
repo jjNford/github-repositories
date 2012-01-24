@@ -639,7 +639,12 @@ button:hover {
 	background: url('../img/repo_stat_forks.png') 5px -2px no-repeat;
 }
 
-.repo_list h3 {
+.repo_list .repo_id {
+    display: inline-block;
+    padding-bottom: 8px;
+}
+
+.repo_list .repo_id h3 {
 	display: block;
 	padding-left: 18px;
 	font-size: 14px;
@@ -647,16 +652,107 @@ button:hover {
 	line-height: 19px;
 }
 
-.repo_list h3 a {
+.repo_list .repo_id h3 a {
 	color: #4183c3;
 	text-decoration: none;
 }
 
-.repo_list div {
-	margin: 8px -10px 0 -10px;
+.repo_list .repo_clone {
+    display: none;
+    margin: 0 -10px;
+    background: #fafafa;
+    border-top: 1px solid #dddddd;
+    color: #333;
+    font-size: 11px;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #fff;
+    line-height: 21px;
+}
+
+.repo_list .repo_clone .zip {
+    width: 41px;
+    padding-right: 9px;
+    display: inline-block;
+    margin: 0 10px;
+    background: url('../img/zip.png') 1px -1px no-repeat,
+                -webkit-gradient(linear,left top,left bottom,from(#F4F4F4),to(#ECECEC)); 
+    border: 1px solid #d4d4d4;    
+    border-radius: 3px;
+    text-align: right;
+}
+
+.repo_list .repo_clone .zip:hover {
+    background: url('../img/zip.png') 1px -27px no-repeat,
+                -webkit-gradient(linear,left top,left bottom, from(#599bdc), to(#3072b3));    border: 1px solid #518cc6;
+    border-color-bottom: #2a65a0;
+    color: #fff;
+    text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
+}
+
+.repo_list .repo_clone .zip.down:hover {
+    background: url('../img/zip.png') 1px -27px no-repeat,
+                -webkit-gradient(linear,left top,left bottom, from(#3071b3), to(#599bdc));    border: 1px solid #518cc6;
+    border-color-bottom: #2a65a0;
+    color: #fff;
+    text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
+}
+
+.repo_list .repo_clone a.zip {
+    color: #333;
+    text-decoration: none;
+}
+
+.repo_list .repo_clone .links {
+    display: inline-block;
+}
+
+.repo_list .repo_clone .links li {
+    height: 21px;
+    margin: 7px 0;
+    padding: 0 9px;
+    display: inline-block;
+    background: -webkit-gradient(linear,left top,left bottom,from(#F4F4F4),to(#ECECEC));
+    border: 1px solid #d4d4d4;
+    border-left: none;
+    cursor: pointer;
+}
+
+.repo_list .repo_clone .links li:first-child {
+    border-left: 1px solid #d4d4d4;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.repo_list .repo_clone li:last-child {
+    padding: 0;
+    border: none;
+}
+
+.repo_list .repo_clone .links li.selected {
+    border-bottom-color: #9a9a9a;
+    background: -webkit-gradient(linear, left top, left bottom, from(#d7d7d7), to(#ababab));
+}
+
+.repo_list .repo_clone li input[type="text"] {
+    width: 170px;
+    height: 16px;
+    padding: 3px 5px 2px 5px;
+    display: inline-block;
+    position: relative;
+    top: 1px;
+    border: 1px solid #ccc;
+    border-left: none;
+    color: #666;
+    font-family: Monaco,"Courier New","DejaVu Sans Mono","Bitstream Vera Sans Mono",monospace;
+    font-size: 11px;
+}
+
+.repo_list .repo_about {
+	margin: 0 -10px;
 	padding: 5px 10px;
 	background: -webkit-gradient(linear,left top,left bottom,from(#fafafa),to(#efefef));
 	border-top: 1px solid #eeeeee;
+	cursor: pointer;
 }
 
 .repo_list .description {
