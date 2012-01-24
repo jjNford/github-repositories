@@ -852,6 +852,10 @@ button:hover {
 	background: url('../img/repo_public.png') 0 8px no-repeat;
 }
 
+.watched_list li.private {
+    background: url('../img/repo_private.png') 0 7px no-repeat;
+}
+
 .watched_list a {
 	display: block;
 	padding: 0 10px 0 20px;
