@@ -361,7 +361,7 @@ function createFilterHTML(filters, selected) {
  * 
  */
 function displayContent(context, type, content, callback) {
-
+    console.log(context);
     var contentSection = $('#content');
 
     // Check semaphore locks.
@@ -437,7 +437,7 @@ function displayFollowing(context, type, following) {
     };
 
     // Display content.
-    displayContent(mGitHub.context.login, type, html, callback);
+    displayContent(context, type, html, callback);
 };
 
 
@@ -655,7 +655,7 @@ function filterOnClickListener() {
     // After a filter is clicked, set it and reload content.
     $('.filter li span').on('click', function() {
         setFilter( mContent, $(this).attr('rel') );
-        loadContent( mContent );
+        loadContent();
     });
 
     // Set filter input focus events.
@@ -827,7 +827,7 @@ function loadContent() {
 
     // Hold a context for this action to create a semephore for
     // caching and displaying data.
-    var context = mGitHub.context.login;
+    context = mGitHub.context.login;
  
     // Remove content data and display loading class.
     displayContentLoading();
@@ -1035,17 +1035,17 @@ function loadFollowing(context, type) {
     // If following are found then display them.
     // If they are not then load them from GitHub.
     if(following) displayFollowing(context, type, following);
-    else loadFromGitHub(context, [], 1);
+    else loadFromGitHub([], 1);
 
     // Use recursion to load all following from GitHub.
-    function loadFromGitHub(context, following, pageNumber) {
+    function loadFromGitHub(following, pageNumber) {
         $.getJSON(mGitHub.api_url + 'user/' + type, {access_token: mOAuth2.getAccessToken(), page: pageNumber})
             .success( function(json) {
 
                 // If data is being returned keep recursing.
                 if(json.length > 0) {
                     following = following.concat(json);
-                    loadFromGitHub(context, following, ++pageNumber);
+                    loadFromGitHub(following, ++pageNumber);
                 }
 
                 // When all data has been retreived:
@@ -1056,13 +1056,13 @@ function loadFollowing(context, type) {
                     // Make callback null, when last follower get name create a callback.
                     for(var current in following) {
                         if(current == following.length -1) {
-                            callback = function(context, following) {
+                            callback = function(following) {
                                 cacheSave(context, type, following);
                                 displayFollowing(context, type, following);
                             }
                         }
                         else var callback = null;
-                        loadUserName(context, following, current, callback);
+                        loadUserName(following, current, callback);
                     }
                 }
             });
@@ -1091,7 +1091,7 @@ function loadRepos(context, type) {
 
         // If we the context type is "User" then load the users repositories.
         if(mGitHub.context.type == "User") loadUserReposFromGitHub([], 1);
-        else loadOrgReposFromGitHub(context, [], 1, null);
+        else loadOrgReposFromGitHub([], 1, null);
     }
 
     // User recursion to load all of a Users repos from GitHub.
@@ -1111,7 +1111,7 @@ function loadRepos(context, type) {
     // we must make sure the last repo from the last request is not equal to
     // the last repo of the current request.
     // A context is required so callback knows what cache to save to.
-    function loadOrgReposFromGitHub(context, repos, pageNumber, lastRepo) {
+    function loadOrgReposFromGitHub(repos, pageNumber, lastRepo) {
         $.getJSON(mGitHub.api_url + 'orgs/' + context + '/repos', {access_token: mOAuth2.getAccessToken(), page: pageNumber} )
             .success( function(json) {
 
@@ -1124,7 +1124,7 @@ function loadRepos(context, type) {
                 // Recurse.
                 else {
                     repos = repos.concat(json);
-                    loadOrgReposFromGitHub(context, repos, ++pageNumber, repos[repos.length - 1]);
+                    loadOrgReposFromGitHub(repos, ++pageNumber, repos[repos.length - 1]);
                 }
         });
     };
@@ -1220,11 +1220,11 @@ function loadRepos(context, type) {
  * @param callback - Callback when complete.
  * 
  */
-function loadUserName(context, group, index, callback) {
+function loadUserName(group, index, callback) {
     $.getJSON(mGitHub.api_url + 'users/' + group[index].login)
         .success( function(json) {
             group[index].name = json.name;
-            if(callback) callback(context, group);
+            if(callback) callback(group);
         });
 };
 
