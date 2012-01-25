@@ -734,7 +734,6 @@ button:hover {
 }
 
 .repo_list .repo_clone li input[type="text"] {
-    width: 170px;
     height: 16px;
     padding: 3px 5px 2px 5px;
     display: inline-block;

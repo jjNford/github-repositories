@@ -1110,10 +1110,14 @@ function loadFollowing(context, type) {
                 // When all data has been retreived:
                 else {
 
+                    // If there is no following then jump to display.
+                    if( following.length == 0) displayFollowing(context, type, following);
+
                     // If any following exists then load user names and diplay following.
                     // After user names are returned save following to cache then display them.
                     // Make callback null, when last follower get name create a callback.
                     for(var current in following) {
+
                         if(current == following.length -1) {
                             callback = function(following) {
                                 cacheSave(context, type, following);
