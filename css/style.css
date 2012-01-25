@@ -683,7 +683,8 @@ button:hover {
 
 .repo_list .repo_clone .zip:hover {
     background: url('../img/zip.png') 1px -27px no-repeat,
-                -webkit-gradient(linear,left top,left bottom, from(#599bdc), to(#3072b3));    border: 1px solid #518cc6;
+                -webkit-gradient(linear,left top,left bottom, from(#599bdc), to(#3072b3));    
+    border: 1px solid #518cc6;
     border-color-bottom: #2a65a0;
     color: #fff;
     text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
@@ -691,7 +692,8 @@ button:hover {
 
 .repo_list .repo_clone .zip.down:hover {
     background: url('../img/zip.png') 1px -27px no-repeat,
-                -webkit-gradient(linear,left top,left bottom, from(#3071b3), to(#599bdc));    border: 1px solid #518cc6;
+                -webkit-gradient(linear,left top,left bottom, from(#3071b3), to(#599bdc));    
+    border: 1px solid #518cc6;
     border-color-bottom: #2a65a0;
     color: #fff;
     text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
@@ -728,7 +730,18 @@ button:hover {
     border: none;
 }
 
+.repo_list .repo_clone .links li:hover {
+    background: -webkit-gradient(linear,left top,left bottom, from(#599bdc), to(#3072b3));
+    border-color: #518CC6;
+    border-bottom-color: #2A65A0;
+    color: #fff;
+    text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
+}
+
 .repo_list .repo_clone .links li.selected {
+    color: #333;
+    text-shadow: 1px 1px 0 #fff;
+    border: 1px solid #d4d4d4;
     border-bottom-color: #9a9a9a;
     background: -webkit-gradient(linear, left top, left bottom, from(#d7d7d7), to(#ababab));
 }
@@ -749,7 +762,7 @@ button:hover {
 .repo_list .repo_about {
 	margin: 0 -10px;
 	padding: 5px 10px;
-	background: -webkit-gradient(linear,left top,left bottom,from(#fafafa),to(#efefef));
+	background: url("../img/expand.png") right bottom no-repeat,-webkit-gradient(linear,left top,left bottom,from(#fafafa),to(#efefef));
 	border-top: 1px solid #eeeeee;
 	cursor: pointer;
 }

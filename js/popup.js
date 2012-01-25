@@ -538,8 +538,6 @@ function displayRepos(context, repos) {
                     $(this).removeClass('down');
                 });
 
-
-
                 // Find the repositories cloning center.
                 var cloneCenter = $(this).parent().find('.repo_clone');
                 cloneCenter.slideToggle(ANIMATION_SPEED);
@@ -554,8 +552,17 @@ function displayRepos(context, repos) {
 
                 // Add on clicks to each clone type button.
                 cloneCenter.find('li').each( function() {
+
+                    // Don't add an onclick event for the input box.
                     if( $(this).attr("rel") != "input" ) {
                         $(this).on('click', function() {
+
+                            // Remove the selected class from another element.
+                            // Add the selected class to the clicked element.
+                            // Add the selected elements links to the input box.
+                            // Select the text in the input box for quick copy.
+                            $(this).siblings().removeClass('selected');
+                            $(this).addClass('selected');
                             inputBox.val( $(this).attr('data') );
                             inputBox.select();
                         })
