@@ -197,6 +197,7 @@ button:hover {
     width: 81px;
     height: 34px;
     margin-top: 80.5px;
+    cursor: pointer;
 }
 
 #application_header {
