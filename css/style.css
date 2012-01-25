@@ -755,6 +755,10 @@ button:hover {
 	cursor: pointer;
 }
 
+.repo_list .private .repo_about {
+    background: #fffeeb;
+}
+
 .repo_list .description {
 	margin-bottom: 3px;
 	color: #444;
@@ -844,16 +848,12 @@ button:hover {
 	clear: both;
 }
 
-.watched_list li:last-child {
-	border-bottom: none;
-}
-
 .watched_list li.public {
 	background: url('../img/repo_public.png') 0 8px no-repeat;
 }
 
 .watched_list li.private {
-    background: url('../img/repo_private.png') 0 7px no-repeat;
+    background: url('../img/repo_private.png') 0 7px no-repeat #fffeeb;
 }
 
 .watched_list a {
@@ -882,10 +882,6 @@ button:hover {
 	font-size: 14px;
 	font-weight: bold;
 	line-height: 24px;
-}
-
-.following_list li:last-child {
-	border-bottom: none;
 }
 
 .following_list a {

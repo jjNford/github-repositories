@@ -557,6 +557,7 @@ function displayRepos(context, repos) {
                     if( $(this).attr("rel") != "input" ) {
                         $(this).on('click', function() {
                             inputBox.val( $(this).attr('data') );
+                            inputBox.select();
                         })
                     }
                 });
