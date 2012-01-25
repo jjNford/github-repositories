@@ -462,7 +462,7 @@ function displayRepos(context, repos) {
     for(var current in repos) {
         repo = repos[current];
 
-        html += '<li class="' + (repo.private ? 'private' : 'public') + (repo.fork ? ' fork' : '') + '">'
+        html += '<li class="' + (repo['private'] ? 'private' : 'public') + (repo.fork ? ' fork' : '') + '">'
               + '<ul class="repo_stats">'
               + '<li>' + (repo.language ? repo.language : "") + '</li>'
               + '<li class="watchers">'
@@ -497,7 +497,7 @@ function displayRepos(context, repos) {
               + '<li rel="ssh" data="' + repo.ssh_url + '" class="selected">SSH</li>'
               + '<li rel="http" data="' + httpURL + '">HTTP</li>';
 
-        if(repo.private == false) html += '<li rel="git" data="' + repo.git_url + '">Git Read-Only</li>';
+        if(repo['private'] == false) html += '<li rel="git" data="' + repo.git_url + '">Git Read-Only</li>';
 
         html += '<li rel="input"><input type="text" value="' + repo.ssh_url + '"/></li>'
               + '</ul>'
@@ -601,7 +601,7 @@ function displayWatched(context, repos) {
     for(var current in repos) {
         repo = repos[current];
 
-        html += '<li class="' + (repo.private ? 'private' : 'public') + '">'
+        html += '<li class="' + (repo['private'] ? 'private' : 'public') + '">'
               + '<a href="' + repo.html_url + '" target="_blank" class="filter_item">'
               + '<span class="user">' + repo.owner.login + '</span>'
               + '/'
@@ -767,7 +767,7 @@ function filterOnClickListener() {
 function filterPrivateReposOnly(repos) {
     if(repos.length == 0) return repos;
     for(var i = (repos.length - 1); i >= 0; i--) {
-        if(!repos[i].private) {
+        if(!repos[i]['private']) {
             repos.splice(i, 1);
         }
     }
@@ -788,7 +788,7 @@ function filterPrivateReposOnly(repos) {
 function filterPublicReposOnly(repos) {
     if(repos.length == 0) return repos;
     for(var i = (repos.length - 1); i >= 0; i--) {
-        if(repos[i].private) {
+        if(repos[i]['private']) {
             repos.splice(i, 1);
         }
     }

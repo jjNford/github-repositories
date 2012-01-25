@@ -6,17 +6,20 @@
     <meta charset="utf-8">
 	<title>Authorizing</title>
 	
+	<!-- css -->
+	<link rel="stylesheet" href="../css/style.css" />
+	<!-- end css -->
+	
 	<!-- js -->
 	<script src="js/oauth2.js"></script>
+	<!-- end js -->
+	
+	<!-- javascript not run by Builder -->
 	<script>
 	    var oauth2 = new OAuth2();
 	    oauth2.flow.getAccessCode(window.location.href);
 	</script>
-	<!-- end js -->
-	
-	<!-- css -->
-	<link rel="stylesheet" href="../css/style.css" />
-	<!-- end css -->
+	<!-- the end of javascript not run by Builder -->
 	
 </head>
 <body class="adapter loading">
