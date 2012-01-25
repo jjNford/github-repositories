@@ -147,10 +147,7 @@ function bootstrap() {
 	// Build Extension Settings.
 	(function() {
 	    var settingsPanel = $('#settings');
-	    var cache_button  = $('#settings .caching .cache_button');
-
-        // Put contribution repository into settings.
-        injectContributionRepoHTML( $('#settings .contribute span') );
+	    var cache_button  = $('#settings .caching .button');
 
 	    // Set caching button.
 	    if( !localStorage[CACHE_PREF] ) localStorage[CACHE_PREF] = CACHE_DEFAULT; 
@@ -550,6 +547,9 @@ function displayRepos(context, repos) {
                     $(this).select();
                 });
 
+                // Select text on slide down.
+                inputBox.select();
+
                 // Add on clicks to each clone type button.
                 cloneCenter.find('li').each( function() {
 
@@ -835,50 +835,6 @@ function filterUserRepos(repos) {
         }
     }
     return repos;
-};
-
-
-
-/**
- * Get Contribution Repo
- * 
- * Get the HTML required to display the github-repositories probject.
- * 
- * @param element - DOM element to inject source reposotory html into.
- * 
- */
-function injectContributionRepoHTML(element) {
-    $.getJSON(mGitHub.api_url + 'repos/jjNford/github-repositories')
-        .success( function(repo) {
-
-            // Repository information has been retreived, create html.
-            var html = '<ul class="repo_list">'
-                     + '<li class="public">'
-                     + '<ul class="repo_stats">'
-                     + '<li>' + (repo.language ? repo.language : "") + '</li>'
-                     + '<li class="watchers">'
-                     + '<a href="' + repo.html_url + '/watchers" target="_blank">' + repo.watchers + '</a>'
-                     + '</li>'
-                     + '<li class="forks">'
-                     + '<a href="' + repo.html_url + '/network" target="_blank">' + repo.forks + '</a>'
-                     + '</li>'
-                     + '</ul>'
-                     + '<h3>'
-                     + '<a href="' + repo.html_url + '" target="_blank" class="filter_item">' + repo.name + '</a>'
-                     + '</h3>'
-                     + '<div>'
-                     + '<p class="description">' + repo.description + '</p>'
-                     + '<p class="updated">Last updated '
-                     + '<time class="timeago" datetime="' + repo.updated_at + '">' + repo.updated_at + '</time>'
-                     + '</p>'
-                     + '</div>'
-                     + '</li>'
-                     + '</ul>';
- 
-            // Inject element and run TimeAgo to get reletive time since last update.
-            element.html(html);
-        	jQuery("time.timeago").timeago();
-        });
 };
 
 

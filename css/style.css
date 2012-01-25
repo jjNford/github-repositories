@@ -97,7 +97,13 @@ button:hover {
 	cursor: pointer;
 }
 
-
+.button.neutral {
+    background: #f4f4f4;
+    background: -webkit-gradient(linear, left top, left bottom, from(#599bdc), to(#3173b4));
+    border-bottom-color: #2A65A0;
+	color: #fff;
+	text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
+}
 
 .button.positive {
 	background: #8add6d;
@@ -126,46 +132,27 @@ button:hover {
 	background: #dfdfdf;
 }
 
-#settings .caching {
-	display: block;
-	margin: 0 auto;
-	padding: 50px;
-	color: #333;
-	font-size: 11px;
-	text-align: center;
-	text-shadow: 1px 1px 0 #fff;
+#settings ul {
+    padding: 20px 0 0 75px;
 }
 
-#settings .cache_button {
-	display: block;
-	margin: 10px auto;
-	width: 75px;
+#settings li {
+    padding: 10px 0;
 }
 
-#settings .contribute {	
-	margin-top: 50px;
+#settings .button {
+    width: 74px;
+    display: inline-block;
 }
 
-#settings .contribute h1 {
-	padding: 10px 0;
-	font-size: 13px;
-	color: #333;
-	font-weight: bold;
-	text-shadow: 0 1px 0 #fff;
-	text-align: center;
-}
-
-#settings .contribute span {
-	width: 450px;
-	display: block;
-	margin: 0 auto;
-	border: 2px solid #fff;
-	border-radius: 3px;
-	box-shadow: 1px 1px 0 #ddd, -1px -1px #ddd;
-}
-
-#settings .contribute .repo_list, #settings .contribute .repo_list li {
-	margin: 0;
+#settings .description {
+    width: 475px;
+    display: inline-block;
+    margin-left: 30px;
+    color: #333;
+    font-size: 13px;
+    font-weight: bold;
+    text-shadow: 0 1px 0 #fff;
 }
 
 #authorization h1 {
