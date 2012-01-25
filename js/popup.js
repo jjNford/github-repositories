@@ -495,7 +495,7 @@ function displayRepos(context, repos) {
 
         html += '</span>'
               + '<div class="repo_clone">'
-              + '<a class="zip" href="' + repo.html_url + '/zipball/master" target="_blank">ZIP</a>'
+              + '<a class="zip" href="' + repo.html_url + '/zipball/' + (repo.master_branch == null ? "master" : repo.master_branch) + '" target="_blank">ZIP</a>'
               + '<ul class="links">'
               + '<li rel="ssh" data="' + repo.ssh_url + '" class="selected">SSH</li>'
               + '<li rel="http" data="' + httpURL + '">HTTP</li>';
