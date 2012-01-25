@@ -756,7 +756,7 @@ button:hover {
 }
 
 .repo_list .private .repo_about {
-    background: #fffeeb;
+    background: url("../img/expand.png") right bottom no-repeat, #fffeeb;
 }
 
 .repo_list .description {
