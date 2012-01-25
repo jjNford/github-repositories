@@ -22,4 +22,4 @@ Author
 
 License
 -------
-GitHub Repositories uses the MIT License.
+GitHub Repositories uses the <a href="http://www.opensource.org/licenses/mit-license.php" target="_blank">MIT License</a>.
