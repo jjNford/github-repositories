@@ -479,11 +479,23 @@ function displayRepos(context, repos) {
 
         // If repo is forked display parent information.
         if(repo.fork) { 
-            html += '<p class="fork_flag">'
-                  + 'Forked from <a href="https://github.com/' + repo.parent.login + '/' + repo.name + '" target="_blank">' 
-                  + repo.parent.login + '/' + repo.name 
-                  + '</a>'
-                  + '</p>';
+
+            html += '<p class="fork_flag">';
+
+            // Make sure the forked repository is not an orphan (parent was found).
+            // From testing I've only ran into this scenario when a forked organization
+            // repository name is changed.
+            if(!repo.orphan) {
+                html += 'Forked from <a href="https://github.com/' + repo.parent.login + '/' + repo.name + '" target="_blank">' 
+                      + repo.parent.login + '/' + repo.name 
+                      + '</a>';
+
+            }
+
+            // If the repository is an orphan.
+            else html += 'Forked parent was lost.';
+
+            html += '</p>';
         }
 
         // Create HTTP URL
@@ -1179,7 +1191,16 @@ function loadRepos(context, type) {
                                 .success( function(json) {
 
                                     // If forked repo does not have a parent it was forked from an owner.
+                                    // If the parent url is not found the repository is an orphan (probably due to name change).
+                                    repos[index].orphan = false;
                                     repos[index].parent = (json.parent ? json.parent.owner : json.owner);
+                                    getForkedParents(repos, ++index, callback);
+                                })
+                                .error( function(json) {
+
+                                    // 404 Error will be thrown if forked organization repository name has changed.
+                                    repos[index].orphan = true;
+                                    repos[index].parent = {"login": repos[index].owner.login};
                                     getForkedParents(repos, ++index, callback);
                                 });
                         }
