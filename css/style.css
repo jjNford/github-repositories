@@ -58,6 +58,21 @@
 	background: url('../img/header_logo_hover.png') 0 0 no-repeat;
 }
 
+.copied {
+    width: 70px;
+    position: fixed;
+    top: 12.5px;
+    left: 325px;
+    padding: 4px 6px;
+    background: rgba(0, 0, 0, .75);
+    border-radius: 5px;
+    color: #fff;
+    font-size: 12px;
+    letter-spacing: 1.1px;
+    text-align: center;
+    display: none;
+}
+
 button {
     background: rgb(255, 255, 255);
     background: -webkit-gradient(linear, left top, left bottom, from(rgb(255, 255, 255)), to(rgb(225, 225, 225)));

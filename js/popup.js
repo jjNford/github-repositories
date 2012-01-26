@@ -506,7 +506,7 @@ function displayRepos(context, repos) {
               + '<div class="repo_clone">'
               + '<a class="zip" href="' + repo.html_url + '/zipball/' + (repo.master_branch == null ? "master" : repo.master_branch) + '" target="_blank">ZIP</a>'
               + '<ul class="links">'
-              + '<li rel="ssh" data="' + repo.ssh_url + '" class="selected">SSH</li>'
+              + '<li rel="ssh" data="' + repo.ssh_url + '">SSH</li>'
               + '<li rel="http" data="' + httpURL + '">HTTP</li>';
 
         if(repo['private'] == false) html += '<li rel="git" data="' + repo.git_url + '">Git Read-Only</li>';
@@ -559,9 +559,6 @@ function displayRepos(context, repos) {
                     $(this).select();
                 });
 
-                // Select text on slide down.
-                inputBox.select();
-
                 // Add on clicks to each clone type button.
                 cloneCenter.find('li').each( function() {
 
@@ -577,6 +574,14 @@ function displayRepos(context, repos) {
                             $(this).addClass('selected');
                             inputBox.val( $(this).attr('data') );
                             inputBox.select();
+
+                            // Copy the link.
+                            document.execCommand("copy");
+
+                            // Notify user that link has been copied.
+                            $('.copied').fadeIn(ANIMATION_SPEED * 2, function() {
+                                $(this).delay(ANIMATION_SPEED).fadeOut(ANIMATION_SPEED * 2);
+                            });
                         })
                     }
                 });
