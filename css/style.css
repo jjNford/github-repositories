@@ -59,18 +59,19 @@
 }
 
 .copied {
-    width: 70px;
-    position: fixed;
-    top: 12.5px;
-    left: 325px;
-    padding: 4px 6px;
-    background: rgba(0, 0, 0, .75);
-    border-radius: 5px;
-    color: #fff;
-    font-size: 12px;
-    letter-spacing: 1.1px;
-    text-align: center;
+    height: 24px;
     display: none;
+    position: fixed;
+    top: 11.5px;
+    left: 325px;
+    padding: 0px 8px;
+    background: rgba(0, 0, 0, .77);
+    border-radius: 3px;
+    color: #fff;
+    font-size: 11px;
+    text-align: center;
+    line-height: 24px;
+    white-space: nowrap;
 }
 
 button {
