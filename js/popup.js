@@ -1,6 +1,6 @@
 // Application Constants.
 var ANIMATION_SPEED = 225;
-var CACHE			= "cache->";
+var CACHE			= "cache.";
 var CACHE_DEFAULT   = "on";
 var CACHE_ON        = "on";
 var CACHE_OFF       = "off";
@@ -27,35 +27,33 @@ var mOAuth2 = new OAuth2();
 var mGitHub = new GitHub();
 
 // Global Variables.
-mCaching = undefined;
-mContent = undefined;
+var mCaching = undefined;
+var mContent = undefined;
 
-mFilterRepos     = undefined;
-mFilterWatched   = undefined;
-mFilterFollowing = undefined;
-mFilterFollowers = undefined;
+var mFilterRepos     = undefined;
+var mFilterWatched   = undefined;
+var mFilterFollowing = undefined;
+var mFilterFollowers = undefined;
+
+
 
 /**
  * Authenticate
  * 
- * Make sure current access token is valid.
- * If so load User object and User Orgs from GitHub.
+ * Authenticate the users OAuth2 token.
  * 
  */
 function authenticate() {
 	
-	// If an access token exists:
+	// If an access token exists load the users data.
 	if(mOAuth2.getAccessToken()) {
-
-        // Load User object from GitHub.
 		$.getJSON(mGitHub.api_url + "user", {access_token: mOAuth2.getAccessToken()})
-			.success( function(json) {
 
-				// Check that User object was returned.
+		    // If there is a successful response then check if a User Object was returned.
+			// If a User Object was returned then save the it and load the user's organizations.
+			.success( function(json) {
 				if(json.type == "User") {
 				    mGitHub.user = json;
-
-                    // Load Users organizations.
 				    $.getJSON(mGitHub.api_url + "user/orgs", {access_token: mOAuth2.getAccessToken()})
 					    .success(function(json) {
 						    mGitHub.orgs = json;
@@ -66,24 +64,18 @@ function authenticate() {
 				}
 			})
 
-			// If an error is returned:
+			// If an error was returned check the ready state and the status of the JSON.
+			// If both are equal to 0 there is a connection error so the application can do no more.
+			// If there is not a connection error then the authentication failed so prompt the user to authenticate.
 			.error( function(json){
-
-			    // If no readyState or status is returned there is no connection.
-			    // Keep extension in current state.
 			    if(json.readyState == 0 && json.status == 0) {}
- 
-			    // Else the User/extension is not authorized.
-			    else {
-			        showAuthorizationScreen();
-			    }
-		});
+			    else showAuthorizationScreen();
+		    });
 	}
 	
-	// If no access token exists:
-	else { 
-	    showAuthorizationScreen(); 
-	}
+	// If no authorization exists then prompt the user to 
+	// authorize the extension to access there personal data.
+	else showAuthorizationScreen(); 
 };
 
 
@@ -91,89 +83,96 @@ function authenticate() {
 /**
  * Bootstrap
  * 
- * User/extension have been authenticated.  Set up application resources, 
- * bind DOM events, load and set extension state and context.
+ * Load last application state, set up the applicaiton context,
+ * create the appropriate element binders and then disaply the application.
  * 
  */
 function bootstrap() {
 
-    // Load last extension state from storage.
+    // Get the state of the exention the last time was used
     onCreate();
 
-	// Update application context.
-	loadContext( mGitHub.context );
+	// Update the application context.
+	// * Right now the context is just an ID because the User Object is
+	//   never stored in the localstorage.  Only the ID of the user is.
+	loadContext(mGitHub.context);
 	
 	// Bind Context Switcher events.
+	//  - On mouse down add the "down" class to the context switcher button.
+	//  - On mouse up remove the class "down" from the context switcher button.
+	//  - When clicked toggle the context menu.
 	var contextButton = $('.context_switcher .context_switcher_button');
 	contextButton.on('mousedown', function() { contextButton.addClass('down'); });
 	contextButton.on('mouseup',   function() { contextButton.removeClass('down'); }); 
 	contextButton.bind('click',   function() { toggleContextMenu(); });
 
 	// Bind Context Panel and Context Overlay events.
+	//  - Toggle the context menu when the button is clicked
+	//  - Close the context menu when the "X" is clicked
 	$('.context_overlay').on('click', toggleContextMenu);
 	$('.context_switcher .context_switcher_panel .close').on('click', toggleContextMenu);
  
 	// Bind Navigation events.
+	//  - Remove selected class from old tab.
+	//  - Add the selected class to the new tab.
+	//  - Set selected reference for next extension use.
+	//  - Load the selected content.
 	$('.application_nav li').on('click', function() {
-
-	    // Remove and add selected class to appropriate tab.
+        $('.application_nav li[rel=' + mContent + ']').removeClass('selected');
 	    var clickedElement = $(this);
-	    $('.application_nav li[data=' + mContent + ']').removeClass('selected');
 	    clickedElement.addClass('selected');
-	
-	    // Save select to local storage for next extension load and load content.
-	    setContent( clickedElement.attr('data') );
+	    setContent( clickedElement.attr('rel') );
 	    loadContent();
 	});
 	
 	// Bind Logout click event.
+	//  - Clear all local storage.
+	//  - Close the popup (if in a window close the window).
 	$('.user_links .log_out').on('click', function() {
- 
-	    // Clear all local storage.
-	    mOAuth2.clearAccessToken();
         localStorage.clear();
-
-        // Close the popup - if the extension is being run in a window, close the window.
         self.close();
         chrome.tabs.getCurrent(function(thisTab) { chrome.tabs.remove(thisTab.id, function(){}); });
     });
 
     // Bind Refresh click event.
+    //  - Delete the cache
+    //  - Load the current content.
 	$('.refresh').on('click', function() {
-        cacheDelete( mGitHub.context.login, mContent );
+        cacheDelete( mGitHub.context.id, mContent );
 	    loadContent();
 	});
 	
 	// Build Extension Settings.
+	//  - Set appropriate caching button.
+	//  - Bind events to caching button.
+	//  - Bind events to settings button.
 	(function() {
 	    var settingsPanel = $('#settings');
 	    var cache_button  = $('#settings .caching .button');
 
-	    // Set caching button.
+	    // Set appropriate caching button.
+	    //  - Create a caching preference if one does not exist.
+	    //  - If caching if Off display the Off button.
+	    //  - If caching is On display the On button.
 	    if( !localStorage[CACHE_PREF] ) localStorage[CACHE_PREF] = CACHE_DEFAULT; 
 	    if( localStorage[CACHE_PREF] == CACHE_ON) cache_button.removeClass('negative').addClass('positive').html("Caching On");
 	    else cache_button.removeClass('positive').addClass('negative').html("Caching Off");
 
 	    // Bind Cache Button click event.
+	    //  - Remove and Add the correct classes and HTML.
+	    //  - Change the local storage settings.
+	    //  - Change the local script variable.
+	    //  - If the cache is turned off then flush the cache.
 	    cache_button.on('click', function() {
-
-	        // If caching is turned off:
 	         if(localStorage[CACHE_PREF] == CACHE_ON) {
-
-	             // Remove positive class, add negative class, and update text.
-	             // Change setting in storage.
                 cache_button.removeClass('positive').addClass('negative').html("Caching Off");
                 localStorage[CACHE_PREF] = CACHE_OFF;
                 mCaching = CACHE_OFF;
-
-                // Delete all cached data.
                 for(var i = localStorage.length - 1; i >= 0; i--) {
                     var key = localStorage.key(i);
                     if( new RegExp(CACHE).test(key) ) delete localStorage[key];
                 }
             }
-
-            // If cache is turned on:
 	        else {
 	            cache_button.removeClass('negative').addClass('positive').html("Caching On");
 	            localStorage[CACHE_PREF] = CACHE_ON;
@@ -204,30 +203,27 @@ function bootstrap() {
 	    });
     })();
 	
-    // Now the Extension Application can be displayed.
-    // Remove the popup loading class, add the loading class to teh content window.
-    // Fade the application in.
+    // Display the Application article of the extension.
 	$('body').removeClass('loading');
 	$('#application').fadeIn(ANIMATION_SPEED);
 	
-	// Display the User Link Tooptips (upper lefthad corner).
-	// This function must be run after the application is displayed,
-	// because the tooltip width is dynamic.  If the display is set to 
-	// none the the centering will not be adjusted correctly.
+	// Render the User Link Tooltips.
+	//  - Set the correct margin.
+	//  - Set the hover effects.
+	//
+	// * This must be done after the the application is displayed because the width of the tooltips
+	//   is generated dynamically to center their width.  Thats they are displayed.
     (function() {
-	    $('.user_links .tooltip h1').each( function() { 
-	        $(this).css('margin-left', -$(this).width()/2-8);
+	    $('.user_links .tooltip h1').each( function() { $(this).css('margin-left', -$(this).width()/2-8); });
+	    $('.user_links li').each(function(){
+	        var menuItem = $(this);
+	        var toolTips = $('.user_links .tooltip');
+	        menuItem.hover(
+	            function() { $('.' + menuItem.attr('class') + ' .tooltip').css('visibility', 'visible').hover( function() { toolTips.css('visibility', 'hidden') }); },       
+	            function() { toolTips.css('visibility', 'hidden'); }
+	        );
 	    });
-
-	     $('.user_links li').each(function(){
-	         var menuItem = $(this);
-	         var toolTips = $('.user_links .tooltip');
-	         menuItem.hover(
-	             function() { $('.' + menuItem.attr('class') + ' .tooltip').css('visibility', 'visible').hover( function() { toolTips.css('visibility', 'hidden') }); },       
-	             function() { toolTips.css('visibility', 'hidden'); }
-	         );
-	     });
-     })();
+    })();
 };
 
 
@@ -235,17 +231,17 @@ function bootstrap() {
 /**
  * Cache Delete
  * 
- * Remove data from cache based on context and key.
+ * Remove selected data from the cache.
  * 
- * @param context - Context login name of cache owner where delete should take place.
- * @param key - Key to data the should be removed from cache.
+ * @param contextID - Context ID of cache owner.
+ * @param key - Hash key where data should be removed.
  * 
  */
-function cacheDelete(context, key) {
+function cacheDelete(contextID, key) {
 	try {
-		var cache = JSON.parse( localStorage[CACHE + context] );
+		var cache = JSON.parse( localStorage[CACHE + contextID] );
 		delete cache[key]
-		localStorage[CACHE + context] = JSON.stringify(cache);
+		localStorage[CACHE + contextID] = JSON.stringify(cache);
 	}
 	catch(ignored) {}
 };
@@ -255,32 +251,23 @@ function cacheDelete(context, key) {
 /**
  * Cache Load
  * 
- * Load data from cache given the context and key.
+ * Load selected data from the cache.
  * 
- * @param context - Context login name of cache owner to be loaded.
- * @param key - Cache key data should be loaded from.
- * @return data - If data is found it will be returned, if data is not found
- *                or has expried, false will be returned.
+ * @param contextID - Context ID of cache owner.
+ * @param key - Hash key data should be loaded from.
+ * @return data - Data if found, false is not.
  * 
  */
-function cacheLoad(context, key) {
+function cacheLoad(contextID, key) {
     if( mCaching == CACHE_ON ) {
-
-       // If caching is on, attempt to load data from cache.
         try { 
-            var data = JSON.parse( localStorage[CACHE + context] )[key]; 
+            var data = JSON.parse( localStorage[CACHE + contextID] )[key]; 
             var time = new Date().getTime();
-
-            // Check that cached data has not expired.
             if(time - data.time > CACHE_TIME) { return false; }
             return (data.cache ? data.cache : false);
         } 
-
-        // If an error is caught the cached data does not exist.
-        catch(error) {return false;}
+        catch(error) { return false; }
     }
-
-    // If we made it here, cache cannot be loaded, return false.
     return false;
 };
 
@@ -289,27 +276,23 @@ function cacheLoad(context, key) {
 /**
  * Cache Save
  * 
- * Save data to cache given the context, key, and data.
+ * Save given data to the cache.
  * 
- * @param context - Context login name of cache owner to save under.
- * @param key - Cache key to save to.
- * @param data - Data to be saved to cache.
+ * @param contextID - Context ID of cache owner.
+ * @param key - Hash key data should be loaded from.
+ * @param data - Data to be saved.
  * 
  */
-function cacheSave(context, key, data) {
+function cacheSave(contextID, key, data) {
     if( mCaching == CACHE_ON ) {
-
-        // If caching is on attempt to save to it.
         try {
-            var cache = JSON.parse( localStorage[CACHE + context] );
+            var cache = JSON.parse( localStorage[CACHE + contextID] );
             cache[key] = {"time" : new Date().getTime(), "cache" : data};
-            localStorage[CACHE + context] = JSON.stringify(cache);
-        }
- 
-        // If cache does not exist create it and try again.
+            localStorage[CACHE + contextID] = JSON.stringify(cache);
+        } 
         catch(error) {
-            localStorage[CACHE + context] = "{}";
-            cacheSave(context, key, data);
+            localStorage[CACHE + contextID] = "{}";
+            cacheSave(contextID, key, data);
         }
     }
 };
@@ -328,22 +311,22 @@ function cacheSave(context, key, data) {
  */
 function createFilterHTML(filters, selected) {
 
-    var html = '<div class="filter">'
-             + '<input type="text" class="filter_search" />'
-             + '<ul>';
-
+    // Create filter list elements.
+    var filterItems = "";
     for(var current in filters) {
-        html += '<li>'
-              + '<span rel="' + current + '" ' + ((current == selected) ? 'class="selected"' : '') + '>' 
-              + filters[current] 
-              + '</span>'
-              + '</li>';
+        filterItems += "<li>"
+                     + "<span rel='" + current + "' " + ((current == selected) ? "class='selected'" : "") + ">"
+                     + filters[current]
+                     + "</span>"
+                     + "</li>";
     }
 
-    html += '</ul>'
-          + '</div>';
-
-    return html;
+    return "<div class='filter'>"
+         + "<input type='text' class='filter_search' />"
+         + "<ul>"
+         + filterItems
+         + "</ul>"
+         + "</div>";
 };
 
 
@@ -351,20 +334,20 @@ function createFilterHTML(filters, selected) {
 /**
  * Display Content
  * 
- * @param context - Current user context (acts as a semaphore for late async callbacks after switching context).
- * @param type - Type of content to display (acts as a semaphore for last sync callbacks when chaning content).
+ * @param contextID - Context ID that called for display.
+ * @param type - Type of content to display.
  * @param content - Content to display.
  * @param callback - Callback to be run after content is rendered.
  * 
+ * * The context ID and type protect the display from being updated with late asyn callbacks.
+ *   By checking the context we guarentee that a late callback will not update the display 
+ *   when the context is switched.  By checking the type we guarentee that the display
+ *   will not update after a late callback when on a different navigation tab.
+ * 
  */
 function displayContent(context, type, content, callback) {
-
     var contentSection = $('#content');
-
-    // Check semaphore locks.
-    if(type == localStorage[CONTENT] && context == mGitHub.context.login) {
-
-        // If content is not locked, fade out loading and fade in content.
+    if(type == mContent && context.id == mGitHub.context.id) {
         contentSection.fadeOut(ANIMATION_SPEED, function() {
             contentSection.removeClass('loading').html(content).fadeIn(ANIMATION_SPEED);
             if(callback) { callback(); }
@@ -397,43 +380,42 @@ function displayContentLoading() {
  */
 function displayFollowing(context, type, following) {
 
-    // Get filter for type.
+    // Create HTML Filter:
+    //  - Get selected filter based on type.
+    //  - Filter the data.
     var filterSelected = window["mFilter" + type.charAt(0).toUpperCase() + type.slice(1)];
-
-    // Filter the repos.
     following = filter(filterSelected, following);
 
-    // Create HTML for Repos.
-    // Create a filter box for sorting Repos.
-    var filters = {"alphabetical_following":"Abc", "recently_followed":"Most Recent"};
-    var html = createFilterHTML(filters, filterSelected);
+    // Create HTML.
+    var html = createFilterHTML( {"alphabetical_following":"Abc", "recently_followed":"Most Recent"} , filterSelected)
+             + "<ul class='following_list'>";
 
-    html += '<ul class="following_list">';
-
+    // Create following list item html.
     for(var current in following) {
-        user = following[current];
 
-        html += '<li>'
-              + '<a href="https://github.com/' + user.login + '" target="_blank">'
-              + '<img src="' + user.avatar_url + '" />'
-              + '</a>'
-              + '<a href="https://github.com/' + user.login + '" target="_blank" class="filter_item">' 
-              + user.login 
-              + '</a>';
+        var userLogin = following[current].login;
+        var userAvatar= following[current].avatar_url ? following[current].avatar_url : "undefined";
+        var userName  = following[current].name ? ("<em> (" + following[current].name + ")</em>") : "";
 
-        if(user.name != undefined) { html += '<em> (' + user.name + ')</em>'; }
-
-        html += '</li>';
+        html += "<li>"
+              + "<a href='https://github.com/" + userLogin + "' target='_blank'>"
+              + "<img src='" + userAvatar + "' />"
+              + "</a>"
+              + "<a href='https://github.com/" + userLogin + "' target='_blank' class='filter_item'>"
+              + userLogin
+              + "</a>"
+              + userName
+              + "</li>";
     }
-    html += '</ul>';
+    html += "</ul>";
 
-    // Create callback to be run after repos is rendered.
-    // Create filter on click events after the filters have been rendered.
+    // Create callback to be run after content is rendered.
+    //  - Create filter on click listeners.
     function callback() {
         filterOnClickListener();
     };
 
-    // Display content.
+    // Display the content.
     displayContent(context, type, html, callback);
 };
 
@@ -442,124 +424,116 @@ function displayFollowing(context, type, following) {
 /**
  * Display Repos
  * 
- * Display Full Repositories.
+ * Display Users Repositories.
  * 
  * @param repos - User repositories to display.
  * 
  */
 function displayRepos(context, repos) {
 
-    // Filter the repos.
+    // Filter repos.
     repos = filter(mFilterRepos, repos);
 
-    // Create HTML for Repos.
-    // Create a filter box for sorting Repos.
-    var filters = {"all_repositories":"All", "public":"Public", "private":"Private", "source":"Source", "forks":"Forks"};
-    var html = createFilterHTML(filters, mFilterRepos); 
-
-    html += '<ul class="repo_list">';
+    // Create HTML.
+    var html = createFilterHTML({"all_repositories":"All", "public":"Public", "private":"Private", "source":"Source", "forks":"Forks"}, mFilterRepos)
+             + "<ul class='repo_list'>";
 
     for(var current in repos) {
-        repo = repos[current];
 
-        html += '<li class="' + (repo['private'] ? 'private' : 'public') + (repo.fork ? ' fork' : '') + '">'
-              + '<ul class="repo_stats">'
-              + '<li>' + (repo.language ? repo.language : "") + '</li>'
-              + '<li class="watchers">'
-              + '<a href="' + repo.html_url + '/watchers" target="_blank">' + repo.watchers + '</a>'
-              + '</li>'
-              + '<li class="forks">'
-              + '<a href="' + repo.html_url + '/network" target="_blank">' + repo.forks + '</a>'
-              + '</li>'
-              + '</ul>'
-              + '<span class="repo_id">'
-              + '<h3>'
-              + '<a href="' + repo.html_url + '" target="_blank" class="filter_item">' + repo.name + '</a>'
-              + '</h3>';
+        var public_private = repos[current]['private'] ? "private" : "public";
+        var forked         = repos[current].fork ? " fork" : "";
+        var language       = repos[current].language ? repos[current].language : "";
+        var httpURL        = "https://" + mGitHub.context.login + "@" + repos[current].clone_url.split("https://")[1];
+        var masterBranch   = (repos[current].master_branch == null) ? "master" : repos[current].master_branch;
 
-        // If repo is forked display parent information.
-        if(repo.fork) { 
-
-            html += '<p class="fork_flag">';
-
-            // Make sure the forked repository is not an orphan (parent was found).
-            // From testing I've only ran into this scenario when a forked organization
-            // repository name is changed.
-            if(!repo.orphan) {
-                html += 'Forked from <a href="https://github.com/' + repo.parent.login + '/' + repo.name + '" target="_blank">' 
-                      + repo.parent.login + '/' + repo.name 
-                      + '</a>';
-
-            }
-
-            // If the repository is an orphan.
-            else html += 'Forked parent was lost.';
-
-            html += '</p>';
+        // If the repository is forked:
+        //  - Create the current markup for it using repos[current].parent data.
+        var forkHTML = "";
+        if(repos[current].fork) {
+            forkHTML += "<p class='fork_flag'>"
+                      + "Forked from <a href='https://github.com/" + repos[current].parent.owner.login + "/" + repos[current].parent.name + "' target='_blank'>"
+                      + repos[current].parent.owner.login + "/" + repos[current].parent.name
+                      + "</a>"
+                      + "</p>";
         }
 
-        // Create HTTP URL
-        var urlTail = repo.clone_url.split("https://");
-        var httpURL = "https://" + mGitHub.context.login + "@" + urlTail[1];
+        // Create Git Read Only HTML.
+        var gitReadOnlyHTML = "";
+        if(repos[current]['private'] == false) gitReadOnlyHTML += "<li rel='git' data='" + repos[current].git_url + "'>Git Read-Only</li>";
 
-        html += '</span>'
-              + '<div class="repo_clone">'
-              + '<a class="zip" href="' + repo.html_url + '/zipball/' + (repo.master_branch == null ? "master" : repo.master_branch) + '" target="_blank">ZIP</a>'
-              + '<ul class="links">'
-              + '<li rel="ssh" data="' + repo.ssh_url + '">SSH</li>'
-              + '<li rel="http" data="' + httpURL + '">HTTP</li>';
+        // Create Displayed HTML.
+        html += "<li class='" + public_private + forked + "'>"
+              + "<ul class='repo_stats'>"
+              + "<li>" + language + "</li>"
+              + "<li class='watchers'>"
+              + "<a href='" + repos[current].html_url + "/watchers' target='_blank'>" + repos[current].watchers + "</a>"
+              + "</li>"
+              + "<li class='forks'>"
+              + "<a href='" + repos[current].html_url + "/network' target='_blank'>" + repos[current].forks + "</a>"
+              + "</li>"
+              + "</ul>"
+              + "<span class='repo_id'>"
+              + "<h3>"
+              + "<a href='" + repos[current].html_url + "' target='_blank' class='filter_item'>" + repos[current].name + "</a>"
+              + "</h3>"
+              + forkHTML
+              + "</span>"
+              + "<div class='repo_clone'>"
+              + "<a class='zip' href='" + repos[current].html_url + "/zipball/" + masterBranch + "' target='_blank'>ZIP</a>"
+              + "<ul class='links'>"
+              + "<li rel='ssh' data='" + repos[current].ssh_url + "'>SSH</li>"
+              + "<li rel='http' data='" + httpURL + "'>HTTP</li>"
+              + gitReadOnlyHTML
+              + "<li rel='input'><input type='text' value='" + repos[current].ssh_url + "'/></li>"
+              + "</ul>"
+              + "</div>"
+              + "<div class='repo_about'>"
+              + "<p class='description'>" + repos[current].description + "</p>"
+              + "<p class='updated'>Last updated "
+              + "<time class='timeago' datetime='" + repos[current].updated_at + "'>" + repos[current].updated_at + "</time>"
+              + "</p>"
+              + "</div>"
+              + "</li>";
+        }
+        html += "</ul>";
 
-        if(repo['private'] == false) html += '<li rel="git" data="' + repo.git_url + '">Git Read-Only</li>';
-
-        html += '<li rel="input"><input type="text" value="' + repo.ssh_url + '"/></li>'
-              + '</ul>'
-              + '</div>'
-              + '<div class="repo_about">'
-              + '<p class="description">' + repo.description + '</p>'
-              + '<p class="updated">Last updated '
-              + '<time class="timeago" datetime="' + repo.updated_at + '">' + repo.updated_at + '</time>'
-              + '</p>'
-              + '</div>'
-              + '</li>';
-    }
-    html += '</ul>';
-
-    // Create callback to be run after repos is rendered.
-    // Run TimeAgo to set all repository time to relevent time since last update.
-    // Create filter on click events after the filters have been rendered.
+    // Create callback to be run after repos are rendered.
+    //  - Run time ago to get relative times
+    //  - Add filter on click listener.
+    //  - Add click events to cloning buttons
     function callback() {
+
         jQuery("time.timeago").timeago();
+
         filterOnClickListener();
 
-        // Add click events for clones buttons.
+        // Add Click Events for cloning buttons.
+        //  - Add mousedown, up, and leave events to the ZIP button.
         $('.repo_list .repo_about').each( function() {
             $(this).on('click', function() {
 
                 // Set button down class on zip button clicks.
-                $('.repo_list .repo_clone .zip').on('mousedown', function() {
-                    $(this).addClass('down');
+                $('.repo_list .repo_clone .zip').on('mousedown', function()  { $(this).addClass('down'); });
+                $('.repo_list .repo_clone .zip').on('mouseleave', function() { $(this).removeClass('down'); });
+                $('.repo_list .repo_clone .zip').on('mouseup', function()    { $(this).removeClass('down'); });
 
-                });
-                $('.repo_list .repo_clone .zip').on('mouseleave', function() {
-                    $(this).removeClass('down'); 
-                });
-                $('.repo_list .repo_clone .zip').on('mouseup', function() {
-                    $(this).removeClass('down');
-                });
-
-                // Find the repositories cloning center.
+                // When the descript are is clicked slide the conting area down.
                 var cloneCenter = $(this).parent().find('.repo_clone');
                 cloneCenter.slideToggle(ANIMATION_SPEED);
 
-                // Find repositories clone inputer box.
+                // For the input box:
+                //  - When clicked select the text for copying.
+                //  - When a button is clicked:
+                //      - Change the input box to contain its link.
+                //      - Select the text.
+                //      - Copy the text to the clipboard.
+                //      - Toast (notify) the user that the link has been copied.
                 var inputBox = cloneCenter.children().find('input');
 
-                // When box is clicked select all text.
-                inputBox.on('click', function() {
-                    $(this).select();
-                });
+                // Select input on click.
+                inputBox.on('click', function() { $(this).select(); });
 
-                // Add on clicks to each clone type button.
+                // Cloning Buttons.
                 cloneCenter.find('li').each( function() {
 
                     // Don't add an onclick event for the input box.
@@ -589,7 +563,7 @@ function displayRepos(context, repos) {
         });
     };
 
-    // Display content.
+    // Display the content.
     displayContent(context, REPOS, html, callback);
 };
 
@@ -605,36 +579,34 @@ function displayRepos(context, repos) {
  */
 function displayWatched(context, repos) {
 
-    // Filter the repos.
+    // Filter the repositories.
     repos = filter(mFilterWatched, repos);
 
-    // Create HTML for Repos.
-    // Create a filter box for sorting Repos.
-    var filters = {"alphabetical_repos":"Abc", "last_updated":"Last Updated", "last_watched":"Last Watched"};
-    var html = createFilterHTML(filters, mFilterWatched);
-
-    html += '<ul class="watched_list">';
+    // Create the content HTML.
+    var html = createFilterHTML({"alphabetical_repos":"Abc", "last_updated":"Last Updated", "last_watched":"Last Watched"}, mFilterWatched)
+             + "<ul class='watched_list'>";
 
     for(var current in repos) {
-        repo = repos[current];
 
-        html += '<li class="' + (repo['private'] ? 'private' : 'public') + '">'
-              + '<a href="' + repo.html_url + '" target="_blank" class="filter_item">'
-              + '<span class="user">' + repo.owner.login + '</span>'
-              + '/'
-              + '<span class="repo">'+ repo.name + '</span>'
-              + '</a>'
-              + '</li>';
+        var public_private = repos[current]['private'] ? "private" : "public";
+
+        html += "<li class='" + public_private + "'>"
+             + "<a href='" + repos[current].html_url + "' target='_blank' class='filter_item'>"
+             + "<span class='user'>" + repos[current].owner.login + "</span>"
+             + "/"
+             + "<span class='repo'>" + repos[current].name + "</span>"
+             + "</a>"
+             + "</li>";
     }
-    html += '</ul>';
+    html += "</ul>";
 
     // Create callback to be run after repos is rendered.
-    // Create filter on click events after the filters have been rendered.
+    //  - Add filter on click listener.
     function callback() {
         filterOnClickListener();
     };
 
-    // Display content.
+    // Display the content.
     displayContent(context, WATCHED, html, callback);
 };
 
@@ -644,7 +616,7 @@ function displayWatched(context, repos) {
  * Filter
  * 
  * Filter the current data based on the filter type.
- * As of now filter settings apply accross all Contexts.
+ * * As of now filter settings apply accross all Contexts.
  * 
  * @param filter - Filter to be used.
  * @param data - Data to be filtered.
@@ -699,7 +671,6 @@ function filter(filter, data) {
         default:
             break;
     }
-
     return data;
 };
 
@@ -708,7 +679,7 @@ function filter(filter, data) {
 /**
  * Filter Forked Repos Only
  * 
- * Filter out all repos that are not forked.
+ * Filter out all repositories that are not forked.
  * 
  * @param repos - Repos to be filtered.
  * @return repos - Filtered repos.
@@ -729,34 +700,34 @@ function filterForkedReposOnly(repos) {
 /**
  * Filter On Click Listener
  * 
- * Binds click events to displayed filters.  Must be run after rendering filters.
+ * Binds click events to displayed filters.
+ * * Events must be bound after filters box is rendered.
  * 
  */
 function filterOnClickListener() {
 
-    // Bind filter click event.
-    // After a filter is clicked, set it and reload content.
+    // Bind click event.
+    //  - When a filter is clicked set that filter.
+    //  - Load the content.
     $('.filter li span').on('click', function() {
         setFilter( mContent, $(this).attr('rel') );
         loadContent();
     });
 
-    // Set filter input focus events.
-    // If filter input has focus:
+    // Bind Filter Input Box events.
+    //  - If the filter search box has focus add class "active".
+    //  - If it loses and is empty focus remove the class "active"
     filterInput = $('.filter_search');
     filterInput.focusin( function() {
         filterInput.addClass('active'); 
     });
-
-    // If filter input loses focus:
     filterInput.focusout( function() {
         if( !filterInput.val()) {
             filterInput.removeClass('active');
         }
     });
 
-    // Create instant search filter for data.
-    // On key up pattern match all available data in the content.
+    // Create instant search.
     filterInput.keyup(function() {
         var regExp = new RegExp($(this).val(), 'i');
         $('#content ul .filter_item').each( function() {
@@ -859,18 +830,17 @@ function filterUserRepos(repos) {
 /**
  * Load Content
  * 
- * Single entry function to load current content into application.
+ * Adapter function to load correct content.
  * 
  */
 function loadContent() {
 
-    // Hold a context for this action to create a semephore for
-    // caching and displaying data.
-    context = mGitHub.context.login;
- 
-    // Remove content data and display loading class.
     displayContentLoading();
 
+    // Get a context instance to act as a semaphore
+    // when asyn calls return a callback to late to display.
+    context = mGitHub.context;
+ 
     // Load appropriate data.
     switch( mContent) {
  
@@ -910,150 +880,112 @@ function loadContent() {
 /**
  * Load Context
  * 
- * Load a context into the application.  This will change cache usage, navigation, and api loading.
+ * Load the requested context and environment.
  * 
- * @param context - Context to load.
+ * @param context - ID of the context to load.
  */
-function loadContext(context) {
+function loadContext(contextID) {
 
-    displayContentLoading();
+    // Remove the selected class from the navigation menu.
+    $('.application_nav li[rel=' + mContent + ']').removeClass('selected');
+	
+	// If the user has no organizations then the application state
+	// will not change the the GitHub user is the corrent context.
+	// If there are organizations then we need to set the context.
+	if(mGitHub.orgs.length == 0) mGitHub.context = mGitHub.user;
+    else findContext();
 
-    // If the User has no organizations then the context panel
-	// and navigation do not need to be updated.
-	// The current context will be the User.
-	if(mGitHub.orgs.length == 0) { 
-	    mGitHub.context = mGitHub.user; 
-	} 
-
-	// If the user has organizations the context menu must be updated, 
-	// the navigation menu must be updated, and the selected context
-	// saved for next time the extension is opened up.
-	else {
-
-        // Given the context login name we must find the User object beloning to it.
-        // To do this we will run a merge sort based on login name on the Users
-        // organizations.  Then a binary search will be performed to get the User object
-        // of the given context.  The soreted organizations will be copied into a
-        // different array so we can keep the context menu order presented by GitHub.
-
-        var theOtherArray = [];
-
-        // First check the base case - Is the context the Logged User ?
-        if( mGitHub.user.login == mGitHub.context ) {
-            mGitHub.context = mGitHub.user;
-        }
-
-        // Not the base case...
+    // Now that the correct context is set:
+    //  - Add the selected class to the selecte navigation tab.
+    //  - The Context Switcher must be updated
+    //  - The correct navigation tab must be selected
+    //  - The content must be loaded.
+    $('.application_nav li[rel=' + mContent + ']').addClass('selected');
+    var contextSwitherHTML = '<img src="' + mGitHub.context.avatar_url + '" />' + '<span>' + mGitHub.context.login + '</span>';
+	$('.context_switcher .context_switcher_button').html(contextSwitherHTML);
+	loadContent();
+	
+	// The correct context must be identified by its ID and set as the current
+	// context to be used so that the application can load data from the GitHub API correctly.
+	function findContext() {
+	
+	    // First check the base case: Is the context the User ?
+	    if(contextID == mGitHub.user.id) mGitHub.context = mGitHub.user;
+	
+	    // Given the context ID we must find the User object the belongs to it.
+	    //
+	    // GitHub returns an array of Organization Object to us that are not ordered
+	    // by login name nor by ID.  Because there will never be a user with thousands
+	    // of contexts there is no reason to copy the organization array (to save context
+	    // switcher order the array will need to be copied), sort the array, then search it.
+	    // Instead we will walk through the array until we find the Organization Object
+	    // that is equal to our ID.
         else {
-
-            // Copy organization array to preserve context menu order.
-            for( var i = 0; i < mGitHub.orgs.length; i++) theOtherArray[i] = mGitHub.orgs[i];
-
-            // Sort the copied array.
-            theOtherArray.sort( function(a, b) {
-                a = a.login.toLowerCase();
-                b = b.login.toLowerCase();
-                if(a < b) return -1;
-                if(a > b) return 1;
-                return 0;
-            });
-
-            // Define the binary search.
-            function userObjectBinarySearch(orgs, key, low, high) {
-                var mid = Math.floor( (low + high) / 2 );
-                if (low > high) return mGitHub.user;
-                else if ( key == orgs[mid].login ) return orgs[mid];
-                else if ( key < orgs[mid].login ) return userObjectBinarySearch(orgs, key, low, mid-1);
-                else return userObjectBinarySearch(orgs, key, mid+1, high);
-            };
-
-            // Find the User Object for out context.
-            mGitHub.context = userObjectBinarySearch(theOtherArray, context, 0, theOtherArray.length - 1);
+            for(var i = 0; i < mGitHub.orgs.length; i++) {
+                if(contextID == mGitHub.orgs[i].id) {
+                    mGitHub.context = mGitHub.orgs[i];
+                    setContext(mGitHub.context.id);
+                    break;
+                }
+            }
         }
 
-        // The Context Has Been Update:
-        // Now all the context must be ordered to display in the context menu panel.
-        // If no other context exists, nothing is added to the panel (and we wouldn't get to this code).
-        // If multiple context exists the currently used context is first,
-        // followed by the context of the logged User, then by the remaining context
-        // given in order by the GET from GitHub.
+        // Now that the correct context is obtained the context switcher
+        // must be created.  The order of the contexts followes these rules:
+        //  - If multiple context exist, the currently used context if first
+        //  - The user context is always second on the list if not selected.
+        //  - The remaining context are ordered according to how they were retreived. 
+        var contextOrderArray = [];
 
-        // An array will be created to hold the context in the correct order for rendering.
+       contextOrderArray.push(mGitHub.context);
 
-        theOtherArray = []; 
-        theOtherArray.push( mGitHub.context );
+       if(mGitHub.context.id != mGitHub.user.id) contextOrderArray.push(mGitHub.user);
 
-        // If the logged user is not the current context push it onto the array.
-        if( mGitHub.user.login != mGitHub.context.login ) theOtherArray.push( mGitHub.user );
+       for(var current in mGitHub.orgs) {
+           if(mGitHub.context.id != mGitHub.orgs[current].id) 
+                contextOrderArray.push( mGitHub.orgs[current] );
+       }
 
-        // Push organization context in order from GitHub onto the array.  Excluse the current context.
-        for(var current in mGitHub.orgs) {
-            if(mGitHub.context.login != mGitHub.orgs[current].login) 
-                theOtherArray.push( mGitHub.orgs[current] );
-        }
+       var contextMenuHTML = "<ul>";
+       for(var i = 0; i < contextOrderArray.length; i++) {
+           contextMenuHTML += "<li rel='"  + contextOrderArray[i].id + "' class='" + ((i==0) ? "selected" : "") + "'>"
+                            + "<img src='" + contextOrderArray[i].avatar_url + "' />"
+                            + "<span>"
+                            + contextOrderArray[i].login
+                            + "</span>"
+                            + "</li>"
+       }
+       contextMenuHTML += "</ul>";
 
-        // Create the context menu html - the first entry is the current context.
-        var html = "<ul>";
-        for(var i = 0; i < theOtherArray.length; i++) {
-            html += '<li rel="' + theOtherArray[i].login + '" class="' + ((i == 0) ? "selected" : "" ) + '">'
-                  + '<img src="' + theOtherArray[i].avatar_url + '" />'
-                  + '<span>'
-                  + theOtherArray[i].login
-                  + '</span>'
-                  + '</li>'
-        }
-        html += "</ul>";
-
-        // Add the html to the context panel.
-        $('.context_switcher .context_switcher_panel .orgs').html(html);
-
-        // Bind click events to the contexts.
-        // If a context is clicked, save the selcted context, close the context panel and update the context.
-        // Only take action if the selected context does not equal the current context.
-        $('.context_switcher_panel .orgs li').each( function() {
+       // Add the HTML and binding events to the context switcher.
+       $('.context_switcher .context_switcher_panel .orgs').html(contextMenuHTML);
+       $('.context_switcher_panel .orgs li').each( function() {
             $(this).on('click', function() {
-                var newContext = $(this).attr('rel');
-                if(newContext && newContext != mGitHub.context.login) {
-                    setContext(newContext);
+                var newContextID = $(this).attr('rel');
+                if(newContextID && newContextID != mGitHub.context.id) {
+                    setContext(newContextID);
                     toggleContextMenu();
-                    loadContext(newContext); 
+                    loadContext(newContextID); 
                 }
             });
         });
 
-        // Update the application navigation to reflect what is available to the current context.
-        $('.application_nav li[data=' + mContent + ']').removeClass('selected');
-
-        // Adjust the navigation tabs based on the User type.
-        // Organization context do not need to show 'watched', 'following', 'follower'.
-        if( mGitHub.context.type != "User" ) {
+        // If the selected context is an Organization hide the navigation tabs.
+        // And set the current navigation tab to the repositories.
+        if(mGitHub.context.type != "User") {
+            setContent(REPOS);
             $('.application_nav li').each( function() {
-                if( $(this).attr('data') != REPOS ) {
+                if( $(this).attr("rel") != REPOS ) {
 
-                     // Have slide up callback to hide element in DOM durring first popup.
-                     // Set the current content to repos.
-                     $(this).slideUp(ANIMATION_SPEED, function() { $(this).hide(); });
-                     setContent(REPOS);
-                 }
-             });
+                    // * Element be be hidden - If an organization is selected 
+                    //   when the extension popup in instantiated the navigation
+                    //   will be hidden. 
+                    $(this).slideUp(ANIMATION_SPEED, function() { $(this).hide(); });
+                }
+            });
         }
-
-        // If the logged User is selected the navigation tabs will all be shown again.
-        else {
-            $('.application_nav li').each( function() { 
-                $(this).slideDown(ANIMATION_SPEED); 
-            }); 
-        }
+        else $('.application_nav li').each( function() { $(this).slideDown(ANIMATION_SPEED); });
     }
-
-	// Set the context switcher image and text.
-	$('.context_switcher .context_switcher_button').html('<img src="' + mGitHub.context.avatar_url + '" />' + '<span>' + mGitHub.context.login + '</span>');
-	
-	// Set currently selected navication tab.
-	$('.application_nav li[data=' + mContent + ']').addClass('selected');
-	
-	// Load content.
-	loadContent();
 };
  
 
@@ -1069,7 +1001,7 @@ function loadContext(context) {
 function loadFollowing(context, type) {
 
     // Attempt to load following from cache.
-    var following = cacheLoad(context, type);
+    var following = cacheLoad(context.id, type);
 
     // If following are found then display them.
     // If they are not then load them from GitHub.
@@ -1077,30 +1009,32 @@ function loadFollowing(context, type) {
     else loadFromGitHub([], 1);
 
     // Use recursion to load all following from GitHub.
+    //  - If data is returned from GitHub keep recursing.
+    //  - If data is not returned from GitHub:
+    //      - And no data exists then cache and display following.
+    //      - If following exists then load the "User Names" and display.
     function loadFromGitHub(following, pageNumber) {
         $.getJSON(mGitHub.api_url + 'user/' + type, {access_token: mOAuth2.getAccessToken(), page: pageNumber})
             .success( function(json) {
 
-                // If data is being returned keep recursing.
-                if(json.length > 0) {
-                    following = following.concat(json);
-                    loadFromGitHub(following, ++pageNumber);
-                }
+                // Data is returned:
+                if(json.length > 0) loadFromGitHub(following.concat(json), ++pageNumber);
 
-                // When all data has been retreived:
+                // No data is returned:
                 else {
 
-                    // If there is no following then jump to display.
-                    if( following.length == 0) displayFollowing(context, type, following);
+                    if( following.length == 0) {
+                        cacheSave(context.id, type, following);
+                        displayFollowing(context, type, following);
+                    }
 
-                    // If any following exists then load user names and diplay following.
-                    // After user names are returned save following to cache then display them.
-                    // Make callback null, when last follower get name create a callback.
+                    // Data was returned.  Send out async task to retreive user names.
+                    // Give the last async taks a callback to cache and display following.
                     for(var current in following) {
-
+                        var callback = null;
                         if(current == following.length -1) {
                             callback = function(following) {
-                                cacheSave(context, type, following);
+                                cacheSave(context.id, type, following);
                                 displayFollowing(context, type, following);
                             }
                         }
@@ -1125,23 +1059,23 @@ function loadFollowing(context, type) {
 function loadRepos(context, type) {
 
     // Attempt to load the repos from the cache.
-    var repos = cacheLoad(context, type);
+    var repos = cacheLoad(context.id, type);
 
     // If the repos are found then trigger callback.
     // If they are not found then load them from GitHub.
+    //  - When loading from GitHub check if context is a User or Organization.
     if(repos) display(repos);
     else {
-
-        // If we the context type is "User" then load the users repositories.
         if(mGitHub.context.type == "User") loadUserReposFromGitHub([], 1);
         else loadOrgReposFromGitHub([], 1, null);
     }
 
     // User recursion to load all of a Users repos from GitHub.
+    //  - If data is being returned keep recursing.
+    //  - If no data is returned call the callback function. (loadRepos.callback).
     function loadUserReposFromGitHub(repos, pageNumber) {
         $.getJSON(mGitHub.api_url + 'user/' + type, {access_token: mOAuth2.getAccessToken(), page: pageNumber})
             .success( function(json) {
-                // If data is still being returned from GitHub keep recursing to make sure all repos are retreived.
                 if(json.length > 0) loadUserReposFromGitHub(repos.concat(json), ++pageNumber);
                 else callback(repos);
             });
@@ -1154,17 +1088,25 @@ function loadRepos(context, type) {
     // we must make sure the last repo from the last request is not equal to
     // the last repo of the current request.
     // A context is required so callback knows what cache to save to.
+
+    // User recursion to load all of the selected organizations repos form GitHub.
+    //  - If no data is returned then there are no organization repos, callback.
+    //  - If data is returned check its last reposoitory agains the previous last
+    //    repository to determine if we need to keep recursing.
+    //
+    // * As of API V3 (01.26.2012) GitHub for some reason does not return organization repositories
+    //   the same way it does user repositories. GitHub will not returned empty JSON data and will cause
+    //   infinite recursion.  To prevent this check the last returned repository with the last repository of
+    //   the previously returned repositories.
     function loadOrgReposFromGitHub(repos, pageNumber, lastRepo) {
-        $.getJSON(mGitHub.api_url + 'orgs/' + context + '/repos', {access_token: mOAuth2.getAccessToken(), page: pageNumber} )
+        $.getJSON(mGitHub.api_url + 'orgs/' + context.login + '/repos', {access_token: mOAuth2.getAccessToken(), page: pageNumber} )
             .success( function(json) {
 
                 // Make sure repos exist.
+                // Check last repository with previouse last repository.
+                // If repos exsist and the last repositories are not equal keep recursing.
                 if(json.length == 0) callback(repos);
-
-                // Check that new repos are still be retreived.
                 else if(repos.length > 0 && json[json.length - 1].clone_url == lastRepo.clone_url) callback(repos);
-
-                // Recurse.
                 else {
                     repos = repos.concat(json);
                     loadOrgReposFromGitHub(repos, ++pageNumber, repos[repos.length - 1]);
@@ -1172,88 +1114,99 @@ function loadRepos(context, type) {
         });
     };
 
-    // Callback function from async tasks used to clean up retreived 
-    // data before caching and displaying it.
+    // Callback Function.
+    //  - User and Organization repositories need to retrieve their forked parent information
+    //    before being sorted by last updated first, cached, and displayed.
+    //  - Watched repositories need to filtered so User repositories do not show up in them
+    //    before being cached and displayed.
     function callback(repos) {
 
         switch(type) {
 
-            // If repositories belong to a context then
-            // the forked parent information needs to be
-            // retrieved and they need to be sorted in order
-            // of last updated.
+            // User and Organization Repositories.
             case REPOS:
 
-                // Forked repository data cannot be loaded in async like following
-                // because the last repo is not always guarenteed to be a fork and
-                // require an aync call.
-                function getForkedParents(repos, index, callback) {
+                // Get the parents of the forked repositories.
+                // Request the repository information to get the parent data.
+                // The repositoies must be retrieved synchrnously (in order) because
+                // it is not known if the last one will be forked and causes an issue with
+                // the callback and the other synchrounouse data.
+                //
+                // * In the future all the repository data could be pulled just like it is with following.
+                //
+                // * It could be done in a way that a counter would make sure it had accounted for
+                //   all parent request before moving forward.  This can be added later if need be.
+                function getRepoData(repos, index, callback) {
                     if(index < repos.length) {
 
-                        // If repo is forked get its parent.
+                        // If repo is forked swap it out with its detailed information.
+                        //  - If the request is successful swap the current repository with the more detailed one.
+                        //  - An error from the request needs to also be caught.  This happens when
+                        //    the name of a forked organization repository is changed and the organization context is 
+                        //    trying to load its repositories (404 Error)
+                        //  - If the repository is not a fork then recurse.
+                        //
+                        // If the AJAX call fails it's because the user/repo did not exists.  In this case
+                        // just try to pull the data using the repos owner.login and name.
+                        //
                         if(repos[index].fork) {
-                            $.getJSON(mGitHub.api_url + 'repos/' + context + '/' + repos[index].name, {access_token: mOAuth2.getAccessToken()})
+                            $.getJSON(mGitHub.api_url + 'repos/' + context.login + '/' + repos[index].name, {access_token: mOAuth2.getAccessToken()})
                                 .success( function(json) {
-
-                                    // If forked repo does not have a parent it was forked from an owner.
-                                    // If the parent url is not found the repository is an orphan (probably due to name change).
-                                    repos[index].orphan = false;
-                                    repos[index].parent = (json.parent ? json.parent.owner : json.owner);
-                                    getForkedParents(repos, ++index, callback);
+                                    repos[index] = json;
+                                    getRepoData(repos, ++index, callback);
                                 })
                                 .error( function(json) {
-
-                                    // 404 Error will be thrown if forked organization repository name has changed.
-                                    repos[index].orphan = true;
-                                    repos[index].parent = {"login": repos[index].owner.login};
-                                    getForkedParents(repos, ++index, callback);
+                                    $.getJSON(mGitHub.api_url + 'repos/' + repos[index].owner.login + '/' + repos[index].name, {access_token: mOAuth2.getAccessToken()})
+                                        .success( function(json) {
+                                           repos[index] = json;
+                                           getRepoData(repos, ++index, callback); 
+                                        });
                                 });
                         }
-                        else getForkedParents(repos, ++index, callback);
+                        else getRepoData(repos, ++index, callback);
                     }
-
-                    // When all repos processed, callback.
                     else callback(repos);
                 };
 
                 // Get forked repos parents.  After all parents retrieved sort
                 // repositories by last updated, save them to cache, then display them.
-                getForkedParents(repos, 0, function(repos) {
+                // After all fork repository information has been obtained:
+                //  - Sort the repositories by last updated.
+                //  - Save the repositories to the cache.
+                //  - Display the repositories.
+                getRepoData(repos, 0, function(repos) {
                     repos = sortReposByLastUpdated(repos);
-                    cacheSave(context, REPOS, repos);
+                    cacheSave(context.id, REPOS, repos);
                     display(repos);
                 });
-
                 break;
 
-            // If repositories are just being watched they need to be
-            // filtered so owned repositories do not show up in them.
-            // Then they can be cached and displayed.
+            // Watched Repositories.
             case WATCHED:
                 repos = filterUserRepos(repos);
-                cacheSave(context, WATCHED, repos);
+                cacheSave(context.id, WATCHED, repos);
                 display(repos);
                 break;
 
-            // OMG...
+            // W hat.......
+            // T errible...
+            // F ailure....
             default:
                 break;
         }
     };
 
     // Adapter function used to display repositories based on type.
+    //  - User & Organization repositories
+    //  - Watched repositories
     function display(repos) {
-
         switch(type) {
-
             case REPOS :
                 displayRepos(context, repos);
                 break;
-
             case WATCHED : 
                 displayWatched(context, repos);
                 break;
-
             default: 
                 break;
         }
@@ -1265,7 +1218,8 @@ function loadRepos(context, type) {
 /**
  * Load User Name
  * 
- * Load a user name into a group based on a login. (Saved to user object).
+ * Load a user name into a group based on a login. 
+ * (Saved to user object - group[index].name).
  * 
  * @param group - Group to get user name from (Passed by reference).
  * @param index - Index of user in group.
@@ -1285,28 +1239,27 @@ function loadUserName(group, index, callback) {
 /**
  * On Resume
  * 
- * Will get extension settings from last application use.
+ * Load extension settings from last use.
  * 
  */
 function onCreate() {
 
-    // Set default local storage data if it does not exist.
+    // Create local storage entries.
     if( localStorage[CACHE_PREF] == undefined) { localStorage[CACHE_PREF] = CACHE_DEFAULT; }
-    if( localStorage[CONTEXT]    == undefined) { localStorage[CONTEXT] = mGitHub.user.login; } 
-    if( localStorage[CONTENT]    == undefined) { localStorage[CONTENT] = REPOS; }
-    if( localStorage[FILTERS]    == undefined) { localStorage[FILTERS] = "{}"; }
+    if( localStorage[CONTEXT]    == undefined) { localStorage[CONTEXT]    = mGitHub.user.id; } 
+    if( localStorage[CONTENT]    == undefined) { localStorage[CONTENT]    = REPOS; }
+    if( localStorage[FILTERS]    == undefined) { localStorage[FILTERS]    = "{}"; }
 
-    // Load users application state.
-    mCaching = localStorage[CACHE_PREF] ? localStorage[CACHE_PREF] : CACHE_OFF;
-    mGitHub.context = localStorage[CONTEXT] ? localStorage[CONTEXT] : mGitHub.user.login;
-    mContent = localStorage[CONTENT] ? localStorage[CONTENT] : REPOS;
+    // Load data from last extension use.
+    mGitHub.context  = localStorage[CONTEXT]    ? localStorage[CONTEXT]    : mGitHub.user.id;
+    mCaching         = localStorage[CACHE_PREF] ? localStorage[CACHE_PREF] : CACHE_OFF;
+    mContent         = localStorage[CONTENT]    ? localStorage[CONTENT]    : REPOS;
 
-    // Load application state filters.
     var filters      = JSON.parse( localStorage[FILTERS] );
     mFilterFollowers = filters[FOLLOWERS] ? filters[FOLLOWERS] : "recently_followed";
     mFilterFollowing = filters[FOLLOWING] ? filters[FOLLOWING] : "recently_followed";
-    mFilterRepos     = filters[REPOS] ? filters[REPOS] : "all_repositories";
-    mFilterWatched   = filters[WATCHED] ? filters[WATCHED] : "last_watched";
+    mFilterRepos     = filters[REPOS]     ? filters[REPOS]     : "all_repositories";
+    mFilterWatched   = filters[WATCHED]   ? filters[WATCHED]   : "last_watched";
 };
 
 
@@ -1314,7 +1267,7 @@ function onCreate() {
 /**
  * Set current content.
  * 
- * Set the current content in local storage and the global variable.
+ * Set the current content in local storage and global variable.
  * 
  * @param content - The content to be set.
  * 
@@ -1369,7 +1322,6 @@ function setFilter(key, filter) {
  * 
  */
 function showAuthorizationScreen() {
-
     $('.github_header').delay(500).fadeOut(200, function() {
         $('body').removeClass('loading').animate( {width: "413px", height: "269px"}, 
             function() {
@@ -1411,7 +1363,7 @@ function sortFollowingAlphabetically(following) {
  * Sort Following By Most Recent.
  * 
  * Following / Followers are given in order of first followed to last followed.
- * Just reverse the list.
+ * Reverse this list and return it.
  * 
  * @param following - Group of users to sort.
  * @return sorted - Sorted users.
