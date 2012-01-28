@@ -920,6 +920,9 @@ function loadContext(contextID) {
 	    // switcher order the array will need to be copied), sort the array, then search it.
 	    // Instead we will walk through the array until we find the Organization Object
 	    // that is equal to our ID.
+	    //
+	    // If the GitHub context is null or a user login is not found set context as user account. 
+	    //
         else {
             for(var i = 0; i < mGitHub.orgs.length; i++) {
                 if(contextID == mGitHub.orgs[i].id) {
@@ -927,6 +930,9 @@ function loadContext(contextID) {
                     setContext(mGitHub.context.id);
                     break;
                 }
+            }
+            if(mGitHub.context == null || mGitHub.context.login == null || mGitHub.context.id == null) {
+                mGitHub.context = mGitHub.user;
             }
         }
 

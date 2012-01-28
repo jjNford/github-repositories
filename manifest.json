@@ -13,7 +13,8 @@
     	}
     ],
         
-    "description": "Quickly access your GitHub Repositories",
+    "description": "An essential for any GitHub user, providing quick access to all of your GitHub Repositories, Watched Repositories,
+				    Organization Repositories, Statistics, Cloning Links and Following in a simple and powerful way.",
     
     "icons": {
         "16": "img/icon_16x16.png",
@@ -30,5 +31,5 @@
 		"clipboardRead"
     ],   
         
-    "version": "2.0.2"
+    "version": "2.0.3"
 }
