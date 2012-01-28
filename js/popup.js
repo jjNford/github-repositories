@@ -207,23 +207,15 @@ function bootstrap() {
 	$('body').removeClass('loading');
 	$('#application').fadeIn(ANIMATION_SPEED);
 	
-	// Render the User Link Tooltips.
-	//  - Set the correct margin.
-	//  - Set the hover effects.
-	//
-	// * This must be done after the the application is displayed because the width of the tooltips
-	//   is generated dynamically to center their width.  Thats they are displayed.
-    (function() {
-	    $('.user_links .tooltip h1').each( function() { $(this).css('margin-left', -$(this).width()/2-8); });
-	    $('.user_links li').each(function(){
-	        var menuItem = $(this);
-	        var toolTips = $('.user_links .tooltip');
-	        menuItem.hover(
-	            function() { $('.' + menuItem.attr('class') + ' .tooltip').css('visibility', 'visible').hover( function() { toolTips.css('visibility', 'hidden') }); },       
-	            function() { toolTips.css('visibility', 'hidden'); }
-	        );
-	    });
-    })();
+	// Create User Link Tooltips.
+    $('.user_links li').each( function() {
+        $(this).hover( function() {
+            var tooltip = $(this).find('.tooltip');
+            tooltip.toggle();
+            var tip = tooltip.find('h1');
+            tip.css("margin-left", -tip.width() / 2 - 8);
+        });
+    });
 };
 
 
@@ -484,7 +476,10 @@ function displayRepos(context, repos) {
               + "<li rel='ssh' data='" + repos[current].ssh_url + "'>SSH</li>"
               + "<li rel='http' data='" + httpURL + "'>HTTP</li>"
               + gitReadOnlyHTML
-              + "<li rel='input'><input type='text' value='" + repos[current].ssh_url + "'/></li>"
+              + "<li rel='input'>"
+              + "<input type='text' value='" + repos[current].ssh_url + "'/>"
+              + "<span class='tooltip down'><h1>Copied</h1></span>"
+              + "</li>"
               + "</ul>"
               + "</div>"
               + "<div class='repo_about'>"
@@ -538,7 +533,7 @@ function displayRepos(context, repos) {
 
                     // Don't add an onclick event for the input box.
                     if( $(this).attr("rel") != "input" ) {
-                        $(this).on('click', function() {
+                        $(this).on('click', function(event) {
 
                             // Remove the selected class from another element.
                             // Add the selected class to the clicked element.
@@ -552,10 +547,18 @@ function displayRepos(context, repos) {
                             // Copy the link.
                             document.execCommand("copy");
 
-                            // Notify user that link has been copied.
-                            $('.copied').fadeIn(ANIMATION_SPEED * 2, function() {
-                                $(this).delay(ANIMATION_SPEED).fadeOut(ANIMATION_SPEED * 2);
+                            // Display tooltip toast for user.
+                            //  - Line tooltip up to bottom middle of input box.
+                            //  - Create fade in animation with fadeout callback animation.
+                            //  - Center the tooltip components.
+                            var tooltip = inputBox.next();
+                            tooltip.css("margin-left", -inputBox.width() / 2 - 10);
+                            tooltip.css("margin-top", inputBox.height() + 10);
+                            tooltip.fadeIn(ANIMATION_SPEED, function() {
+                                tooltip.delay(ANIMATION_SPEED).fadeOut(ANIMATION_SPEED);
                             });
+                            var tip = tooltip.find('h1');
+                            tip.css("margin-left", -tip.width() / 2 - 8);
                         })
                     }
                 });

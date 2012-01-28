@@ -58,22 +58,6 @@
 	background: url('../img/header_logo_hover.png') 0 0 no-repeat;
 }
 
-.copied {
-    height: 24px;
-    display: none;
-    position: fixed;
-    top: 11.5px;
-    left: 325px;
-    padding: 0px 8px;
-    background: rgba(0, 0, 0, .77);
-    border-radius: 3px;
-    color: #fff;
-    font-size: 11px;
-    text-align: center;
-    line-height: 24px;
-    white-space: nowrap;
-}
-
 button {
     background: rgb(255, 255, 255);
     background: -webkit-gradient(linear, left top, left bottom, from(rgb(255, 255, 255)), to(rgb(225, 225, 225)));
@@ -275,32 +259,34 @@ button:hover {
 	background-position-y: -33px;
 }
 
-.user_links .tooltip {
-	margin-left: 3px;
-}
-
 .tooltip {
-	display: block;
-	position: absolute;
-	visibility: hidden;
-	border-left: 5px solid transparent;
-	border-right: 5px solid transparent;
-	border-bottom: 5px solid rgba(0, 0, 0, .77);
+    display: none;
+    position: absolute;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid rgba(0, 0, 0, .77);
 }
 
 .tooltip h1 {
-	height: 24px;
-	display: block;
-	position: absolute;
-	margin-top: 5px;
-	padding: 0 8px;
-	background: rgba(0, 0, 0, .77);
-	border-radius: 3px;
-	color: #ffffff;
-	font-size: 11px;
-	font-weight: normal;
-	line-height: 24px;
-	white-space: nowrap;
+    height: 24px;
+    position: absolute;
+    padding: 0 8px;
+    background: rgba(0, 0, 0, .77);
+    border-radius: 3px;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 24px;
+    white-space: nowrap;
+    text-shadow: none;
+}
+
+.tooltip.down h1 {
+    margin-top: 5px;
+}
+
+.tooltip.up h1{
+    margin-top: -24px;
 }
 
 .refresh {
