@@ -208,12 +208,16 @@ function bootstrap() {
 	$('#application').fadeIn(ANIMATION_SPEED);
 	
 	// Create User Link Tooltips.
+	//  - Get tooltip.
+	//  - Center tooltip.
+	//  - Hide tooltip when hovered on.
     $('.user_links li').each( function() {
         $(this).hover( function() {
             var tooltip = $(this).find('.tooltip');
             tooltip.toggle();
             var tip = tooltip.find('h1');
             tip.css("margin-left", -tip.width() / 2 - 8);
+            tooltip.hover( function() { tooltip.toggle(); });
         });
     });
 };
