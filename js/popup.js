@@ -562,7 +562,7 @@ function displayRepos(context, repos) {
                                 tooltip.delay(ANIMATION_SPEED).fadeOut(ANIMATION_SPEED);
                             });
                             var tip = tooltip.find('h1');
-                            tip.css("margin-left", -tip.width() / 2 - 8);
+                            tip.css("margin-left", -tip.width() / 2 - 4);
                         })
                     }
                 });
