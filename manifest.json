@@ -13,8 +13,7 @@
     	}
     ],
         
-    "description": "An essential for any GitHub user, providing quick access to all of your GitHub Repositories, Watched Repositories,
-				    Organization Repositories, Statistics, Cloning Links and Following in a simple and powerful way.",
+    "description": "An Essential for any GitHub User, providing quick access to all of your Repositories.",
     
     "icons": {
         "16": "img/icon_16x16.png",
