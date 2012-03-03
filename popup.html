@@ -1,129 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	
-	<!-- css -->
-	<link rel="stylesheet" href="css/style.css" />
-	<!-- end css -->
-	
-	<!-- js -->
-	<script src="js/jquery-1.7.min.js"></script>
-	<script src="js/jquery.timeago.js"></script>
-	<script src="js/oauth2.js"></script>
-	<script src="js/popup.js"></script>
-	<!-- end js -->
-	
-	<!-- analytics -->
-	<script>
-		var _gaq = _gaq || [];
-		_gaq.push(['_setAccount', 'UA-24870345-3']);
-		_gaq.push(['_trackPageview']);
+    <meta charset="utf-8">
 
-	(function() {
-		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		ga.src = 'https://ssl.google-analytics.com/ga.js';
-		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	})();
-	</script>
-	<!-- end analytics -->
-	
+    <!-- css -->
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- end css -->
+
+    <!-- js -->
+    <script src="js/jquery-1.7.min.js"></script>
+    <script src="js/jquery.timeago.js"></script>
+	<script src="js/extension.js"></script>
+    <!-- end js -->
+
+    <!-- google analytics -->
+    <script>
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-24870345-3']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = 'https://ssl.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <!-- end analytics -->
+
 </head>
 <body class="popup loading">
 
-    <!-- header -->
     <header class="github_header">
-    	<a href="https://github.com" target="_blank" class="github_logo"></a>
+        <a href="https://github.com" target="_blank" class="github_logo"></a>
     </header>
-    <!-- end header -->
+
+	<!-- authorization -->
+    <article id="authorization" class="hidden">
+        <h1>Log in <a href="https://github.com/plans" target="_blank">(Pricing and Signup)</a></h1>
+        <div>
+            <button>Authorize</button>
+        </div>
+    </article>
+	<!-- end authorization -->
 
 	<!-- settings -->
 	<article id="settings">
 		<ul>
 			<li class="caching">
-				<span class="button"></span>
-				<p class="description">Repositories and Following data are Cached for 15 minutes.</p>
+				<button></button>
+				<p class="description">GitHub data is cached for 15 minutes.</p>
+			</li>
+			<li class="empty_cache">
+				<button class="neutral">Empty Cache</button>
+				<p class="description">Clear the current contents of the cache.</p>
 			</li>
 			<li class="contribute">
-				<a href="https://github.com/jjNford/github-repositories" target="_blank"><span class="button neutral">Contribute</span></a>
-				<p class="description" style="font-size:13px">I would love to change the world, but they won’t give me the source code.</p>
+				<a href="https://github.com/jjNford/github-repositories" target="_blank"><button class="neutral">Contribute</button></a>
+				<p class="description">Contribute to this open source project.</p>
+			</li>
+			<li class="contribute">
+				<a href="https://twitter.com/jjNford" target="_blank"><button class="neutral">Follow @jjNford</button></a>
 			</li>
 		</ul>
-		<footer id="settings_footer"></footer>
+		<footer class="settings_footer"></footer>
 	</article>
 	<!-- end settings -->
-        
-    <!-- authorize -->
-	<article id="authorization" class="hidden">
-	        <h1>Log in <a href="https://github.com/plans" target="_blank">(Pricing and Signup)</a></h1>
-			<div><button>Authorize</button></div>
-	</article>
-	<!-- end authorize -->
-    
-    <!-- application -->
-    <article id="application" class="hidden">
-	
-		<span class="tooltip up copied"><h1>Copied</h1></span>
-	
-		<!-- header -->
-		<header id="application_header">
-			<ul class="user_links">
-				<li class="extension_settings">
-					<span class="link"></span>
-					<span class="tooltip down"><h1>Settings</h1></span>
-				</li>
-				<li class="log_out">
-					<span class="link"></span>
-					<span class="tooltip down"><h1>Log Out</h1></span>
-				</li>
-			</ul>
-		</header>
-		<!-- end header -->
-		
-		<!-- dashboard -->
-		<section id="dashboard">
-			
-			<!-- context switcher -->
-			<div class="context_overlay"></div>
-			<div class="context_switcher">
-				<span class="context_switcher_button"></span>
-				<div class="context_switcher_panel hidden">
-					<span class="close"></span>
-					<header>Switch account context</header>
-					<div class="orgs">
-						<div class="no_orgs">You don't belong to any organizations.</div>
-					</div>
-					<a href="https://github.com/account/organizations" target="_blank" class="manage_organizations">Manage Organizations</a>
-				</div>
-			</div>
-			<!-- end context switcher -->
-			
-			<!-- navigation -->
-			<nav class="application_nav">
+
+	<!-- application -->
+    <article id="application" class="hidden">	
+        <header class="application_header">
+            <ul class="user_links">
+                <li rel="extension_settings" tooltip="Settings"></li>
+                <li rel="log_out" tooltip="Log Out"></li>
+            </ul>
+        </header>
+        <section class="dashboard">
+            <div class="context_switcher">
+                <div class="overlay"></div>
+                <span class="context_switcher_button"></span>
+                <div class="context_switcher_panel hidden">
+                    <span class="close"></span>
+                    <header>Switch account context</header>
+                    <div class="organizations">
+                        <div class="none">You don't belong to any organizations.</div>
+                    </div>
+					<a href="https://github.com/account/organizations" target="_blank" class="manage">Manage Organizations</a>
+                </div>
+            </div>
+			<nav class="navigation">
 				<ul>
 					<li rel="repos">Repositories</li>
 					<li rel="watched">Watched</li>
 					<li rel="following">Following</li>
 					<li rel="followers">Followers</li>
 				</ul>
-			</nav>	
-			<!-- end navigation -->
-			
-		</section>
-		<!-- end dashboard -->
-		
-		<!-- content -->
-		<section id="content"></section>
-		<!-- end content -->
-		
-		<!-- footer -->
-		<footer id="application_footer">
-			<span class="user_links refresh">Refresh</span>
-		</footer>
-		<!-- end footer -->
-		
+			</nav>
+        </section>
+        <section class="content loading"></section>
+        <footer class="application_footer">
+        	<span class="user_links refresh">Refresh</span>
+			<span class="user_links loading"></span>
+        </footer>
     </article>
-    <!-- end application -->
-    
+	<!-- end application -->
+
 </body>
 </html>
