@@ -37,12 +37,41 @@ window.App = {
 			App.content.init();
 			App.navigation.init();
 			App.switcher.init();
+								
+			App.bind();					
 									
 			// Show application.
 			jQuery('body').removeClass('loading').find('#application').show();
 			
 		}, function() {
 			App.authentication.prompt();
+		});
+	},
+	
+	/**
+	 * Creates bindings for application components.
+	 */
+	bind: function() {
+		
+		// Set log out click events.
+		jQuery('.user_links li[rel="log_out"]').on('click', function() {
+			Storage.clear();
+			App.close();
+		});
+		
+		// Set refresh button mouse and click events.
+		var refresh = jQuery('.refresh');
+		refresh.on('click', function() {
+			// TODO: refresh content.
+		});
+		refresh.on('mousedown', function() {
+			refresh.addClass('down');
+		});
+		refresh.on('mouseup', function() {
+			refresh.removeClass('down');
+		});
+		refresh.on('mouseleave', function() {
+			refresh.removeClass('down');
 		});
 	},
 	

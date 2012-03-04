@@ -14,7 +14,7 @@ window.App.navigation = {
 		this.selected = Storage.load(this._key);
 		this.items = {};
 				
-		// Collect navigation tabs.
+		// Collect navigation tabs and set click events.
 		jQuery('.dashboard .navigation li').each(function() {
 			var temp = jQuery(this);
 			App.navigation.items[temp.attr('rel')] = temp;
