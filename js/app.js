@@ -35,7 +35,15 @@ window.App = {
 	 */
 	init: function(){
 		App.authentication.validate(function(user) {
-			// TODO - User validated successfully
+			
+			jQuery.extend(App.user, user);
+			App.user.load();
+			
+			console.log(App.user);
+			
+			// Show application.
+			jQuery('body').removeClass('loading').find('#application').show();
+			
 		}, function() {
 			App.authentication.prompt();
 		});

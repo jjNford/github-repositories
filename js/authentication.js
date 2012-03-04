@@ -1,3 +1,8 @@
+/**
+ * Authentication
+ * 
+ * 
+ */
 window.App.authentication = {
 	
 	/**
