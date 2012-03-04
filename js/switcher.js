@@ -1,21 +1,23 @@
-/**
- * Switcher
- * 
- * 
- */
 window.App.switcher = {
 
 	/**
-	 * Initializes context switcher.
+	 * Initialize
 	 */
-	init : function() {
+	init: function() {
 		this.button = jQuery('.context_switcher .context_switcher_button');
 		this.close = jQuery('.context_switcher .context_switcher_panel .close');
 		this.list = jQuery('.context_switcher .context_switcher_panel .organizations');
 		this.overlay = jQuery('.context_switcher .overlay');
 		this.panel = jQuery('.context_switcher .context_switcher_panel');
 		
-		// Set mouse events.
+		this.bind();
+		this.update();
+	},
+	
+	/**
+	 * Bind
+	 */
+	bind: function(){
 		this.button.on('mousedown', function() {
 			App.switcher.button.addClass('down');
 		});
@@ -26,19 +28,15 @@ window.App.switcher = {
 			App.switcher.button.removeClass('down');
 		});
 		
-		// Set click events.
 		this.button.on('click', App.switcher.toggle.bind(this));
 		this.close.on('click', App.switcher.toggle.bind(this));
 		this.overlay.on('click', App.switcher.toggle.bind(this));
-		
-		// Update the context switcher.
-		this.update();
 	},
 
 	/**
-	 * Toggles context switcher panel.
+	 * Toggle
 	 */
-	toggle : function() {
+	toggle: function() {
 		if(this.panel.is(':visible')) {
 			this.button.removeClass('active');
 			this.panel.hide();
@@ -52,9 +50,9 @@ window.App.switcher = {
 	},
 
 	/**
-	 * Updates context switcher to current context.
+	 * Update
 	 */
-	update : function() {
+	update: function() {
 		
 		// Add image to context switcher button.
 		var html = "<img src='" + App.user.context.avatar_url + "' /><span>" + App.user.context.login + "</span>";
@@ -85,7 +83,7 @@ window.App.switcher = {
 			
 			this.list.html(html);
 
-			// Set click events on context panel.
+			// Create bindings for new context panel.
 			this.list.find('li').each(function() {
 				var element = jQuery(this);
 				element.on('click', function() {
