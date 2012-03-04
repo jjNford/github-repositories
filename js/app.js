@@ -34,6 +34,7 @@ window.App = {
 			jQuery.extend(App.user, user);
 			App.user.init();
 			
+			App.content.init();
 			App.navigation.init();
 			App.switcher.init();
 									
