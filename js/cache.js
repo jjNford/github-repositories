@@ -27,15 +27,14 @@
 	
 	window.Cache = {
 		
-		_ttl: 900000, // 15 minutes
-		
-		_key: "cache.",
-		_enabled: "pref.cen",
-		_smart: "pref.csm",
-		
-		_threshold: 1,
-		
-		_name: "Cache",
+		init: function() {
+			this._ttl = 900000; // 15 minutes
+			this._key = "cache.";
+			this._enabled = "pref.cen";
+			this._smart = "pref.csm";
+			this._threshold = 1;
+			this.name = "Cache";
+		},
 		
 		/**
 		 * Remove all data from the cache.
@@ -58,18 +57,17 @@
 		},
 		
 		/**
-		 * Returnes whether or not cache is enabled.
+		 * Returns whether or not cache is enabled.
 		 * 
 		 * @return True if cache is enabled, false if not.
 		 */
 		isEnabled: function() {
 			if(window['localStorage'] !== null) {
 				try {
-					var temp = window['localStorage'][this._enabled];
-					return temp ? temp : true;
+					return JSON.parse(window['localStorage'][this._enabled]);
 				}
 				catch(error) {
-					return false;
+					return true;
 				}
 			}
 			return false;
@@ -81,13 +79,12 @@
 		 * @return True if smart caching is on, false if not.
 		 */
 		isSmart: function() {
-			if(this.isEnabled() === 'true') {
+			if(this.isEnabled() === true) {
 				try {
-					var temp = window['localStorage'][this._smart];
-					return temp ? temp : true;
+					return window['localStorage'][this._smart];
 				}
 				catch(error) {
-					return false;
+					return true;
 				}
 			}
 			return false;
@@ -103,7 +100,7 @@
 		 *         returned.
 		 */
 		load: function(id, address) {
-			if(this.isEnabled() == 'true') {
+			if(this.isEnabled() === true) {
 				try {
 					var payload = JSON.parse(window['localStorage'][this._key + id])[address];
 					var timestamp = new Date().getTime();
@@ -111,7 +108,7 @@
 					
 					if(payload != null) {
 						if(timestamp - payload.time > this._ttl) {
-							if(this.isSmart() === 'false') {
+							if(this.isSmart() === false) {
 								return null;
 							}
 							expired = true;
@@ -136,7 +133,7 @@
 		 * @return True if the data is cached, false if not.
 		 */
 		save: function(id, address, data, _missed) {
-			if(this.isEnabled() === 'true') {
+			if(this.isEnabled() === true) {
 				try {
 					if(!_missed || _missed <= this._threshold) {						
 						var block = JSON.parse(window['localStorage'][this._key + id]);
@@ -187,6 +184,8 @@
 				catch(error) {}
 			}
 		}
-	}
+	};
+	
+	Cache.init();
 	
 })();

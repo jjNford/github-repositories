@@ -41,13 +41,18 @@
 
 	window.OAuth2 = {
 		
-		_key: "token",
-		_access_token_url: "https://github.com/login/oauth/access_token",
-		_authorization_url: "https://github.com/login/oauth/authorize",
-		_client_id: "911fa741a8b8dac7d28c",
-		_client_secret: "e13f2f8ba4d9892eb231b4fcf3257013736327d1",
-		_redirect_url: "https://github.com/robots.txt",
-		_scopes: ['repo'],
+		/**
+		 * Initializes OAuth2.
+		 */
+		init: function() {
+			this._key = "token";
+			this._access_token_url = "https://github.com/login/oauth/access_token";
+			this._authorization_url = "https://github.com/login/oauth/authorize";
+			this._client_id = "911fa741a8b8dac7d28c";
+			this._client_secret = "e13f2f8ba4d9892eb231b4fcf3257013736327d1";
+			this._redirect_url = "https://github.com/robots.txt";
+			this._scopes = ['repo'];
+		},
 		
 		/**
 		 * Begins the OAuth2 process.
@@ -157,5 +162,7 @@
 			}
 		}
 	};
+	
+	OAuth2.init();
 
 })();

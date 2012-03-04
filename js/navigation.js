@@ -5,12 +5,12 @@
  */
 window.App.navigation = {
 
-	_key: "navigation",
-
 	/**
 	 * Initializes navigation.
 	 */
 	init : function() {
+		
+		this._key = "navigation";		
 		this.selected = Storage.load(this._key);
 		this.items = {};
 				

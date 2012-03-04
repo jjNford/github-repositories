@@ -28,14 +28,13 @@
 	var _ = window.Storage;
 	
 	window.Storage = {
-
-		_: _,
 		
-		_exception: "StorageException",
-		
-		_throw: false,
-		
-		name: "Storage",
+		init: function() {
+			this._ = _;
+			this._exception = "StorageException";
+			this._throw = false;
+			this.name = "Storage";
+		},
 
 		/**
 		 * Removes all data from localStorage.
@@ -181,5 +180,7 @@
 			}
 		}
 	};
+	
+	Storage.init();
 	
 })();

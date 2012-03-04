@@ -13,7 +13,6 @@ window.App.authentication = {
 	 */
 	validate : function(pass, fail) {
 		if(OAuth2.getToken() == null) {
-			console.log("okay");
 			fail();
 		}
 		else {
