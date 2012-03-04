@@ -1,6 +1,6 @@
 /*
- * localStorage enhanced
- * <https://github.com/jjNford/localStorage-enhanced>
+ * Local Storage Plus
+ * <https://github.com/jjNford/localstorage-plus>
  * 
  * Copyright (C) 2012, JJ Ford (jj.n.ford@gmail.com)
  * 
@@ -39,9 +39,21 @@
 
 		/**
 		 * Removes all data from localStorage.
+		 * 
+		 * @return True if localStorage is cleared, false if not.
+		 * @throws StorageException
 		 */
 		clear: function() {
-			window['localStorage'].clear();
+			try {
+				window['localStorage'].clear();
+				return true;
+			}
+			catch(error) {
+				if(this._throw === true) {
+					throw this._exception;
+				}
+				return false;
+			}
 		},
 		
 		/**
@@ -49,6 +61,7 @@
 		 * 
 		 * @param fn Callback to be run if localStorage is not supported (optional).
 		 * @return True if localStorage is supported, false if not.
+		 * @throws StorageException
 		 */
 		isSupported: function(fn) {
 			try {
@@ -75,6 +88,7 @@
 		 * 
 		 * @param key The hash key to load data from.
 		 * @return The stored data, null if no data if found.
+		 * @throws StorageException
 		 */
 		load: function(key) {
 			try {
@@ -93,6 +107,7 @@
 		 * 
 		 * @param key The hash key the data to remove is stored under.
 		 * @return True if the data is found and removed, false if not.
+		 * @throws StorageException
 		 */
 		remove: function(key) {
 			try {
@@ -113,6 +128,7 @@
 		 * @param key The hash key to save the data under.
 		 * @param data The data to be saved.
 		 * @return True if data is saved successfully, false if not.
+		 * @throws StorageException
 		 */
 		save: function(key, data) {
 			try {
@@ -131,7 +147,7 @@
 		},
 		
 		/**
-		 * Turn on/off localStroage exceptions.
+		 * Turn on/off localStroage exceptions (default off).
 		 * 
 		 * @param bool Enable or disable localStorage Enhaced exceptions.
 		 */
@@ -145,6 +161,7 @@
 		 * Get the number of entries currently in localStorage.
 		 * 
 		 * @return The lenght of the localStorage.
+		 * @throws StorageException
 		 */
 		size: function() {
 			try {
