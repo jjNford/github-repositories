@@ -1,38 +1,40 @@
-/**
- * Navigation
- * 
- * 
- */
 window.App.navigation = {
 
 	/**
-	 * Initializes navigation.
+	 * Initialize
 	 */
-	init : function() {
-		
+	init: function() {	
 		this._key = "navigation";		
 		this.selected = Storage.load(this._key);
 		this.items = {};
-				
-		// Collect navigation tabs and set click events.
+			
+		// Store navigation DOM elements into associative array.	
 		jQuery('.dashboard .navigation li').each(function() {
-			var temp = jQuery(this);
-			App.navigation.items[temp.attr('rel')] = temp;
-			temp.on('click', function() {
-				App.navigation.update(temp.attr('rel'));
-			});
-		});
-		
+			App.navigation.items[jQuery(this).attr('rel')] = jQuery(this);
+		});	
+			
+		this.bind();	
 		this.update(this.selected, true);
+	},
+	
+	/**
+	 * Bind
+	 */
+	bind: function() {
+		for(var current in this.items) {
+			this.items[current].on('click', function() {
+				App.navigation.update(jQuery(this).attr('rel'));
+			});
+		}
 	},
 
 	/**
-	 * Updates navigation.
+	 * Update
 	 * 
 	 * @param tab Tab to update the navigation to.
 	 * @param force Force navigation update (optional).
 	 */
-	update : function(tab, force) {
+	update: function(tab, force) {
 		if(tab == null) {
 			tab = App.REPOS;
 		}
