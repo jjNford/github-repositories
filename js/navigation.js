@@ -60,7 +60,7 @@ window.App.navigation = {
 			}
 			
 			this.selected = tab;
-			Storage.save(this._key, tab);
+			Storage.save(this._key, this.selected);
 			// TODO: show loading in content
 			// TODO: load content
 		}
