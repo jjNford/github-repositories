@@ -42,18 +42,6 @@
 	window.OAuth2 = {
 		
 		_key: "token",
-		
-		/*
-		 * Set application and api information here <-----------------------------------------------
-		 * 
-		 * _access_token_url  - URL to api where token is requested from.
-		 * _authorization_url - URL to api where use authorizes extension.
-		 * _client_id         - Application ID.
-		 * _client_secret     - Application secret.
-		 * _redirect_url      - URL where api will redirect access token request.
-		 * _scopes            - API permissions being requested.
-		 *  
-		 */
 		_access_token_url: "https://github.com/login/oauth/access_token",
 		_authorization_url: "https://github.com/login/oauth/authorize",
 		_client_id: "911fa741a8b8dac7d28c",
