@@ -1,5 +1,5 @@
 /**
- * Swither
+ * Switcher
  * 
  * 
  */
