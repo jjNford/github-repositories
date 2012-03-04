@@ -36,6 +36,9 @@ window.App.user = {
 				this.context = this;
 			}
 		}
+		
+		// Save last used context.
+		Storage.save(this._key, this.context.id);
 	},
 	
 	/**
