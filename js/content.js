@@ -1,12 +1,7 @@
-/**
- * Content
- * 
- * 
- */
 window.App.content = {
 
 	/**
-	 * Initialized content.
+	 * Initialize
 	 */
 	init: function() {
 
@@ -15,7 +10,7 @@ window.App.content = {
 	},
 	
 	/**
-	 * Posts events to content to safely and synhchronously be run.
+	 * Post
 	 * 
 	 * @param contextId The user contenxt ID at the time of the call.
 	 * @param caller The object type of the caller.
@@ -41,7 +36,7 @@ window.App.content = {
 	},
 	
 	/**
-	 * Displays content.
+	 * Display
 	 * 
 	 * @param content The content to be displayed.
 	 */
@@ -50,7 +45,7 @@ window.App.content = {
 	},
 	
 	/**
-	 * Shows loading.
+	 * Loading
 	 */
 	loading: function() {
 		this.article.html("").addClass('loading');

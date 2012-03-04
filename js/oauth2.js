@@ -42,7 +42,7 @@
 	window.OAuth2 = {
 		
 		/**
-		 * Initializes OAuth2.
+		 * Initialize
 		 */
 		init: function() {
 			this._key = "token";
@@ -55,7 +55,7 @@
 		},
 		
 		/**
-		 * Begins the OAuth2 process.
+		 * Begin
 		 */
 		begin: function() {
 			var url = this._authorization_url + "?client_id=" + this._client_id + "&redirect_uri" + this._redirect_url + "&scope=";
@@ -73,7 +73,7 @@
 		},
 		
 		/**
-		 * Parses the access code ouf of the given url query string pulled from redirect url.
+		 * Parses Access Code
 		 * 
 		 * @param url The url containing the access code.
 		 */	
@@ -89,7 +89,7 @@
 		},
 		
 		/**
-		 * Requests token from provider.
+		 * Request Token
 		 * 
 		 * @param code The access code returned by provider.
 		 */
@@ -118,7 +118,7 @@
 		},
 		
 		/**
-		 * Saves the oauth2 token and closes the adapter page.
+		 * Finish
 		 * 
 		 * @param token The OAuth2 token given to the application from the provider.
 		 */
@@ -134,7 +134,7 @@
 		},
 		
 		/**
-		 * Get the OAuth2 token from localStorage.
+		 * Get Token
 		 * 
 		 * @return OAuth2 access token if it exists, null if not.
 		 */
@@ -148,7 +148,7 @@
 		},
 		
 		/**
-		 * Delete the OAuth token from localStorage.
+		 * Delete Token
 		 * 
 		 * @return True if token is removed from localStorage, false if not.
 		 */

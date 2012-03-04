@@ -1,21 +1,3 @@
-// Prevent any future conflicts.
-$.noConflict();
-
-// Initialize application after page has loaded.
-jQuery(window).bind("load", function() {
-	if(!Storage.isSupported()) {
-		App.close();
-	}
-	else {
-		App.init();
-	}
-});
-
-/**
- * Application
- * 
- * 
- */
 window.App = {
 
 	API: "https://api.github.com",
@@ -26,7 +8,7 @@ window.App = {
 	WATCHED: "watched",
 
 	/**
-	 * Initializes application.
+	 * Initialize
 	 */
 	init: function(){
 		App.authentication.validate(function(user) {
@@ -49,7 +31,7 @@ window.App = {
 	},
 	
 	/**
-	 * Creates bindings for application components.
+	 * Bind
 	 */
 	bind: function() {
 		
@@ -76,7 +58,7 @@ window.App = {
 	},
 	
 	/**
-	 * Closes extension.
+	 * Close
 	 */
 	close: function(){
 		window.close();
@@ -85,3 +67,16 @@ window.App = {
 		});
 	}
 };
+
+// Prevent any future conflicts.
+$.noConflict();
+
+// Initialize application after page has loaded.
+jQuery(window).bind("load", function() {
+	if(!Storage.isSupported()) {
+		App.close();
+	}
+	else {
+		App.init();
+	}
+});

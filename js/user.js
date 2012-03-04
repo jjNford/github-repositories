@@ -1,12 +1,7 @@
-/**
- * User
- * 
- * 
- */
 window.App.user = {
 	
 	/**
-	 * Initializes user.
+	 * Initialize
 	 */
 	init: function() {
 		this._key = "content";
@@ -14,7 +9,7 @@ window.App.user = {
 	},
 	
 	/**
-	 * Loads the user object belonging to the context ID currently stored in user.context.
+	 * Load
 	 */
 	load: function() {
 		if(this.context == null) {
@@ -48,7 +43,7 @@ window.App.user = {
 	},
 	
 	/**
-	 * Updates the context user object to that with the given ID.
+	 * Update
 	 * 
 	 * @param contextId Context ID of user object to update & load.
 	 */

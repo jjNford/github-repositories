@@ -1,17 +1,12 @@
-/**
- * Authentication
- * 
- * 
- */
 window.App.authentication = {
 	
 	/**
-	 * Validates that extension is authorized to access users private data.
+	 * Validate
 	 * 
 	 * @param pass Callback to be executed if validation is successful, sent user parameter.
 	 * @param fail Callback to be executed if validation fails.
 	 */
-	validate : function(pass, fail) {
+	validate: function(pass, fail) {
 		if(OAuth2.getToken() == null) {
 			fail();
 		}
@@ -44,9 +39,9 @@ window.App.authentication = {
 	},
 	
 	/**
-	 * Prompts the user to authenticate extension with GitHub account.
+	 * Prompt
 	 */
-	prompt : function() {
+	prompt: function() {
 		jQuery('.github_header').delay(500).fadeOut(200, function() {
 			jQuery('body').removeClass('loading').animate({width:"413px", height:"269px"}, function() {
 				jQuery('#authorization').delay(750).fadeIn(225);
