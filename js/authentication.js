@@ -24,6 +24,10 @@ window.App.authentication = {
 						// Load user's organizations.
 						jQuery.getJSON(App.API + "/user/orgs", {access_token: OAuth2.getToken()})
 							.success(function(orgs) {
+								
+								// Don't have access to '/user/<org-name>' because token not for them, but
+								// it would be useful in getting the number or repositories each user has.
+								
 								user.orgs = orgs;
 								pass(user);
 							});
