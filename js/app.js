@@ -18,10 +18,11 @@ window.App = {
 			
 			App.content.init();
 			App.navigation.init();
+			App.settings.init();
 			App.switcher.init();
 								
 			App.bind();					
-									
+
 			// Show application.
 			jQuery('body').removeClass('loading').find('#application').show();
 			
