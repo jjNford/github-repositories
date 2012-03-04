@@ -9,8 +9,6 @@ window.App.switcher = {
 	 * Initializes context switcher.
 	 */
 	init : function() {
-		
-		// Find DOM elements.
 		this.button = jQuery('.context_switcher .context_switcher_button');
 		this.close = jQuery('.context_switcher .context_switcher_panel .close');
 		this.list = jQuery('.context_switcher .context_switcher_panel .organizations');
@@ -94,7 +92,7 @@ window.App.switcher = {
 					var newId = element.attr('rel');
 					if(newId && newId != App.user.context.id) {
 						App.user.update(newId);
-						// TODO - Update navigation
+						App.navigation.update(App.REPOS, true);
 						App.switcher.toggle();
 						App.switcher.update();
 					}

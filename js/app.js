@@ -19,6 +19,11 @@ jQuery(window).bind("load", function() {
 window.App = {
 
 	API: "https://api.github.com",
+	
+	FOLLOWERS: "followers",
+	FOLLOWING: "following",
+	REPOS: "repos",
+	WATCHED: "watched",
 
 	/**
 	 * Initializes application.
@@ -26,11 +31,10 @@ window.App = {
 	init: function(){
 		App.authentication.validate(function(user) {
 			
-			// Load application user.
 			jQuery.extend(App.user, user);
-			App.user.load();
+			App.user.init();
 			
-			// Initialize components.
+			App.navigation.init();
 			App.switcher.init();
 									
 			// Show application.

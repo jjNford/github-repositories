@@ -12,8 +12,9 @@ window.App.authentication = {
 	 * @param fail Callback to be executed if validation fails.
 	 */
 	validate : function(pass, fail) {
-		if(OAuth2.getToken() === null) {
-			// TODO: - popup.authentication.prompt();
+		if(OAuth2.getToken() == null) {
+			console.log("okay");
+			fail();
 		}
 		else {
 			jQuery.getJSON(App.API + "/user", {access_token: OAuth2.getToken()})

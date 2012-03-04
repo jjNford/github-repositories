@@ -92,7 +92,13 @@
 		 */
 		load: function(key) {
 			try {
-				return JSON.parse(window['localStorage'][key]);
+				var temp = window['localStorage'][key];
+				try {
+					return JSON.parse(temp);
+				}
+				catch(error) {
+					return temp;
+				}
 			}
 			catch(error) {
 				if(this._throw === true) {

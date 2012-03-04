@@ -10,8 +10,8 @@ window.App.user = {
 	/**
 	 * Loads the user object belonging to the context ID currently stored in user.context.
 	 */
-	load: function() {
-		if(this.context === null) {
+	init: function() {
+		if(this.context == null) {
 			this.context = Storage.load(this._key);
 		}
 		
@@ -51,6 +51,6 @@ window.App.user = {
 			Storage.save(this._key, contextId);
 			this.context = contextId;
 		}
-		this.load();
+		this.init();
 	}
 };
