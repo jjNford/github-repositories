@@ -11,7 +11,7 @@ window.App.authentication = {
 			fail();
 		}
 		else {
-			jQuery.getJSON(App.API + "/user", {access_token: OAuth2.getToken()})
+			jQuery.getJSON("https://api.github.com/user", {access_token: OAuth2.getToken()})
 				.success(function(json) {
 					if(json.type == "User") {
 						
@@ -19,7 +19,7 @@ window.App.authentication = {
 						user.logged = json;
 						
 						// Load user's organizations.
-						jQuery.getJSON(App.API + "/user/orgs", {access_token: OAuth2.getToken()})
+						jQuery.getJSON("https://api.github.com/user/orgs", {access_token: OAuth2.getToken()})
 							.success(function(json) {
 								
 								// Don't have access to '/user/<org-name>' because token not for them, but

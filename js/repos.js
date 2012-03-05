@@ -31,7 +31,7 @@
 			 * @param context Context requesting load.
 			 */
 			cache: function(context) {
-				var cache = Cache.load(context.id, App.REPOS);
+				var cache = Cache.load(context.id, App.repos.name);
 				Repos.display.list(context.id, cache.data);
 				if(!cache || cache.expired) {
 					App.repos.load.refresh(context);

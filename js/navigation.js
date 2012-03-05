@@ -36,7 +36,7 @@ window.App.navigation = {
 	 */
 	update: function(tab, force) {
 		if(tab == null) {
-			tab = App.REPOS;
+			tab = Repos.name;
 		}
 				
 		// Updated selected.
@@ -48,14 +48,14 @@ window.App.navigation = {
 			
 			if(App.user.context.type == "User") {
 				if(!this.items[App.WATCHED].is(":visible")) {
-					this.items[App.REPOS].removeClass("orgs");
+					this.items[App.repos.name].removeClass("orgs");
 					this.items[App.WATCHED].show();
 					this.items[App.FOLLOWING].show();
 					this.items[App.FOLLOWERS].show();
 				}
 			}
 			else {
-				this.items[App.REPOS].addClass("orgs");
+				this.items[App.repos.name].addClass("orgs");
 				this.items[App.WATCHED].hide();
 				this.items[App.FOLLOWING].hide();
 				this.items[App.FOLLOWERS].hide();

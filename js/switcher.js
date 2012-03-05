@@ -90,7 +90,7 @@ window.App.switcher = {
 					var newId = element.attr('rel');
 					if(newId && newId != App.user.context.id) {
 						App.user.update(newId);
-						App.navigation.update(App.REPOS, true);
+						App.navigation.update(App.repos.name, true);
 						App.switcher.toggle();
 						App.switcher.update();
 					}
