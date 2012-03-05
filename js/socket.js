@@ -27,8 +27,12 @@
 
 	window.Socket = {
 	
+		/**
+		 * Initialize
+		 */
 		init: function() {
 			this.port = chrome.extension.connect({name: "popupToBackground"});
+			this.tasks = 0;
 
 			chrome.extension.onConnect.addListener(function(port) {
 				if(port.name == "backgroundToPopup") {}
@@ -42,19 +46,46 @@
 				port.onMessage.addListener(function(msg) {
 					try {
 						window[msg.namespace][msg.literal][msg.method].apply(this, msg.args);
+						
+						// Keep track of tasks running in background page.
+						if(Socket.port.name == "backgroundToPopup") {
+							Socket.tasks++;
+						}
 					}
-					catch(UnknownDestination) {}
+					catch(UnknownDestination) {
+						if(msg == "complete") {
+							jQuery('.user_links.loading').hide();
+						}
+					}
 				});
 			});
 		},
 		
 		/**
+		 * Post Complete
+		 */
+		postComplete: function() {
+			this.tasks--;
+			if(this.tasks == 0) {
+				this.port.postMessage("complete");
+			}
+		},
+				
+		/**
+		 * Post Message 
+		 * 
 		 * @param - namespace - Namespace of message destination.
 		 * @param - literal - Object of message destination.
 		 * @param - method - Method of message destination. 
 		 */
 		postMessage: function(namespace, literal, method, args) {
-			Socket.port.postMessage({namespace: namespace, literal: literal, method: method, args: args});
+						
+			// Display loading notification.
+			if(this.port.name == "popupToBackground") {
+				jQuery('.user_links.loading').show();
+			}
+
+			this.port.postMessage({namespace: namespace, literal: literal, method: method, args: args});
 		}
 	};
 

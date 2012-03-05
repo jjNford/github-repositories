@@ -85,6 +85,7 @@
 				if(list.length == 0) {
 					App.content.post(contextId, App.repos.name, function() {
 						App.content.display(App.repos.html.list([repo]));
+						App.repos.bind.list();
 					});
 				}
 				
@@ -335,7 +336,7 @@
 					}
 					else {
 						Cache.save(context.id, Repos.name, buffer);
-						// TODO: notify popup that background loading is complete.
+						Socket.postComplete();
 					}
 				};
 			},
