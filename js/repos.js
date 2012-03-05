@@ -111,7 +111,7 @@
 						if(old.length > 0) {
 							if(old.find('.repo_extras').is(':visible')) {
 								repo.find('.repo_extras').show();
-								repo.find('repo_about').addClass('opened');
+								repo.find('.repo_about').addClass('opened');
 							}
 							old.remove();
 						}
