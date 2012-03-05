@@ -9,8 +9,65 @@
 		},
 		
 		bind: {
-			list: function(){},
-			item: function(){}
+			
+			/**
+			 * List
+			 */
+			list: function() {
+				jQuery('.repo_list li.repo').each(function() {
+					App.repos.bind.item(jQuery(this));
+				});
+			},
+			
+			/**
+			 * Item
+			 * 
+			 * @param DOM item to bind events to.
+			 */
+			item: function(item) {
+				var about = item.find('.repo_about');
+				var extras = item.find('.repo_extras');
+				var links = extras.find('.links');
+				var input = extras.find('input');
+				var zip = extras.find('zip');
+				
+				// Toggle cloning area.
+				about.on('click', function() {
+					extras.slideToggle(225);
+					about.toggleClass('opened');
+				});
+				
+				// Select all text on input box click.
+				input.on('click', function() {
+					jQuery(this).select();
+				});
+				
+				// Add mouse events to zip button.
+				zip.on('mousedown', function() {
+					jQuery(this).addClass('down');
+				});
+				zip.on('mouseleave', function() {
+					jQuery(this).removeClass('down');
+				});
+				zip.on('mouseup', function() {
+					jQuery(this).removeClass('down');
+				});
+				
+				// Change input to match current link and copy to clipboard.
+				links.find('li').each(function() {
+					var element = jQuery(this);
+					if(element.attr('rel') != "input") {
+						element.on('click', function(event) {
+							element.siblings().removeClass('selected');
+							element.addClass('selected');
+							input.val(element.attr('data'));
+							input.select();
+							document.execCommand("copy");
+							input.blur();
+						});
+					}
+				});
+			}
 		},
 		
 		display: {
@@ -49,6 +106,8 @@
 							jQuery(html).insertBefore(temp);
 						}
 					
+						repo = list.find('li.repo[id="' + repo.id + '"]');
+					
 						if(old.length > 0) {
 							if(old.find('.repo_extras').is(':visible')) {
 								repo.find('.repo_extras').show();
@@ -57,7 +116,7 @@
 							old.remove();
 						}
 					
-						// TODO: bind events to new DOM elements.
+						App.repos.bind.item(repo);
 					});
 				}
 			},
@@ -71,7 +130,7 @@
 			list: function(contextId, repos) {
 				App.content.post(contextId, App.repos.name, function() {
 					App.content.display(App.repos.html.list(repos));
-					// TODO: bind events to new DOM elements.
+					App.repos.bind.list();
 				});
 			}
 		},
