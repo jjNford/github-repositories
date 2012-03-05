@@ -14,7 +14,53 @@
 		},
 		
 		display: {
-			append: function() {},
+			
+			/**
+			 * Append
+			 * 
+			 * @param repo Repository to append to display.
+			 */
+			append: function(contextId, repo) {
+				
+				var list = jQuery('.repo_list');
+				
+				// If a list has not yet been created.
+				if(list.length == 0) {
+					App.content.post(contextId, App.repos.name, function() {
+						App.content.display(App.repos.html.list([repo]));
+					});
+				}
+				
+				// Append the list.
+				else {
+					App.content.post(contextId, App.repos.name, function() {
+						var old = list.find('li.repo[id="' + repo.id + '"]');
+						var temp = list.find('li.repo:first-child');
+						var html = App.repos.html.item(repo);
+					
+						while(temp.length > 0 && temp.attr('time') > repo.pushed_at) {
+							temp = temp.next();
+						}
+					
+						if(temp.length == 0 || repo.pushed_at == null) {
+							list.append(html);
+						}
+						else {
+							jQuery(html).insertBefore(temp);
+						}
+					
+						if(old.length > 0) {
+							if(old.find('.repo_extras').is(':visible')) {
+								repo.find('.repo_extras').show();
+								repo.find('repo_about').addClass('opened');
+							}
+							old.remove();
+						}
+					
+						// TODO: bind events to new DOM elements.
+					});
+				}
+			},
 			
 			/**
 			 * List
@@ -196,8 +242,7 @@
 							jQuery.getJSON("https://api.github.com/repos/" + context.login + "/" + buffer[index].name, {access_token: token})
 								.success(function(json) {
 									buffer[index] = json;
-									// TODO: send to popup up with socket.
-									console.log(json);
+									Socket.postMessage(Repos.name, "display", "append", [context.id, json]);
 									getParents(buffer, ++index);
 								})
 								
@@ -225,8 +270,7 @@
 								
 						}
 						else {
-							// TODO: send to popup with socket.
-							console.log(buffer[index]);
+							Socket.postMessage(Repos.name, "display", "append", [context.id, buffer[index]]);
 							getParents(buffer, ++index);
 						}
 					}
