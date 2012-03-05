@@ -3,26 +3,66 @@
 	// Keep in global namespace for background page.
 	window.Repos = {
 	
+		/**
+		 * Initialized
+		 */
 		init: function(){
 			this.name = "repos";
 			window[this.name] = this;
 		},
 		
+		/**
+		 * Bind
+		 */
 		bind: {
 			list: function(){},
 			item: function(){}
 		},
 		
+		/**
+		 * Display
+		 */
 		display: {
 			append: function() {},
 			list: function() {},
 		},
 		
+		/**
+		 * Filter
+		 */
+		filter: {
+			
+			/**
+			 * Recently Pused
+			 * 
+			 * @param repos Repositories to sort.
+			 * @return Sorted repositories.
+			 */
+			recentlyPushed: function(data) {
+				if(data && data.length > 0) {
+					data.sort(function(a, b) {
+						var a = new Date(a.pushed_at).getTime();
+						var b = new Date(b.pushed_at).getTime();
+						if(a > b) return -1;
+						if(a < b) return 1;
+						return 0;
+					});
+				}
+				return data;
+			}
+		},
+		
+		/**
+		 * HTML
+		 */
 		html: {
 			item: function() {},
 			list: function() {}
 		},
 		
+		/**
+		 * Load
+		 */
 		load: {
 			
 			/**
