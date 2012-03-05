@@ -3,33 +3,21 @@
 	// Keep in global namespace for background page.
 	window.Repos = {
 	
-		/**
-		 * Initialized
-		 */
 		init: function(){
 			this.name = "repos";
 			window[this.name] = this;
 		},
 		
-		/**
-		 * Bind
-		 */
 		bind: {
 			list: function(){},
 			item: function(){}
 		},
 		
-		/**
-		 * Display
-		 */
 		display: {
 			append: function() {},
 			list: function() {},
 		},
 		
-		/**
-		 * Filter
-		 */
 		filter: {
 			
 			/**
@@ -52,17 +40,11 @@
 			}
 		},
 		
-		/**
-		 * HTML
-		 */
 		html: {
 			item: function() {},
 			list: function() {}
 		},
 		
-		/**
-		 * Load
-		 */
 		load: {
 			
 			/**
