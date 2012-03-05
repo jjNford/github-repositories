@@ -37,8 +37,6 @@
 		},
 		
 		/**
-		 * Remove all data from the cache.
-		 * 
 		 * @return Returns true if cache is cleared, false if not.
 		 */
 		clear: function() {
@@ -57,8 +55,6 @@
 		},
 		
 		/**
-		 * Returns whether or not cache is enabled.
-		 * 
 		 * @return True if cache is enabled, false if not.
 		 */
 		isEnabled: function() {
@@ -74,8 +70,6 @@
 		},
 		
 		/**
-		 * Returns whether or not smart caching is on or off.
-		 * 
 		 * @return True if smart caching is on, false if not.
 		 */
 		isSmart: function() {
@@ -91,8 +85,6 @@
 		},
 		
 		/**
-		 * Loads data from cache.
-		 * 
 		 * @param id The ID of the cache block to load from.
 		 * @param key The address in the block to load data from.
 		 * @return If smart caching is turned on, cached data object {expired: <>, data: <>}, null 
@@ -125,8 +117,6 @@
 		},
 		
 		/**
-		 * Saves data to the cache.
-		 * 
 		 * @param id The ID of the cache block to save data to.
 		 * @param key The address in the block to save data to.
 		 * @param The data to cache.
@@ -158,8 +148,6 @@
 		},
 		
 		/**
-		 * Turns caching on/off (default on).
-		 * 
 		 * @param bool True to turn caching on, false to turn it off.
 		 */
 		setEnabled: function(bool) {
@@ -172,8 +160,6 @@
 		},
 		
 		/**
-		 * Turns smart caching on/off (default on).
-		 * 
 		 * @param bool True to turn smart caching on, false to turn it off.
 		 */
 		setSmart: function(bool) {

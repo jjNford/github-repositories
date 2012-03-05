@@ -1,6 +1,6 @@
 /*
- * Local Storage Plus
- * <https://github.com/jjNford/localstorage-plus>
+ * HTML5 Storage
+ * <https://github.com/jjNford/html5-storage>
  * 
  * Copyright (C) 2012, JJ Ford (jj.n.ford@gmail.com)
  * 
@@ -37,8 +37,6 @@
 		},
 
 		/**
-		 * Removes all data from localStorage.
-		 * 
 		 * @return True if localStorage is cleared, false if not.
 		 * @throws StorageException
 		 */
@@ -56,8 +54,6 @@
 		},
 		
 		/**
-		 * Determine if the browser supports localStorage.
-		 * 
 		 * @param fn Callback to be run if localStorage is not supported (optional).
 		 * @return True if localStorage is supported, false if not.
 		 * @throws StorageException
@@ -83,8 +79,6 @@
 		},
 		
 		/**
-		 * Load data from the localStorage.
-		 * 
 		 * @param key The hash key to load data from.
 		 * @return The stored data, null if no data if found.
 		 * @throws StorageException
@@ -108,8 +102,6 @@
 		},
 		
 		/**
-		 * Removes data stored under the given hash key from localStorage.
-		 * 
 		 * @param key The hash key the data to remove is stored under.
 		 * @return True if the data is found and removed, false if not.
 		 * @throws StorageException
@@ -128,8 +120,6 @@
 		},
 		
 		/**
-		 * Saves data to localStorage.
-		 * 
 		 * @param key The hash key to save the data under.
 		 * @param data The data to be saved.
 		 * @return True if data is saved successfully, false if not.
@@ -152,8 +142,6 @@
 		},
 		
 		/**
-		 * Turn on/off localStroage exceptions (default off).
-		 * 
 		 * @param bool Enable or disable localStorage Enhaced exceptions.
 		 */
 		setExceptions: function(bool) {
@@ -163,8 +151,6 @@
 		},
 		
 		/**
-		 * Get the number of entries currently in localStorage.
-		 * 
 		 * @return The lenght of the localStorage.
 		 * @throws StorageException
 		 */
