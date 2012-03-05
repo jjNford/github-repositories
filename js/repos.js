@@ -135,7 +135,7 @@
 				var cache = Cache.load(context.id, App.repos.name);
 				
 				if(cache != null) {
-					Repos.display.list(context.id, cache.data);
+					App.repos.display.list(context.id, cache.data);
 				}
 				
 				if(!cache || cache.expired) {
@@ -243,7 +243,7 @@
 			 * @param context Context requesting refresh.
 			 */
 			refresh: function(context) {
-				Socket.postMessage("Repos", "load", "github", [context, OAuth2.getToken()]);
+				Socket.postMessage(App.repos.name, "load", "github", [context, OAuth2.getToken()]);
 			}
 		}
 	};
