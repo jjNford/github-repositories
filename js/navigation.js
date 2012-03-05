@@ -63,8 +63,8 @@ window.App.navigation = {
 			
 			this.selected = tab;
 			Storage.save(this._key, this.selected);
-			// TODO: show loading in content
-			// TODO: load content
+			App.content.loading();
+			App[this.selected].load.cache(App.user.context);
 		}
 	}
 };
