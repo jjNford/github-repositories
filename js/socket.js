@@ -41,7 +41,6 @@
 				
 				port.onMessage.addListener(function(msg) {
 					try {
-						console.log(msg);
 						window[msg.namespace][msg.literal][msg.method].apply(this, msg.args);
 					}
 					catch(UnknownDestination) {}
