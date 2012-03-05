@@ -17,14 +17,14 @@ window.App.user = {
 		}
 		
 		// Check self.
-		if(this.context != null && this.context.id == this.id) {
-			this.context = this;
+		if(this.context != null && this.context.id == this.logged.id) {
+			this.context = this.logged;
 			return;
 		}
 		
 		// Check organizations.
 		if(this.orgs.length == 0) {
-			this.context = this;
+			this.context = this.logged;
 		}
 		else {
 			for(var i = 0; i < this.orgs.length; i++) {
@@ -34,7 +34,7 @@ window.App.user = {
 				}
 			}
 			if(this.context == null || this.context.login == null || this.context.id == null) {
-				this.context = this;
+				this.context = this.logged;
 			}
 		}
 		

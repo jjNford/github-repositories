@@ -12,17 +12,20 @@ window.App.authentication = {
 		}
 		else {
 			jQuery.getJSON(App.API + "/user", {access_token: OAuth2.getToken()})
-				.success(function(user) {
-					if(user.type == "User") {
+				.success(function(json) {
+					if(json.type == "User") {
+						
+						var user = {};
+						user.logged = json;
 						
 						// Load user's organizations.
 						jQuery.getJSON(App.API + "/user/orgs", {access_token: OAuth2.getToken()})
-							.success(function(orgs) {
+							.success(function(json) {
 								
 								// Don't have access to '/user/<org-name>' because token not for them, but
 								// it would be useful in getting the number or repositories each user has.
 								
-								user.orgs = orgs;
+								user.orgs = json;
 								pass(user);
 							});
 					}

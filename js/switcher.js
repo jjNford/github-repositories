@@ -63,8 +63,8 @@ window.App.switcher = {
 			var array = [];
 
 			array.push(App.user.context);
-			if(App.user.context.id != App.user.id) {
-				array.push(App.user);
+			if(App.user.context.id != App.user.logged.id) {
+				array.push(App.user.logged);
 			}
 			for(var index in App.user.orgs) {
 				if(App.user.context.id != App.user.orgs[index].id) {
