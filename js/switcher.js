@@ -76,8 +76,21 @@ window.App.switcher = {
 			for(var i = 0; i < array.length; i++) {
 				html += "<li rel='" + array[i].id + "' class='" + (i == 0 ? "selected" : "") + "'>"
 				     + "<img src='" + array[i].avatar_url + "' />"
-					 + "<span>" + array[i].login + "</span>"
-					 + "</li>";
+					 + "<span>" + array[i].login + "</span>";
+				
+				// Add repository count to panel if available.
+				if(i > 0) {
+					var cache = Cache.load(array[i].id, App.repos.name);	
+					
+					if(cache) {	
+						html += "<span class='count'>"
+						      + cache.data.length
+						      + ((cache.data.length > 1) ? " repositories" : " repository")
+							  + "</span>";
+					}
+				}
+					
+				html += "</li>";
 			}
 			html += "</ul>";
 			

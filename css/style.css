@@ -383,7 +383,6 @@ button.positive:active {
     border-top: 1px solid #eee;
     color: #666;
     font-size: 12px;
-    font-weight: bold;
     overflow: hidden;
     white-space: nowrap;
     cursor: pointer;
@@ -397,8 +396,9 @@ button.positive:active {
 }
 
 .context_switcher .context_switcher_panel .organizations li.selected {
-    color: #000;
     background: url('../img/context_check.png') 5px 11px no-repeat;
+	color: #000;
+	font-weight: bold;
 }
 
 .context_switcher .context_switcher_panel .organizations li.selected:hover {
@@ -407,6 +407,12 @@ button.positive:active {
 
 .context_switcher .context_switcher_panel .organizations li:first-child {
     border-top: none;
+}
+
+.context_switcher .context_switcher_panel .organizations li .count {
+	float: right;
+	margin-top: 4px;
+	color: #9999aa;
 }
 
 .context_switcher .context_switcher_panel .organizations .none {

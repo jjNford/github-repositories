@@ -2,7 +2,6 @@ window.App = {
 	
 	FOLLOWERS: "followers",
 	FOLLOWING: "following",
-	REPOS: "repos",
 	WATCHED: "watched",
 
 	/**
