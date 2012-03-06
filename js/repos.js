@@ -29,7 +29,8 @@
 				var extras = item.find('.repo_extras');
 				var links = extras.find('.links');
 				var input = extras.find('input');
-				var zip = extras.find('zip');
+				var zip = extras.find('.zip');
+				var copy = extras.find('.copy');
 				
 				// Toggle cloning area.
 				about.on('click', function() {
@@ -60,10 +61,13 @@
 						element.on('click', function(event) {
 							element.siblings().removeClass('selected');
 							element.addClass('selected');
+							
 							input.val(element.attr('data'));
 							input.select();
 							document.execCommand("copy");
 							input.blur();
+							
+							copy.fadeIn(100).delay(500).fadeOut(100);
 						});
 					}
 				});
@@ -204,6 +208,7 @@
 					+ "<input type='text' value='" + repo.ssh_url + "' />"
 					+ "</li>"
 					+ "</ul>"
+					+ "<img class='copy' src='../img/clipboard.png' />"
 					+ "</div>"
 					+ "<div class='repo_about'>"
 					+ "<p class='description'>" + repo.description + "</p>"

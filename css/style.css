@@ -777,8 +777,16 @@ button.positive:active {
     border-radius: 0 3px 3px 0;
     -webkit-border-radius: 0 3px 3px 0;
 }
+
 .repo_list .repo_extras .links li[rel="input"]:hover {
     background: transparent;
+}
+
+.repo_list .repo_extras .copy {
+	display: none;
+	padding-left: 5px;
+	vertical-align: middle;
+	margin-top: -2px;
 }
 
 .repo_list .repo_extras .zip {
