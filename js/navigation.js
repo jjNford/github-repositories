@@ -47,16 +47,16 @@ window.App.navigation = {
 			this.items[tab].addClass('selected');
 			
 			if(App.user.context.type == "User") {
-				if(!this.items[App.WATCHED].is(":visible")) {
+				if(!this.items[App.watched.name].is(":visible")) {
 					this.items[App.repos.name].removeClass("orgs");
-					this.items[App.WATCHED].show();
+					this.items[App.watched.name].show();
 					this.items[App.FOLLOWING].show();
 					this.items[App.FOLLOWERS].show();
 				}
 			}
 			else {
 				this.items[App.repos.name].addClass("orgs");
-				this.items[App.WATCHED].hide();
+				this.items[App.watched.name].hide();
 				this.items[App.FOLLOWING].hide();
 				this.items[App.FOLLOWERS].hide();
 			}

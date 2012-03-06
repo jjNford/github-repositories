@@ -2,7 +2,6 @@ window.App = {
 	
 	FOLLOWERS: "followers",
 	FOLLOWING: "following",
-	WATCHED: "watched",
 
 	/**
 	 * Initialize
@@ -14,6 +13,7 @@ window.App = {
 			App.user.init();
 						
 			App.repos = window.Repos;
+			App.watched = window.Watched;
 			
 			App.content.init();
 			App.navigation.init();
