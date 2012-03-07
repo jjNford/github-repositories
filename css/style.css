@@ -1046,3 +1046,36 @@ button.positive:active {
     color: #fff;
     text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
 }
+
+.watched_list li {
+	height: 30px;
+	border-bottom: 1px solid #dddddd;
+	overflow: hidden;
+}
+
+.watched_list .public {
+	background: url('../img/repo_public.png') 0 8px no-repeat;
+}
+
+.watched_list .private {
+	background: url('../img/repo_private.png') 0 7px no-repeat, #fffeeb;
+}
+
+.watched_list a {
+	display: block;
+	padding: 0 10px 0 20px;
+	background: url('../img/arrow_faded.png') 97% 50% no-repeat;
+	color: #4183c4;
+	font-size: 14px;
+	text-decoration: none;
+	line-height: 30px;
+}
+
+.watched_list a:hover {
+	background: url('../img/arrow.png') 97% 50% no-repeat;
+	text-decoration: underline;
+}
+
+.watched_list .repo {
+	font-weight: bold;
+}
