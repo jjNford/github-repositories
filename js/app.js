@@ -1,20 +1,16 @@
 window.App = {
 	
-	FOLLOWERS: "followers",
-	FOLLOWING: "following",
+	FOLLOWERS: "Followers",
+	FOLLOWING: "Following",
 
 	/**
 	 * Initialize
 	 */
 	init: function(){
 		App.authentication.validate(function(user) {
-			
 			jQuery.extend(App.user, user);
 			App.user.init();
-						
-			App.repos = window.Repos;
-			App.watched = window.Watched;
-			
+									
 			App.content.init();
 			App.navigation.init();
 			App.settings.init();

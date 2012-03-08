@@ -45,18 +45,18 @@ window.App.navigation = {
 				this.items[this.selected].removeClass('selected');
 			}
 			this.items[tab].addClass('selected');
-			
+
 			if(App.user.context.type == "User") {
-				if(!this.items[App.watched.name].is(":visible")) {
-					this.items[App.repos.name].removeClass("orgs");
-					this.items[App.watched.name].show();
+				if(!this.items[Watched.name].is(":visible")) {
+					this.items[Repos.name].removeClass("orgs");
+					this.items[Watched.name].show();
 					this.items[App.FOLLOWING].show();
 					this.items[App.FOLLOWERS].show();
 				}
 			}
 			else {
-				this.items[App.repos.name].addClass("orgs");
-				this.items[App.watched.name].hide();
+				this.items[Repos.name].addClass("orgs");
+				this.items[Watched.name].hide();
 				this.items[App.FOLLOWING].hide();
 				this.items[App.FOLLOWERS].hide();
 			}
@@ -64,7 +64,7 @@ window.App.navigation = {
 			this.selected = tab;
 			Storage.save(this._key, this.selected);
 			App.content.loading();
-			App[this.selected].load.cache(App.user.context);
+			window[this.selected].load.cache(App.user.context);
 		}
 	}
 };

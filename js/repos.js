@@ -1,11 +1,10 @@
 (function() {
-	
+		
 	// Keep in global namespace for background page.
 	window.Repos = {
 	
 		init: function(){
-			this.name = "repos";
-			window[this.name] = this;
+			this.name = "Repos";
 		},
 		
 		bind: {
@@ -15,7 +14,7 @@
 			 */
 			list: function() {
 				jQuery('.repo_list li.repo').each(function() {
-					App.repos.bind.item(jQuery(this));
+					Repos.bind.item(jQuery(this));
 				});
 			},
 			
@@ -87,18 +86,18 @@
 				
 				// If a list has not yet been created.
 				if(list.length == 0) {
-					App.content.post(contextId, App.repos.name, function() {
-						App.content.display(App.repos.html.list([repo]));
-						App.repos.bind.list();
+					App.content.post(contextId, Repos.name, function() {
+						App.content.display(Repos.html.list([repo]));
+						Repos.bind.list();
 					});
 				}
 				
 				// Append the list.
 				else {
-					App.content.post(contextId, App.repos.name, function() {
+					App.content.post(contextId, Repos.name, function() {
 						var old = list.find('li.repo[id="' + repo.id + '"]');
 						var temp = list.find('li.repo:first-child');
-						var html = App.repos.html.item(repo);
+						var html = Repos.html.item(repo);
 					
 						while(temp.length > 0 && temp.attr('time') > repo.pushed_at) {
 							temp = temp.next();
@@ -121,7 +120,7 @@
 							old.remove();
 						}
 					
-						App.repos.bind.item(repo);
+						Repos.bind.item(repo);
 					});
 				}
 			},
@@ -133,9 +132,9 @@
 			 * @param repos Repositories to be displayed.
 			 */
 			list: function(contextId, repos) {
-				App.content.post(contextId, App.repos.name, function() {
-					App.content.display(App.repos.html.list(repos));
-					App.repos.bind.list();
+				App.content.post(contextId, Repos.name, function() {
+					App.content.display(Repos.html.list(repos));
+					Repos.bind.list();
 				});
 			}
 		},
@@ -228,7 +227,7 @@
 			list: function(repos) {
 				var html = "<ul class='repo_list'>";
 				for(var i in repos) {
-					html += App.repos.html.item(repos[i]);
+					html += Repos.html.item(repos[i]);
 				}
 				html += "</ul>";
 				return html;
@@ -243,14 +242,14 @@
 			 * @param context Context requesting load.
 			 */
 			cache: function(context) {
-				var cache = Cache.load(context.id, App.repos.name);
+				var cache = Cache.load(context.id, Repos.name);
 				
 				if(cache != null) {
-					App.repos.display.list(context.id, cache.data);
+					Repos.display.list(context.id, cache.data);
 				}
 				
 				if(!cache || cache.expired) {
-					App.repos.load.refresh(context);
+					Repos.load.refresh(context);
 				}
 			},
 			
@@ -352,7 +351,7 @@
 			 * @param context Context requesting refresh.
 			 */
 			refresh: function(context) {
-				Socket.postMessage(App.repos.name, "load", "github", [context, OAuth2.getToken()]);
+				Socket.postMessage(Repos.name, "load", "github", [context, OAuth2.getToken()]);
 			}
 		}
 	};

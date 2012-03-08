@@ -4,8 +4,7 @@
 	window.Watched = {
 	
 		init: function(){
-			this.name = "watched";
-			window[this.name] = this;
+			this.name = "Watched";
 		},
 		
 		bind: {},
@@ -28,8 +27,8 @@
 			 * @param repos Watched repositories to be displayed.
 			 */
 			list: function(contextId, repos) {
-				App.content.post(contextId, App.watched.name, function() {
-					App.content.display(App.watched.html.list(repos));
+				App.content.post(contextId, Watched.name, function() {
+					App.content.display(Watched.html.list(repos));
 				});
 			}
 		},
@@ -83,7 +82,7 @@
 			list: function(repos) {		
 				var html = "<ul class='watched_list'>";
 				for(var i in repos) {
-					html += App.watched.html.item(repos[i]);
+					html += Watched.html.item(repos[i]);
 				}
 				html += "</ul>";
 				return html;
@@ -98,14 +97,14 @@
 			 * @param context Context requesting load.
 			 */
 			cache: function(context) {
-				var cache = Cache.load(context.id, App.watched.name);
+				var cache = Cache.load(context.id, Watched.name);
 				
 				if(cache != null) {
-					App.watched.display.list(context.id, cache.data);
+					Watched.display.list(context.id, cache.data);
 				}
 				
 				if(!cache || cache.expired) {
-					App.watched.load.refresh(context);
+					Watched.load.refresh(context);
 				}
 			},
 			
@@ -138,7 +137,7 @@
 			 * @param context Context requesting refresh.
 			 */
 			refresh: function(context) {
-				Socket.postMessage(App.watched.name, "load", "github", [context, OAuth2.getToken()]);
+				Socket.postMessage(Watched.name, "load", "github", [context, OAuth2.getToken()]);
 			}
 		}
 	};
