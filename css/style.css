@@ -438,7 +438,7 @@ button.positive:active {
 
 .filters {
 	margin-top: 10px;
-	padding: 5px 10px 0 10px;
+	padding: 10px 10px 0 10px;
 	background: #fafafb;
 	border: 1px solid #ddd;
 	border-radius: 4px;
@@ -446,50 +446,48 @@ button.positive:active {
 }
 
 .filters .search {
-    width: 166px;
-    height: 15px;
-    float: left;
-    margin-top: 1px;
-    padding: 2px 12px;
-    background: url('../img/filter_input.png') 0 0 no-repeat;
-    border:none;
-    outline: none;
-    color: #444;
-    font-size: 11px;
-    font: 99%;
+	width: 428px;
+	height: 15px;
+	padding: 2px 12px;
+	background: url('../img/filter_input.png') 0 0 no-repeat;
+	border: none;
+	color: #444;
+	font-size: 11px;
+	font: 99%;
+	outline: none;
 }
 
-.filters .search.active {
-    background: url('../img/filter_input.png') 0 -19px no-repeat;
+.filters .search:focus {
+	background: url('../img/filter_input.png') 0 -19px no-repeat;
 }
 
-.filters ul {
-    display: block;
-    text-align: right;
-    overflow: hidden;
+.filters .type {
+	margin-top: 7px;
+	overflow: hidden;
 }
 
-.filters li {
-    display: inline;
-    margin-left: 13px;
+.filters .type li {
+	margin-left: 10px;
+	padding-bottom: 8px;
+	float: right;
+	color: #777;
+	font-size: 11px;
+	cursor: pointer;
 }
 
-.filters li .filter {
-    display: inline-block;
-    padding-bottom: 8px;
-    color: #777;
-    font-size: 11px;
+.filters .type li:first-child {
+	margin-left: 0;
+	float: left;
 }
 
-.filters li .filter:hover {
-    text-decoration: underline;
-    cursor: pointer;
+.filters .type li:hover {
+	text-decoration: none;
 }
 
-.filters .selected {
-    background: url('../img/filter_selected_bit.gif') 50% 100% no-repeat;
-    color: #000;
-    font-weight: bold;
+.filters .type li.selected {
+	background: url('../img/filter_selected_bit.gif') 50% 100% no-repeat;
+	color: #000;
+	font-weight: bold;
 }
 
 .github_header {

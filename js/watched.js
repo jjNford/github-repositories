@@ -5,6 +5,7 @@
 	
 		init: function(){
 			this.name = "Watched";
+			this.filter = new Filter(this.name);
 		},
 		
 		bind: {},
@@ -17,7 +18,7 @@
 			 * @param repos Watched repositories to append to display.
 			 */
 			append: function(contextId, repos) {
-				console.log(repos);
+				// TODO: Append repositories - Wait until filters are completed.
 			},
 			
 			/**
@@ -30,28 +31,6 @@
 				App.content.post(contextId, Watched.name, function() {
 					App.content.display(Watched.html.list(repos));
 				});
-			}
-		},
-		
-		filter: {
-			
-			/**
-			 * Remove Users Repos
-			 * 
-			 * @param repos Set of repos to remove own repos from.
-			 * @param login Users login.
-			 * @return The set of repos not containing owned repos.
-			 */
-			removeUserRepos: function(repos, login) {
-				if(repos.length == 0) {
-					return repos;
-				}
-				for(var i = (repos.length - 1); i >= 0; i--) {
-					if(repos[i].owner.login == login) {
-						repos.splice(i, 1);
-					}
-				}
-				return repos;
 			}
 		},
 		
@@ -79,8 +58,9 @@
 			 * @param repos Watched repos to create HTML list for.
 			 * @return Watched repo list in HTML.
 			 */
-			list: function(repos) {		
-				var html = "<ul class='watched_list'>";
+			list: function(repos) {	
+				var html = Repos.filter.html();	
+				html += "<ul class='watched_list'>";
 				for(var i in repos) {
 					html += Watched.html.item(repos[i]);
 				}
@@ -119,11 +99,12 @@
 					jQuery.getJSON("https://api.github.com/user/watched", {access_token: token, page: page})
 						.success(function(json) {
 							if(json.length > 0) {
-								json = Watched.filter.removeUserRepos(json, context.login);
+								json = Watched.filter.apply.removeUserRepos(json, context.login);
 								Socket.postMessage(Watched.name, "display", "append", [context.id, json]);
 								getWatchedRepos(buffer.concat(json), ++page);
 							}
 							else {
+								console.log(buffer);
 								Cache.save(context.id, Watched.name, buffer);
 								Socket.postComplete();
 							}

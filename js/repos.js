@@ -5,6 +5,7 @@
 	
 		init: function(){
 			this.name = "Repos";
+			this.filter = new Filter(this.name);
 		},
 		
 		bind: {
@@ -139,28 +140,6 @@
 			}
 		},
 		
-		filter: {
-			
-			/**
-			 * Recently Pused
-			 * 
-			 * @param repos Repositories to sort.
-			 * @return Sorted repositories.
-			 */
-			recentlyPushed: function(repos) {
-				if(repos && repos.length > 0) {
-					repos.sort(function(a, b) {
-						var a = new Date(a.pushed_at).getTime();
-						var b = new Date(b.pushed_at).getTime();
-						if(a > b) return -1;
-						if(a < b) return 1;
-						return 0;
-					});
-				}
-				return repos;
-			}
-		},
-		
 		html: {
 			
 			/**
@@ -171,51 +150,51 @@
 			 */
 			item: function(repo) {
 				return "<li class='repo " + (repo['private'] ? "private" : "public") + (repo.fork ? " fork" : " source" ) + "' id='" + repo.id + "' time='" + repo.pushed_at + "'>"
-				    + "<ul class='repo_stats'>"
-					+ "<li>" + (repo.language ? repo.language : "") + "</li>"
-					+ "<li class='watchers'>"
-					+ "<a href='" + repo.html_url + "/watchers' target='_blank'>" + repo.watchers + "</a>"
-					+ "</li>"
-					+ "<li class='forks'>"
-					+ "<a href='" + repo.html_url + "/network' target='_blank'>" + repo.forks + "</a>"
-					+ "</li>"
-					+ "</ul>"
-					+ "<span class='repo_id'>"
-					+ "<h3>"
-					+ "<a href='" + repo.html_url + "' target='_blank'>" + repo.name + "</a>"
-					+ "</h3>"
-					+ (repo.fork ? "<p class='fork_flag'>"
-					             + "Forked from <a href='https://github.com/" + repo.parent.owner.login + "/" + repo.parent.name + "' target='_blank'>"
-					             + repo.parent.owner.login + "/" + repo.parent.name
-					             + "</a></p>" : "")
-					+ "</span>"
-					+ "<div class='repo_extras'>"
-					+ "<ul class='quick_links'>"
-					+ "<li><a href='" + repo.html_url + "/branches' target='_blank'>Branches</a></li>"
-					+ "<li><a href='" + repo.html_url + "/commits/master' target='_blank'>Commits</a></li>"
-					+ "<li><a href='" + repo.html_url + "/issues?sort=created&direction=desc&state=open' target='_blank'>Issues</a></li>"
-					+ "<li><a href='" + repo.html_url + "/pulls' target='_blank'>Pull Requests</a></li>"
-					+ "<li><a href='" + repo.html_url + "/tags' target='_blank'>Tags</a></li>"
-					+ ((repo.owner.id == App.user.logged.id) ? "<li><a href='" + repo.html_url + "/admin' target='_blank'>Admin</a></li>" : "")
-					+ "</ul>"
-					+ "<a class='zip' href='" + repo.html_url + "/zipball/" + ((repo.master_branch == null) ? "master" : repo.master_branch) + "' target='_blank'>ZIP</a>"
-					+ "<ul class='links'>"
-					+ "<li rel='ssh' data='" + repo.ssh_url + "'>SSH</li>"
-					+ "<li rel='http' data='https://" + App.user.context.login + "@" + repo.clone_url.split("https://")[1] + "'>HTTP</li>"
-					+ (repo['private'] == false ? "<li rel='git' data='" + repo.git_url + "'>Git Read-Only</li>" : "")
-					+ "<li rel='input'>"
-					+ "<input type='text' value='" + repo.ssh_url + "' />"
-					+ "</li>"
-					+ "</ul>"
-					+ "<img class='copy' src='../img/clipboard.png' />"
-					+ "</div>"
-					+ "<div class='repo_about'>"
-					+ "<p class='description'>" + repo.description + "</p>"
-					+ "<p class='updated'>"
-					+ ((repo.pushed_at != null) ? "Last updated <time>" + jQuery.timeago(repo.pushed_at) + "</time>" : "Never updated")
-					+ "</p>"
-					+ "</div>"
-					+ "</li>";				
+					 + "<ul class='repo_stats'>"
+					 + "<li>" + (repo.language ? repo.language : "") + "</li>"
+					 + "<li class='watchers'>"
+					 + "<a href='" + repo.html_url + "/watchers' target='_blank'>" + repo.watchers + "</a>"
+					 + "</li>"
+					 + "<li class='forks'>"
+					 + "<a href='" + repo.html_url + "/network' target='_blank'>" + repo.forks + "</a>"
+					 + "</li>"
+					 + "</ul>"
+					 + "<span class='repo_id'>"
+					 + "<h3>"
+					 + "<a href='" + repo.html_url + "' target='_blank'>" + repo.name + "</a>"
+					 + "</h3>"
+					 + (repo.fork ? "<p class='fork_flag'>"
+					              + "Forked from <a href='https://github.com/" + repo.parent.owner.login + "/" + repo.parent.name + "' target='_blank'>"
+					              + repo.parent.owner.login + "/" + repo.parent.name
+					              + "</a></p>" : "")
+					 + "</span>"
+					 + "<div class='repo_extras'>"
+					 + "<ul class='quick_links'>"
+					 + "<li><a href='" + repo.html_url + "/branches' target='_blank'>Branches</a></li>"
+					 + "<li><a href='" + repo.html_url + "/commits/master' target='_blank'>Commits</a></li>"
+					 + "<li><a href='" + repo.html_url + "/issues?sort=created&direction=desc&state=open' target='_blank'>Issues</a></li>"
+					 + "<li><a href='" + repo.html_url + "/pulls' target='_blank'>Pull Requests</a></li>"
+					 + "<li><a href='" + repo.html_url + "/tags' target='_blank'>Tags</a></li>"
+					 + ((repo.owner.id == App.user.logged.id) ? "<li><a href='" + repo.html_url + "/admin' target='_blank'>Admin</a></li>" : "")
+					 + "</ul>"
+					 + "<a class='zip' href='" + repo.html_url + "/zipball/" + ((repo.master_branch == null) ? "master" : repo.master_branch) + "' target='_blank'>ZIP</a>"
+					 + "<ul class='links'>"
+					 + "<li rel='ssh' data='" + repo.ssh_url + "'>SSH</li>"
+					 + "<li rel='http' data='https://" + App.user.context.login + "@" + repo.clone_url.split("https://")[1] + "'>HTTP</li>"
+					 + (repo['private'] == false ? "<li rel='git' data='" + repo.git_url + "'>Git Read-Only</li>" : "")
+					 + "<li rel='input'>"
+					 + "<input type='text' value='" + repo.ssh_url + "' />"
+					 + "</li>"
+					 + "</ul>"
+					 + "<img class='copy' src='../img/clipboard.png' />"
+					 + "</div>"
+					 + "<div class='repo_about'>"
+					 + "<p class='description'>" + repo.description + "</p>"
+					 + "<p class='updated'>"
+					 + ((repo.pushed_at != null) ? "Last updated <time>" + jQuery.timeago(repo.pushed_at) + "</time>" : "Never updated")
+					 + "</p>"
+					 + "</div>"
+					 + "</li>";				
 			},
 			
 			/**
@@ -225,7 +204,8 @@
 			 * @return Repo list in HTML.
 			 */
 			list: function(repos) {
-				var html = "<ul class='repo_list'>";
+				var html = Repos.filter.html();
+				html += "<ul class='repo_list'>";
 				for(var i in repos) {
 					html += Repos.html.item(repos[i]);
 				}
@@ -280,7 +260,8 @@
 								getUserRepos(buffer.concat(json), ++page);
 							}
 							else {
-								buffer = Repos.filter.recentlyPushed(buffer);
+								console.log(Repos);
+								buffer = Repos.filter.apply.recentlyPushed(buffer);
 								getParents(buffer, 0);
 							}
 						});
@@ -290,7 +271,7 @@
 					jQuery.getJSON("https://api.github.com/orgs/" + context.login + "/repos", {access_token: token, page: page})
 						.success(function(json) {
 							if(json.length == 0 || (last != null && json[json.length - 1].id == last.id)) {
-								buffer = Repos.filter.recentlyPushed(buffer);
+								buffer = Repos.filter.apply.recentlyPushed(buffer);
 								getParents(buffer, 0);
 							}
 							else {
