@@ -19,6 +19,16 @@ Release version numbers will follow the format:
 
 All source code is minified before being published to the [Google Chrome Web Store](https://chrome.google.com/webstore/detail/jgekomkdphbcbfpnfjgcmjnnhfikinmn).
 
+External Libraries
+------------------
+- [GitHub API v3] (http://developer.github.com/v3/)
+- [jQuery](https://github.com/jquery/jquery) (included)
+- [jQuery Timeago](https://github.com/rmm5t/jquery-timeago) (included)
+- [HTML5 Storage](https://github.com/jjNford/html5-storage) (included)
+- [HTML5 Caching](https://github.com/jjNford/html5-caching) (included)
+- [Chrome Extension Socket](https://github.com/jjNford/chrome-extension-socket) (included)
+- [OAuth2 Chrome Extension](https://github.com/jjNford/oauth2-chrome-extension) (included)
+
 License
 -------
 - [MIT](http://www.opensource.org/licenses/mit-license.php)
