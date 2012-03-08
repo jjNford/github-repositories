@@ -1066,7 +1066,6 @@ button.positive:active {
 .watched_list a {
 	display: block;
 	padding: 0 10px 0 20px;
-	background: url('../img/arrow_faded.png') 97% 50% no-repeat;
 	color: #4183c4;
 	font-size: 14px;
 	text-decoration: none;
@@ -1074,8 +1073,21 @@ button.positive:active {
 }
 
 .watched_list a:hover {
-	background: url('../img/arrow.png') 97% 50% no-repeat;
 	text-decoration: underline;
+}
+
+.watched_list a .arrow {
+	float: right;
+	margin-top: 10px;
+	margin-right: 10px;
+	border-width: 5px 0 5px 5px;
+	border-style: solid;
+	border-color: transparent;
+	border-left-color: #D0D0D1;
+}
+
+.watched_list a:hover .arrow {
+	border-left-color: #9f9fa0;
 }
 
 .watched_list .repo {

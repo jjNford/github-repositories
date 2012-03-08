@@ -90,6 +90,7 @@
 					 + "<span class='user'>" + repo.owner.login + "</span>"
 					 + "/"
 					 + "<span class='repo'>" + repo.name + "</span>"
+					 + "<span class='arrow'></span>"
 					 + "</a>"
 					 + "</li>";
 			},
