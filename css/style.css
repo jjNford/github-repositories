@@ -1051,6 +1051,10 @@ button.positive:active {
 	overflow: hidden;
 }
 
+.watched_list li:last-child {
+	border-bottom: none;
+}
+
 .watched_list .public {
 	background: url('../img/repo_public.png') 0 8px no-repeat;
 }
