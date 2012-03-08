@@ -105,6 +105,7 @@
 							}
 							else {
 								console.log(buffer);
+								buffer = Watched.filter.apply.recentlyPushed(buffer);
 								Cache.save(context.id, Watched.name, buffer);
 								Socket.postComplete();
 							}
