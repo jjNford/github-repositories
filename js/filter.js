@@ -27,17 +27,17 @@ Filter.prototype = {
 		 */
 		repos: function() {
 			return "<div class='filters'>"
-				 + "<div>"
-			     	 + "<input type='text' class='search' />"
-			     	 + "</div>"
-				 + "<ul class='type'>"
-				 + "<li type='all' class='selected'>All Repositories</li>"
-				 + "<li type='forks'>Forks</li>"
-				 + "<li type='sources'>Sources</li>"
-				 + "<li type='private'>Private</li>"
-				 + "<li type='public'>Public</li>"
-				 + "</ul>"
-				 + "</div>";
+			     + "<div>"
+			     + "<input type='text' class='search' />"
+			     + "</div>"
+			     + "<ul class='type'>"
+			     + "<li type='all' class='selected'>All Repositories</li>"
+			     + "<li type='forks'>Forks</li>"
+			     + "<li type='sources'>Sources</li>"
+			     + "<li type='private'>Private</li>"
+		             + "<li type='public'>Public</li>"
+			     + "</ul>"
+		             + "</div>";
 		}
 	},
 	
