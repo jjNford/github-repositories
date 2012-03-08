@@ -82,12 +82,12 @@
 			 * @param repo Repository to append to display.
 			 */
 			append: function(contextId, repo) {
-				
+
 				var list = jQuery('.repo_list');
 				
 				// If a list has not yet been created.
 				if(list.length == 0) {
-					App.content.post(contextId, Repos.name, function() {
+					App.content.post(contextId, Repos.name, function() {	
 						App.content.display(Repos.html.list([repo]));
 						Repos.bind.list();
 					});
@@ -149,6 +149,11 @@
 			 * @return Repo list item HTML.
 			 */
 			item: function(repo) {
+				
+				if(!repo) {
+					return "";
+				}
+				
 				return "<li class='repo " + (repo['private'] ? "private" : "public") + (repo.fork ? " fork" : " source" ) + "' id='" + repo.id + "' time='" + repo.pushed_at + "'>"
 					 + "<ul class='repo_stats'>"
 					 + "<li>" + (repo.language ? repo.language : "") + "</li>"
@@ -206,9 +211,13 @@
 			list: function(repos) {
 				var html = Repos.filter.html();
 				html += "<ul class='repo_list'>";
-				for(var i in repos) {
-					html += Repos.html.item(repos[i]);
+				
+				if(repos) {
+					for(var i in repos) {
+						html += Repos.html.item(repos[i]);
+					}
 				}
+				
 				html += "</ul>";
 				return html;
 			}
@@ -260,7 +269,6 @@
 								getUserRepos(buffer.concat(json), ++page);
 							}
 							else {
-								console.log(Repos);
 								buffer = Repos.filter.apply.recentlyPushed(buffer);
 								getParents(buffer, 0);
 							}
@@ -320,6 +328,12 @@
 						}
 					}
 					else {
+						
+						// Account for user having no data.
+						if(buffer.length == 0) {
+							Socket.postMessage(Repos.name, "display", "append", [context.id, null]);
+						}
+						
 						Cache.save(context.id, Repos.name, buffer);
 						Socket.postComplete();
 					}
