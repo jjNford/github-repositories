@@ -2,7 +2,7 @@ var Filter = function(type) {
 	this.type = type;
 	this.init();
 };
-		
+	
 Filter.prototype = {
 	
 	init: function() {
@@ -61,7 +61,7 @@ Filter.prototype = {
 			}
 			return repos;
 		},
-		
+	
 		/**
 		 * Remove Users Repos
 		 * 

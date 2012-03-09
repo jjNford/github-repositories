@@ -26,7 +26,7 @@
 (function() {
 	
 	window.Cache = {
-		
+	
 		init: function() {
 			this._ttl = 900000; // 15 minutes
 			this._key = "cache.";
@@ -35,7 +35,7 @@
 			this._threshold = 1;
 			this.name = "Cache";
 		},
-		
+	
 		/**
 		 * @return Returns true if cache is cleared, false if not.
 		 */
@@ -53,7 +53,7 @@
 				return false;
 			}
 		},
-		
+	
 		/**
 		 * @return True if cache is enabled, false if not.
 		 */
@@ -68,7 +68,7 @@
 			}
 			return false;
 		},
-		
+	
 		/**
 		 * @return True if smart caching is on, false if not.
 		 */
@@ -83,7 +83,7 @@
 			}
 			return false;
 		},
-		
+	
 		/**
 		 * @param id The ID of the cache block to load from.
 		 * @param key The address in the block to load data from.
@@ -97,7 +97,7 @@
 					var payload = JSON.parse(window['localStorage'][this._key + id])[address];
 					var timestamp = new Date().getTime();
 					var expired = false;
-					
+	
 					if(payload != null) {
 						if(timestamp - payload.time > this._ttl) {
 							if(this.isSmart() === false) {
@@ -115,7 +115,7 @@
 			}
 			return null;
 		},
-		
+	
 		/**
 		 * @param id The ID of the cache block to save data to.
 		 * @param key The address in the block to save data to.
@@ -125,7 +125,7 @@
 		save: function(id, address, data, _missed) {
 			if(this.isEnabled() === true) {
 				try {
-					if(!_missed || _missed <= this._threshold) {						
+					if(!_missed || _missed <= this._threshold) {	
 						var block = JSON.parse(window['localStorage'][this._key + id]);
 						var timestamp = new Date().getTime();
 						block[address] = {"time": timestamp, "data": data};
@@ -146,7 +146,7 @@
 			}
 			return false;
 		},
-		
+	
 		/**
 		 * @param bool True to turn caching on, false to turn it off.
 		 */
@@ -158,7 +158,7 @@
 				catch(error) {}
 			}
 		},
-		
+	
 		/**
 		 * @param bool True to turn smart caching on, false to turn it off.
 		 */

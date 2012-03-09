@@ -4,15 +4,15 @@ window.App.navigation = {
 	 * Initialize
 	 */
 	init: function() {	
-		this._key = "navigation";		
+		this._key = "navigation";	
 		this.selected = Storage.load(this._key);
 		this.items = {};
-			
+	
 		// Store navigation DOM elements into associative array.	
 		jQuery('.dashboard .navigation li').each(function() {
 			App.navigation.items[jQuery(this).attr('rel')] = jQuery(this);
 		});	
-			
+	
 		this.bind();	
 		this.update(this.selected, true);
 	},
@@ -38,7 +38,7 @@ window.App.navigation = {
 		if(tab == null) {
 			tab = Repos.name;
 		}
-				
+	
 		// Updated selected.
 		if(tab != this.selected | force) {
 			if(this.items[this.selected]) {
@@ -60,7 +60,7 @@ window.App.navigation = {
 				this.items[App.FOLLOWING].hide();
 				this.items[App.FOLLOWERS].hide();
 			}
-			
+	
 			this.selected = tab;
 			Storage.save(this._key, this.selected);
 			App.content.loading();

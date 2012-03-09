@@ -1,5 +1,5 @@
 (function() {
-		
+	
 	// Keep in global namespace for background page.
 	window.Repos = {
 	
@@ -7,9 +7,9 @@
 			this.name = "Repos";
 			this.filter = new Filter(this.name);
 		},
-		
+	
 		bind: {
-			
+	
 			/**
 			 * List
 			 */
@@ -18,7 +18,7 @@
 					Repos.bind.item(jQuery(this));
 				});
 			},
-			
+	
 			/**
 			 * Item
 			 * 
@@ -31,18 +31,18 @@
 				var input = extras.find('input');
 				var zip = extras.find('.zip');
 				var copy = extras.find('.copy');
-				
+	
 				// Toggle cloning area.
 				about.on('click', function() {
 					extras.slideToggle(225);
 					about.toggleClass('opened');
 				});
-				
+	
 				// Select all text on input box click.
 				input.on('click', function() {
 					jQuery(this).select();
 				});
-				
+	
 				// Add mouse events to zip button.
 				zip.on('mousedown', function() {
 					jQuery(this).addClass('down');
@@ -53,7 +53,7 @@
 				zip.on('mouseup', function() {
 					jQuery(this).removeClass('down');
 				});
-				
+	
 				// Change input to match current link and copy to clipboard.
 				links.find('li').each(function() {
 					var element = jQuery(this);
@@ -61,21 +61,21 @@
 						element.on('click', function(event) {
 							element.siblings().removeClass('selected');
 							element.addClass('selected');
-							
+	
 							input.val(element.attr('data'));
 							input.select();
 							document.execCommand("copy");
 							input.blur();
-							
+	
 							copy.fadeIn(100).delay(500).fadeOut(100);
 						});
 					}
 				});
 			}
 		},
-		
+	
 		display: {
-			
+	
 			/**
 			 * Append
 			 * 
@@ -84,7 +84,7 @@
 			append: function(contextId, repo) {
 
 				var list = jQuery('.repo_list');
-				
+	
 				// If a list has not yet been created.
 				if(list.length == 0) {
 					App.content.post(contextId, Repos.name, function() {	
@@ -92,27 +92,27 @@
 						Repos.bind.list();
 					});
 				}
-				
+	
 				// Append the list.
 				else {
 					App.content.post(contextId, Repos.name, function() {
 						var old = list.find('li.repo[id="' + repo.id + '"]');
 						var temp = list.find('li.repo:first-child');
 						var html = Repos.html.item(repo);
-					
+	
 						while(temp.length > 0 && temp.attr('time') > repo.pushed_at) {
 							temp = temp.next();
 						}
-					
+	
 						if(temp.length == 0 || repo.pushed_at == null) {
 							list.append(html);
 						}
 						else {
 							jQuery(html).insertBefore(temp);
 						}
-					
+	
 						repo = list.find('li.repo[id="' + repo.id + '"]');
-					
+	
 						if(old.length > 0) {
 							if(old.find('.repo_extras').is(':visible')) {
 								repo.find('.repo_extras').show();
@@ -120,12 +120,12 @@
 							}
 							old.remove();
 						}
-					
+	
 						Repos.bind.item(repo);
 					});
 				}
 			},
-			
+	
 			/**
 			 * List
 			 * 
@@ -139,9 +139,9 @@
 				});
 			}
 		},
-		
+	
 		html: {
-			
+	
 			/**
 			 * Item
 			 * 
@@ -149,11 +149,11 @@
 			 * @return Repo list item HTML.
 			 */
 			item: function(repo) {
-				
+	
 				if(!repo) {
 					return "";
 				}
-				
+	
 				return "<li class='repo " + (repo['private'] ? "private" : "public") + (repo.fork ? " fork" : " source" ) + "' id='" + repo.id + "' time='" + repo.pushed_at + "'>"
 					 + "<ul class='repo_stats'>"
 					 + "<li>" + (repo.language ? repo.language : "") + "</li>"
@@ -199,9 +199,9 @@
 					 + ((repo.pushed_at != null) ? "Last updated <time>" + jQuery.timeago(repo.pushed_at) + "</time>" : "Never updated")
 					 + "</p>"
 					 + "</div>"
-					 + "</li>";				
+					 + "</li>";	
 			},
-			
+	
 			/**
 			 * List
 			 * 
@@ -211,20 +211,20 @@
 			list: function(repos) {
 				var html = Repos.filter.html();
 				html += "<ul class='repo_list'>";
-				
+	
 				if(repos) {
 					for(var i in repos) {
 						html += Repos.html.item(repos[i]);
 					}
 				}
-				
+	
 				html += "</ul>";
 				return html;
 			}
 		},
-		
+	
 		load: {
-			
+	
 			/**
 			 * Cache
 			 * 
@@ -232,16 +232,16 @@
 			 */
 			cache: function(context) {
 				var cache = Cache.load(context.id, Repos.name);
-				
+	
 				if(cache != null) {
 					Repos.display.list(context.id, cache.data);
 				}
-				
+	
 				if(!cache || cache.expired) {
 					Repos.load.refresh(context);
 				}
 			},
-			
+	
 			/**
 			 * Github
 			 * 
@@ -255,7 +255,7 @@
 				else {
 					getOrgRepos([], 1);
 				}
-				
+	
 				/* GitHub onlly returns 40 repositories per page - use recursion to retreive all
 				 * repositories. When all user repositories have been retreived, GitHub returns
 				 * and empty array. When all organization repositories have been retreived, GitHub
@@ -274,7 +274,7 @@
 							}
 						});
 				};
-				
+	
 				function getOrgRepos(buffer, page, last) {
 					jQuery.getJSON("https://api.github.com/orgs/" + context.login + "/repos", {access_token: token, page: page})
 						.success(function(json) {
@@ -288,7 +288,7 @@
 							}
 						});
 				};
-				
+	
 				function getParents(buffer, index) {
 					if(index < buffer.length) {
 						if(buffer[index].fork) {
@@ -298,7 +298,7 @@
 									Socket.postMessage(Repos.name, "display", "append", [context.id, json]);
 									getParents(buffer, ++index);
 								})
-								
+	
 								/* 404 error is thrown when a forked org repo name has changed and 
 								 * that org is trying to load its repos parents. GitHub does not
 								 * show these repositories as the main org page so they will be 
@@ -307,7 +307,7 @@
 								 * 
 								 */
 								.error(function(json) {
-									
+	
 									// Block 1:
 									// jQuery.getJSON("https://api.github.com/repos" + buffer[index].owner.login + "/" + buffer[index].name, {access_token: token})
 									//     .success(function(json) {
@@ -315,12 +315,11 @@
 									//         // TODO: send to popup with socket.
 									//         getParents(buffer, ++index);
 									//     });
-									
+	
 									// Block 2:
 									buffer.splice(index, 1);
 									getParents(buffer, index);
-								});
-								
+								});	
 						}
 						else {
 							Socket.postMessage(Repos.name, "display", "append", [context.id, buffer[index]]);
@@ -328,18 +327,18 @@
 						}
 					}
 					else {
-						
+	
 						// Account for user having no data.
 						if(buffer.length == 0) {
 							Socket.postMessage(Repos.name, "display", "append", [context.id, null]);
 						}
-						
+	
 						Cache.save(context.id, Repos.name, buffer);
 						Socket.postComplete();
 					}
 				};
 			},
-			
+	
 			/**
 			 * Refresh
 			 *

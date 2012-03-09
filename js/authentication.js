@@ -14,17 +14,17 @@ window.App.authentication = {
 			jQuery.getJSON("https://api.github.com/user", {access_token: OAuth2.getToken()})
 				.success(function(json) {
 					if(json.type == "User") {
-						
+	
 						var user = {};
 						user.logged = json;
-						
+	
 						// Load user's organizations.
 						jQuery.getJSON("https://api.github.com/user/orgs", {access_token: OAuth2.getToken()})
 							.success(function(json) {
-								
+	
 								// Don't have access to '/user/<org-name>' because token not for them, but
 								// it would be useful in getting the number or repositories each user has.
-								
+	
 								user.orgs = json;
 								pass(user);
 							});

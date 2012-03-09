@@ -7,20 +7,20 @@
 			this.name = "Watched";
 			this.filter = new Filter(this.name);
 		},
-		
+	
 		bind: {},
-		
+	
 		display: {
-			
+	
 			/**
 			 * Append
 			 * 
 			 * @param repos Watched repositories to append to display.
 			 */
 			append: function(contextId, repos) {
-				
+	
 				var list = jQuery('.watched_list');
-				
+	
 				// If a list has not yet been created.
 				if(list.length == 0) {
 					App.content.post(contextId, Watched.name, function() {
@@ -28,28 +28,28 @@
 						App.content.display(Watched.html.list(repos));
 					});
 				}
-				
+	
 				// Append the list.
 				else {
 					App.content.post(contextId, Watched.name, function() {
 						for(var i in repos) {
 							var repo = repos[i];
-						
+	
 							var old = list.find('li.repo[id="' + repo.id + '"]');
 							var temp = list.find('li.repo:first-child');
 							var html = Watched.html.item(repo);
-						
+	
 							while(temp.length > 0 && temp.attr('time') > repo.pushed_at) {
 								temp = temp.next();
 							}
-							
+	
 							if(temp.length == 0 || repo.pushed_at == null) {
 								list.append(html);
 							}
 							else {
 								jQuery(html).insertBefore(temp);
 							}
-							
+	
 							if(old.length > 0) {
 								old.remove();
 							}
@@ -57,7 +57,7 @@
 					});
 				}
 			},
-			
+	
 			/**
 			 * List
 			 * 
@@ -70,9 +70,9 @@
 				});
 			}
 		},
-		
+	
 		html: {
-			
+	
 			/**
 			 * Item
 			 * 
@@ -80,11 +80,11 @@
 			 * @return Watched repo list item HTML.
 			 */
 			item: function(repo) {
-				
+	
 				if(!repo) {
 					return "";
 				}
-				
+	
 				return "<li class='repo " + (repo['private'] ? "private" : "public") + "' id='" + repo.id + "' time='" + repo.pushed_at + "'>"
 				     + "<a href='" + repo.html_url + "' target='_blank'>"
 					 + "<span class='user'>" + repo.owner.login + "</span>"
@@ -94,7 +94,7 @@
 					 + "</a>"
 					 + "</li>";
 			},
-			
+	
 			/**
 			 * List
 			 * 
@@ -104,20 +104,20 @@
 			list: function(repos) {	
 				var html = Repos.filter.html();	
 				html += "<ul class='watched_list'>";
-				
+	
 				if(repos) {
 					for(var i in repos) {
 						html += Watched.html.item(repos[i]);
 					}
 				}
-				
+	
 				html += "</ul>";
 				return html;
 			}
 		},
-		
+	
 		load: {
-			
+	
 			/**
 			 * Cache
 			 * 
@@ -125,16 +125,16 @@
 			 */
 			cache: function(context) {
 				var cache = Cache.load(context.id, Watched.name);
-				
+	
 				if(cache != null) {
 					Watched.display.list(context.id, cache.data);
 				}
-				
+	
 				if(!cache || cache.expired) {
 					Watched.load.refresh(context);
 				}
 			},
-			
+	
 			/**
 			 * Github
 			 * 
@@ -156,9 +156,9 @@
 								Socket.postComplete();
 							}
 						});
-				})([], 1);				
+				})([], 1);	
 			},
-			
+	
 			/**
 			 * Refresh
 			 *

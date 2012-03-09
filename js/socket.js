@@ -42,11 +42,11 @@
 				else {
 					return;
 				}
-				
+	
 				port.onMessage.addListener(function(msg) {
 					try {
 						window[msg.namespace][msg.literal][msg.method].apply(this, msg.args);
-						
+	
 						// Keep track of tasks running in background page.
 						if(Socket.port.name == "backgroundToPopup") {
 							Socket.tasks++;
@@ -60,7 +60,7 @@
 				});
 			});
 		},
-		
+	
 		/**
 		 * Post Complete
 		 */
@@ -70,7 +70,7 @@
 				this.port.postMessage("complete");
 			}
 		},
-				
+	
 		/**
 		 * Post Message 
 		 * 
@@ -79,7 +79,7 @@
 		 * @param - method - Method of message destination. 
 		 */
 		postMessage: function(namespace, literal, method, args) {
-						
+	
 			// Display loading notification.
 			if(this.port.name == "popupToBackground") {
 				jQuery('.user_links.loading').show();

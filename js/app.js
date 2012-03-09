@@ -10,17 +10,17 @@ window.App = {
 		App.authentication.validate(function(user) {
 			jQuery.extend(App.user, user);
 			App.user.init();
-									
+	
 			App.content.init();
 			App.navigation.init();
 			App.settings.init();
 			App.switcher.init();
-								
-			App.bind();					
+	
+			App.bind();	
 
 			// Show application.
 			jQuery('body').removeClass('loading').find('#application').show();
-			
+	
 		}, function() {
 			App.authentication.prompt();
 		});
@@ -30,13 +30,13 @@ window.App = {
 	 * Bind
 	 */
 	bind: function() {
-		
+	
 		// Set log out click events.
 		jQuery('.user_links li[rel="log_out"]').on('click', function() {
 			Storage.clear();
 			App.close();
 		});
-		
+	
 		// Set refresh button mouse and click events.
 		var refresh = jQuery('.refresh');
 		refresh.on('click', function() {

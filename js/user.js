@@ -15,13 +15,13 @@ window.App.user = {
 		if(this.context == null) {
 			this.context = Storage.load(this._key);
 		}
-		
+	
 		// Check self.
 		if(this.context != null && this.context.id == this.logged.id) {
 			this.context = this.logged;
 			return;
 		}
-		
+	
 		// Check organizations.
 		if(this.orgs.length == 0) {
 			this.context = this.logged;
@@ -37,7 +37,7 @@ window.App.user = {
 				this.context = this.logged;
 			}
 		}
-		
+	
 		// Save last used context.
 		Storage.save(this._key, this.context.id);
 	},

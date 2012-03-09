@@ -40,7 +40,7 @@
 (function() {
 
 	window.OAuth2 = {
-		
+	
 		/**
 		 * Initialize
 		 */
@@ -53,17 +53,17 @@
 			this._redirect_url = "https://github.com/robots.txt";
 			this._scopes = ['repo'];
 		},
-		
+	
 		/**
 		 * Begin
 		 */
 		begin: function() {
 			var url = this._authorization_url + "?client_id=" + this._client_id + "&redirect_uri" + this._redirect_url + "&scope=";
-			
+	
 			for(var i in this._scopes) {
 				url += this._scopes[i];
 			}
-			
+	
 			chrome.tabs.create({url: url, selected: true}, function(data) {
 				window.close();
 				chrome.tabs.getCurrent(function(tab) {
@@ -71,7 +71,7 @@
 				});
 			});
 		},
-		
+	
 		/**
 		 * Parses Access Code
 		 * 
@@ -87,7 +87,7 @@
 				this.requestToken(url.match(/\?code=([\w\/\-]+)/)[1]);
 			}
 		},
-		
+	
 		/**
 		 * Request Token
 		 * 
@@ -116,7 +116,7 @@
 			xhr.open('POST', this._access_token_url, true);
 			xhr.send(data);
 		},
-		
+	
 		/**
 		 * Finish
 		 * 
@@ -132,7 +132,7 @@
 				chrome.tabs.remove(tab.id, function() {});
 			});
 		},
-		
+	
 		/**
 		 * Get Token
 		 * 
@@ -146,7 +146,7 @@
 				return null;
 			}
 		},
-		
+	
 		/**
 		 * Delete Token
 		 * 

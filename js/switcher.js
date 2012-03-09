@@ -9,7 +9,7 @@ window.App.switcher = {
 		this.list = jQuery('.context_switcher .context_switcher_panel .organizations');
 		this.overlay = jQuery('.context_switcher .overlay');
 		this.panel = jQuery('.context_switcher .context_switcher_panel');
-		
+	
 		this.bind();
 		this.update();
 	},
@@ -27,7 +27,7 @@ window.App.switcher = {
 		this.button.on('mouseleave', function() {
 			App.switcher.button.removeClass('down');
 		});
-		
+	
 		this.button.on('click', App.switcher.toggle.bind(this));
 		this.close.on('click', App.switcher.toggle.bind(this));
 		this.overlay.on('click', App.switcher.toggle.bind(this));
@@ -53,7 +53,7 @@ window.App.switcher = {
 	 * Update
 	 */
 	update: function() {
-		
+	
 		// Add image to context switcher button.
 		var html = "<img src='" + App.user.context.avatar_url + "' /><span>" + App.user.context.login + "</span>";
 		this.button.html(html);
@@ -77,11 +77,11 @@ window.App.switcher = {
 				html += "<li rel='" + array[i].id + "' class='" + (i == 0 ? "selected" : "") + "'>"
 				     + "<img src='" + array[i].avatar_url + "' />"
 					 + "<span>" + array[i].login + "</span>";
-				
+	
 				// Add repository count to panel if available.
 				if(i > 0) {
 					var cache = Cache.load(array[i].id, Repos.name);	
-					
+	
 					if(cache) {	
 						html += "<span class='count'>"
 						      + cache.data.length
@@ -89,11 +89,11 @@ window.App.switcher = {
 							  + "</span>";
 					}
 				}
-					
+	
 				html += "</li>";
 			}
 			html += "</ul>";
-			
+	
 			this.list.html(html);
 
 			// Create bindings for new context panel.

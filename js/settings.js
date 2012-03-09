@@ -8,14 +8,14 @@ window.App.settings = {
 		this.button = jQuery('.user_links li[rel="extension_settings"]');
 		this.cacheButton = this.panel.find('.caching button');
 		this.emptyButton = this.panel.find('.empty_cache button');
-		
+	
 		if(Cache.isEnabled() === true) {
 			this.cacheButton.addClass('negative').html("Disable Cache");
 		}
 		else {
 			this.cacheButton.addClass('positive').html("Enable Cache");
 		}
-		
+	
 		this.bind();
 	},
 	
@@ -36,7 +36,7 @@ window.App.settings = {
 				App.settings.panel.slideDown(500);
 			}
 		});
-		
+	
 		// Toggle caching preference.
 		this.cacheButton.on('click', function() {
 			if(Cache.isEnabled() === false) {
@@ -49,7 +49,7 @@ window.App.settings = {
 				App.settings.cacheButton.removeClass('negative').addClass('positive').html("Enable Cache");
 			}
 		});
-		
+	
 		// Empty cache.
 		this.emptyButton.on('click', function() {
 			Cache.clear();
