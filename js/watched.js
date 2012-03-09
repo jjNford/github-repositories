@@ -24,7 +24,7 @@
 				// If a list has not yet been created.
 				if(list.length == 0) {
 					App.content.post(contextId, Watched.name, function() {
-						repos = Watched.filter.apply.recentlyPushed(repos);
+						repos = Watched.filter.data.recentlyPushed(repos);
 						App.content.display(Watched.html.list(repos));
 					});
 				}
@@ -146,12 +146,12 @@
 					jQuery.getJSON("https://api.github.com/user/watched", {access_token: token, page: page})
 						.success(function(json) {
 							if(json.length > 0) {
-								json = Watched.filter.apply.removeUserRepos(json, context.login);
+								json = Watched.filter.data.removeUserRepos(json, context.login);
 								Socket.postMessage(Watched.name, "display", "append", [context.id, json]);
 								getWatchedRepos(buffer.concat(json), ++page);
 							}
 							else {
-								buffer = Watched.filter.apply.recentlyPushed(buffer);
+								buffer = Watched.filter.data.recentlyPushed(buffer);
 								Cache.save(context.id, Watched.name, buffer);
 								Socket.postComplete();
 							}

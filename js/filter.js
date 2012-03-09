@@ -41,7 +41,7 @@ Filter.prototype = {
 		}
 	},
 	
-	apply: {
+	data: {
 
 		/**
 		 * Recently Pushed

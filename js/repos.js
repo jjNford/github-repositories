@@ -269,7 +269,7 @@
 								getUserRepos(buffer.concat(json), ++page);
 							}
 							else {
-								buffer = Repos.filter.apply.recentlyPushed(buffer);
+								buffer = Repos.filter.data.recentlyPushed(buffer);
 								getParents(buffer, 0);
 							}
 						});
@@ -279,7 +279,7 @@
 					jQuery.getJSON("https://api.github.com/orgs/" + context.login + "/repos", {access_token: token, page: page})
 						.success(function(json) {
 							if(json.length == 0 || (last != null && json[json.length - 1].id == last.id)) {
-								buffer = Repos.filter.apply.recentlyPushed(buffer);
+								buffer = Repos.filter.data.recentlyPushed(buffer);
 								getParents(buffer, 0);
 							}
 							else {
