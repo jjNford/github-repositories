@@ -1,6 +1,8 @@
 (function() {
 	
-	var Follows = function(name) {};
+	var Follows = function(name) {
+		this.filter = new Filter(this.name);
+	};
 	
 	Follows.prototype = {
 	
@@ -12,7 +14,7 @@
 			 * @param user User to append to display.
 			 */
 			append: function(contextId, user, name) {
-				console.log(user);
+				//console.log(user);
 			},
 	
 			/**
@@ -106,15 +108,15 @@
 					getComplete();
 				}
 				else {
-					getFollowing([], 1);
+					getFollows([], 1);
 				}
 
 				/* GitHub only returns 30 followers per page.  User recursion to get all followers.
-				 * Because of high volume of possible following, user temporary caching to begin
+				 * Because of high volume of possible follows, user temporary caching to begin
 				 * loading user names before all pages have been pulled.
 				 * 
 				 */
-				function getFollowing(buffer, page) {
+				function getFollows(buffer, page) {
 					jQuery.getJSON("https://api.github.com/user/" + type, {access_token: token, page: page})
 						.success(function(json) {
 
@@ -127,7 +129,7 @@
 							// Save to temp buffer and recurse.
 							if(json.length > 0) {
 								tempBuffer = json;
-								getFollowing(buffer.concat(json), ++page);
+								getFollows(buffer.concat(json), ++page);
 							}
 						});
 				};
@@ -138,6 +140,7 @@
 
 							// Pull user name and add to cacheBuffer.
 							users[index].name = json.name;
+							users[index].created_at = json.created_at;
 							cacheBuffer = cacheBuffer.concat(users[index]);
 							Socket.postMessage(name, "display", "append", [context.id, users[index], name]);
 	
@@ -153,6 +156,7 @@
 				};
 
 				function getComplete() {
+					cacheBuffer = window[name].filter.data.createdAt(cacheBuffer);
 					Cache.save(context.id, name, cacheBuffer);
 					Socket.postComplete();
 				}
