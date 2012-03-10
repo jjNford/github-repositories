@@ -26,30 +26,6 @@ var Filter = function(type) {
 	
 Filter.prototype = {
 	
-	apply: function(item) {
-
-		var that = this;
-
-		if(item) {
-			filterItem(item);
-		}
-		else {
-			jQuery('.item').each(function() {
-				filterItem(jQuery(this));
-			});
-		}
-
-		// Apply filter to an item.
-		function filterItem(item) {
-			if(item.hasClass(that.selected)) {
-				item.show();
-			}
-			else {
-				item.hide();
-			}
-		}
-	},
-	
 	bind: function() {
 
 		var that = this;
@@ -66,13 +42,14 @@ Filter.prototype = {
 			jQuery(this).addClass('selected');
 			that.selected = jQuery(this).attr('type');
 			Storage.save("filter." + that.type, that.selected);
-			window[that.type].filter.apply();
+			window[that.type].filter.dom();
 		});
 	
 		// Input box.
 		var input = jQuery('.filters .search');
 		input.one('click', function() {
 			input.val("");
+			input.removeClass('dead');
 		});
 
 		// Instant search.
@@ -100,7 +77,7 @@ Filter.prototype = {
 		follows: function() {
 			return "<div class='filters follows'>"
 			     + "<div class='search_wrapper'>"
-			     + "<input type='text' class='search' value='Find User...' />"
+			     + "<input type='text' class='search dead' value='Find User...' />"
 			     + "</div>"
 				 + "</div>";
 		},
@@ -113,7 +90,7 @@ Filter.prototype = {
 		repos: function() {
 			return "<div class='filters'>"
 			     + "<div class='search_wrapper'>"
-			     + "<input type='text' class='search' value='Find Repository...' />"
+			     + "<input type='text' class='search dead' value='Find Repository...' />"
 			     + "</div>"
 			     + "<ul class='types'>"
 			     + "<li type='item'>All Repositories</li>"
@@ -183,6 +160,37 @@ Filter.prototype = {
 				}
 			}
 			return repos;
+		}
+	},
+	
+	dom: function(item) {
+		var that = this;
+
+		if(item) {
+			filterItem(item);
+		}
+		else {
+			jQuery('.item').each(function() {
+				filterItem(jQuery(this));
+			});
+		}
+
+		// Apply filter to an item.
+		function filterItem(item) {
+			if(item.hasClass(that.selected)) {
+				if(jQuery('.filters .search').hasClass('dead')) {
+					item.show();
+				}
+				else {
+					var regExp = new RegExp(jQuery('.filters .search').val(), 'i');
+					if(item.attr('tags').match(regExp)) {
+						item.show();
+					}
+				}
+			}
+			else {
+				item.hide();
+			}
 		}
 	}
 };
