@@ -15,7 +15,7 @@ window.App.content = {
 	 * @param caller The object type of the caller.
 	 * @param fn The function to be posted.
 	 */
-	post: function(contextId, caller, fn) {fn();return;
+	post: function(contextId, caller, fn) {
 		try {
 			if(caller == App.navigation.selected && contextId == App.user.context.id) {
 				if(this._locked) {
