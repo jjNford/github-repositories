@@ -17,9 +17,34 @@
 	
 				var list = jQuery('.follows_list');
 	
+				// If a list has not yet been created.
 				if(list.length == 0) {
 					App.content.post(contextId, name, function() {
 						App.content.display(window[name].html.list([user], name));
+					});
+				}
+
+				// Append the list.
+				else {
+					App.content.post(contextId, name, function() {
+						var old = list.find('li.user[id="' + user.id + '"]');
+						var temp = list.find('li.user:first-child');
+						var html = window[name].html.item(user);
+	
+						while(temp.length > 0 && temp.attr('created_at') > user.created_at) {
+							temp = temp.next();
+						}
+	
+						if(temp.length == 0) {
+							list.append(html);
+						}
+						else {
+							jQuery(html).insertBefore(temp);
+						}
+	
+						if(old.length > 0) {
+							old.remove();
+						}
 					});
 				}
 			},
@@ -46,7 +71,7 @@
 			 * @return User list item HTML.
 			 */
 			item: function(user) {	
-				return "<li>"
+				return "<li class='user' id='" + user.id + "' created_at='" + user.created_at + "'>"
 				     + "<a href='https://github.com/" + user.login + "' target='_blank'>"
 				 	 + "<img src='" + (user.avatar_url ? user.avatar_url : "undefined") + "' />"
 					 + "</a>"
