@@ -28,25 +28,25 @@ Filter.prototype = {
 	
 	apply: function(item) {
 
-		// If filter is being applied to an item.
+		var that = this;
+
 		if(item) {
-			if(!item.hasClass(this.selected)) {
-				item.addClass('hidden');
-			}
+			filterItem(item);
+		}
+		else {
+			jQuery('.item').each(function() {
+				filterItem(jQuery(this));
+			});
 		}
 
-		// If filter is being applied to a list.
-		else {
-			var that = this;
-
-			jQuery('.item').each(function() {
-				if(!jQuery(this).hasClass(that.selected)) {
-					jQuery(this).addClass('hidden');
-				}
-				else {
-					jQuery(this).removeClass('hidden');
-				}
-			});
+		// Apply filter to an item.
+		function filterItem(item) {
+			if(item.hasClass(that.selected)) {
+				item.show();
+			}
+			else {
+				item.hide();
+			}
 		}
 	},
 	
@@ -79,11 +79,12 @@ Filter.prototype = {
 		input.keyup(function() {
 			var regExp = new RegExp(jQuery(this).val(), 'i');
 			jQuery('.content .item').each(function() {
-				if(jQuery(this).attr('tags').match(regExp)) {
-					jQuery(this).closest('li.item').show();
+				var item = jQuery(this);
+				if(item.hasClass(that.selected) && item.attr('tags').match(regExp)) {
+					item.closest('li.item').show();
 				}
 				else {
-					jQuery(this).closest('li.item').hide();
+					item.closest('li.item').hide();
 				}
 			})
 		})
