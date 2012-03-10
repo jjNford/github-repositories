@@ -26,15 +26,28 @@ var Filter = function(type) {
 	
 Filter.prototype = {
 	
+	apply: function() {
+	
+		console.log(this.selected);
+		//console.log(jQuery('li.item').hasClass(this.selected));
+	},
+	
 	bind: function() {
 
+		var that = this;
+
+		// Set selected filter.
+		//console.log(jQuery('.filters .type .private'));
+		//jQuery('.filters .type[type]).addClass('selected');
+
 		// Type selection.
-		var types = jQuery('.filters .type li');
+		var types = jQuery('.filters .types li');
 		types.on('click', function() {
 			types.each(function() {
 				jQuery(this).removeClass('selected');
 			});
-			jQuery(this).addClass('selected');
+			jQuery(this).addClass('selected');	
+			Storage.save("filter." + that.type, jQuery(this).attr('type'));
 		});
 	
 		// Input box.
@@ -82,8 +95,8 @@ Filter.prototype = {
 			     + "<div class='search_wrapper'>"
 			     + "<input type='text' class='search' value='Find Repository...' />"
 			     + "</div>"
-			     + "<ul class='type'>"
-			     + "<li type='all' class='selected'>All Repositories</li>"
+			     + "<ul class='types'>"
+			     + "<li type='all'>All Repositories</li>"
 			     + "<li type='forks'>Forks</li>"
 			     + "<li type='sources'>Sources</li>"
 			     + "<li type='private'>Private</li>"

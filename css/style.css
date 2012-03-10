@@ -473,12 +473,12 @@ button.positive:active {
 	color: #444;
 }
 
-.filters .type {
+.filters .types {
 	margin-top: 7px;
 	overflow: hidden;
 }
 
-.filters .type li {
+.filters .types li {
 	margin-left: 10px;
 	padding-bottom: 8px;
 	float: right;
@@ -487,16 +487,16 @@ button.positive:active {
 	cursor: pointer;
 }
 
-.filters .type li:first-child {
+.filters .types li:first-child {
 	margin-left: 0;
 	float: left;
 }
 
-.filters .type li:hover {
+.filters .types li:hover {
 	text-decoration: none;
 }
 
-.filters .type li.selected {
+.filters .types li.selected {
 	background: url('../img/filter_selected_bit.gif') 50% 100% no-repeat;
 	color: #000;
 	font-weight: bold;

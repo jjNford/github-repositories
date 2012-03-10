@@ -61,6 +61,7 @@
 			list: function(contextId, repos) {
 				App.content.post(contextId, "Watched", function() {
 					App.content.display(Watched.html.list(repos));
+					Watched.filter.apply();
 					Watched.filter.bind();
 				});
 			}
