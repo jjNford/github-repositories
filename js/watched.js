@@ -50,7 +50,7 @@
 
 							// Check if item should be filtered.
 							repo = list.find('li.repo[id="' + repo.id + '"]');
-							Watched.filter.apply(repo);
+							Watched.filter.dom(repo);
 						}
 					});
 				}
@@ -65,8 +65,8 @@
 			list: function(contextId, repos) {
 				App.content.post(contextId, "Watched", function() {
 					App.content.display(Watched.html.list(repos));
-					Watched.filter.apply();
 					Watched.filter.bind();
+					Watched.filter.dom();
 				});
 			}
 		},
@@ -80,7 +80,7 @@
 			 * @return Watched repo list item HTML.
 			 */
 			item: function(repo) {
-	console.log(repo);
+
 				if(!repo) {
 					return "";
 				}
