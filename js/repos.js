@@ -4,8 +4,7 @@
 	window.Repos = {
 	
 		init: function(){
-			this.name = "Repos";
-			this.filter = new Filter(this.name);
+			this.filter = new Filter("Repos");
 		},
 	
 		bind: {
