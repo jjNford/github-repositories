@@ -445,20 +445,28 @@ button.positive:active {
 	overflow: hidden;
 }
 
+.filters .search_wrapper {
+	padding-right: 20px;
+}
+
 .filters .search {
-	width: 428px;
-	height: 15px;
-	padding: 2px 12px;
-	background: url('../img/filter_input.png') 0 0 no-repeat;
-	border: none;
-	color: #444;
+	padding: 2px 10px;
+	width: 100%;
+	height: 12px;
+	border-radius: 10px;
+	border: 1px solid #e0e0e0;
+	border-top-color: #d2d2d2;
+	border-bottom-color: #e0e0e0;
+	color: #aaaaaa;
+	font-family: arial, clean, sans-serif;
 	font-size: 11px;
-	font: 99%;
+	font: 99%;	
+	box-shadow: 0 -1px 0 #848484;
 	outline: none;
 }
 
 .filters .search:focus {
-	background: url('../img/filter_input.png') 0 -19px no-repeat;
+	color: #444;
 }
 
 .filters .type {
