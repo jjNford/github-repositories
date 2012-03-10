@@ -1,7 +1,4 @@
 window.App = {
-	
-	FOLLOWERS: "Followers",
-	FOLLOWING: "Following",
 
 	/**
 	 * Initialize

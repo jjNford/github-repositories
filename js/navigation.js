@@ -50,15 +50,15 @@ window.App.navigation = {
 				if(!this.items["Watched"].is(":visible")) {
 					this.items["Repos"].removeClass("orgs");
 					this.items["Watched"].show();
-					this.items[App.FOLLOWING].show();
-					this.items[App.FOLLOWERS].show();
+					this.items["Following"].show();
+					this.items["Followers"].show();
 				}
 			}
 			else {
 				this.items["Repos"].addClass("orgs");
 				this.items["Watched"].hide();
-				this.items[App.FOLLOWING].hide();
-				this.items[App.FOLLOWERS].hide();
+				this.items["Following"].hide();
+				this.items["Followers"].hide();
 			}
 	
 			this.selected = tab;
