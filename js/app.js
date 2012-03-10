@@ -28,6 +28,24 @@ window.App = {
 	 */
 	bind: function() {
 	
+		// Create user link tooltips.
+		jQuery('.user_links [tooltip]').each(function() {
+			var element = jQuery(this);
+			var html = "<span class='trigger'></span>"
+					 + "<span class='tooltip'>"
+			         + "<span class='arrow'></span>"
+					 + "<span class='bubble'>" + element.attr('tooltip') + "</span>"
+					 + "</span>";
+	
+			jQuery(this).append(html);
+
+			element.find('.trigger').on('hover', function() {
+				element.find('.tooltip').toggle();
+				var bubble = element.find('.bubble');
+				bubble.css('margin-left', -bubble.width() / 2 + "px");
+			});
+		});
+	
 		// Set log out click events.
 		jQuery('.user_links li[rel="log_out"]').on('click', function() {
 			Storage.clear();
