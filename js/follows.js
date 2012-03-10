@@ -71,6 +71,11 @@
 			 * @return User list item HTML.
 			 */
 			item: function(user) {	
+
+				if(!user) {
+					return "";
+				}
+	
 				return "<li class='user' id='" + user.id + "' created_at='" + user.created_at + "'>"
 				     + "<a href='https://github.com/" + user.login + "' target='_blank'>"
 				 	 + "<img src='" + (user.avatar_url ? user.avatar_url : "undefined") + "' />"
@@ -139,6 +144,7 @@
 	
 				if(context[type] == 0) {
 					getComplete();
+					Socket.postMessage(name, "display", "append", [context.id, null, name]);
 				}
 				else {
 					getFollows([], 1);
