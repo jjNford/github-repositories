@@ -47,6 +47,10 @@
 							if(old.length > 0) {
 								old.remove();
 							}
+
+							// Check if item should be filtered.
+							repo = list.find('li.repo[id="' + repo.id + '"]');
+							Watched.filter.apply(repo);
 						}
 					});
 				}
@@ -76,12 +80,12 @@
 			 * @return Watched repo list item HTML.
 			 */
 			item: function(repo) {
-	
+	console.log(repo);
 				if(!repo) {
 					return "";
 				}
 	
-				return "<li class='item repo " + (repo['private'] ? "private" : "public") + "' id='" + repo.id + "' pushed_at='" + repo.pushed_at + "' "
+				return "<li class='item repo " + (repo['private'] ? "private" : "public") + (repo.fork ? " fork" : " source" ) + "' id='" + repo.id + "' pushed_at='" + repo.pushed_at + "' "
 				     + "tags='" + repo.owner.login + " " + repo.name + "'>"
 				     + "<a href='" + repo.html_url + "' target='_blank'>"
 					 + "<span class='user'>" + repo.owner.login + "</span>"
