@@ -99,7 +99,7 @@
 						var temp = list.find('li.repo:first-child');
 						var html = Repos.html.item(repo);
 	
-						while(temp.length > 0 && temp.attr('time') > repo.pushed_at) {
+						while(temp.length > 0 && temp.attr('pushed_at') > repo.pushed_at) {
 							temp = temp.next();
 						}
 	
@@ -153,7 +153,7 @@
 					return "";
 				}
 	
-				return "<li class='repo " + (repo['private'] ? "private" : "public") + (repo.fork ? " fork" : " source" ) + "' id='" + repo.id + "' time='" + repo.pushed_at + "'>"
+				return "<li class='repo " + (repo['private'] ? "private" : "public") + (repo.fork ? " fork" : " source" ) + "' id='" + repo.id + "' pushed_at='" + repo.pushed_at + "'>"
 					 + "<ul class='repo_stats'>"
 					 + "<li>" + (repo.language ? repo.language : "") + "</li>"
 					 + "<li class='watchers'>"
