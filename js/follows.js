@@ -5,15 +5,68 @@
 	Follows.prototype = {
 	
 		display: {
-			append: function(contextId, user) {
+	
+			/**
+			 * Append
+			 * 
+			 * @param user User to append to display.
+			 */
+			append: function(contextId, user, name) {
 				console.log(user);
 			},
-			list: function(contextId, users) {}
+	
+			/**
+			 * List
+			 * 
+			 * @param contextId Context ID requesting display.
+			 * @param users User to be displayed.
+			 */
+			list: function(contextId, users, name) {
+				App.content.post(contextId, name, function() {
+					App.content.display(window[name].html.list(users));
+				});
+			}
 		},
 	
 		html: {
-			item: function(user) {},
-			list: function(users) {}
+
+			/**
+			 * Item
+			 * 
+			 * @param user Item to generate HTML for.
+			 * @return User list item HTML.
+			 */
+			item: function(user) {	
+				return "<li>"
+				     + "<a href='https://github.com/" + user.login + "' target='_blank'>"
+				 	 + "<img src='" + (user.avatar_url ? user.avatar_url : "undefined") + "' />"
+					 + "</a>"
+					 + "<a href='https://github.com/" + user.login + "' target='_blank'>"
+					 + user.login
+					 + "</a>"
+					 + (user.name ? ("<em>(" + user.name + ")</em>") : "")
+					 + "</li>";
+			},
+
+			/**
+			 * List
+			 * 
+			 * @param users Users to create HTML list for.
+			 * @return Users list HTML.
+			 */
+			list: function(users) {
+				var html = ""; // TODO: Filter box goes here.
+				html += "<ul class='follows'>";
+
+				if(users) {
+					for(var i in users) {
+						html += this.item(users[i]);
+					}
+				}
+	
+				html += "</ul>";
+				return html;
+			}
 		},
 	
 		load: {
@@ -28,7 +81,7 @@
 				var cache = Cache.load(context.id, name);
 
 				if(cache != null) {
-					window[name].display.list(context.id, cache.data);
+					window[name].display.list(context.id, cache.data, name);
 				}
 	
 				if(!cache || cache.expired) {
@@ -86,7 +139,7 @@
 							// Pull user name and add to cacheBuffer.
 							users[index].name = json.name;
 							cacheBuffer = cacheBuffer.concat(users[index]);
-							Socket.postMessage(name, "display", "append", [context.id, users[index]]);
+							Socket.postMessage(name, "display", "append", [context.id, users[index], name]);
 	
 							if(index < users.length - 1) {
 								getUserNames(users, ++index);
