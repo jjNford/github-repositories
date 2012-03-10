@@ -4,7 +4,7 @@
 	window.Watched = {
 	
 		init: function(){
-			this.filter = new Filter(this.name);
+			this.filter = new Filter("Watched");
 		},
 	
 		display: {
