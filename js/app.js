@@ -40,7 +40,7 @@ window.App = {
 			jQuery(this).append(html);
 
 			element.find('.trigger').on('hover', function() {
-				element.find('.tooltip').toggle();
+				element.find('.tooltip').fadeToggle(75);
 				var bubble = element.find('.bubble');
 				bubble.css('margin-left', -bubble.width() / 2 + "px");
 			});
