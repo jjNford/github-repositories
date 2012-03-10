@@ -45,7 +45,7 @@
 			 */
 			github: function(context, token, name) {
 				var type = name.toLowerCase();
-				var pages = context[type] % 30 + 1;
+				var pages = Math.floor(context[type] / 30) + 1;
 				var tempBuffer = [];
 				var cacheBuffer = [];
 	
