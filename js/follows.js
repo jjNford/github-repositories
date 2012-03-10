@@ -14,7 +14,14 @@
 			 * @param user User to append to display.
 			 */
 			append: function(contextId, user, name) {
-				//console.log(user);
+	
+				var list = jQuery('.follows_list');
+	
+				if(list.length == 0) {
+					App.content.post(contextId, name, function() {
+						App.content.display(window[name].html.list([user], name));
+					});
+				}
 			},
 	
 			/**
@@ -59,7 +66,7 @@
 			 */
 			list: function(users, name) {
 				var html = window[name].filter.html();
-				html += "<ul class='follows'>";
+				html += "<ul class='follows_list'>";
 
 				if(users) {
 					for(var i in users) {
