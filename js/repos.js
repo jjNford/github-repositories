@@ -82,7 +82,6 @@
 			 * @param repo Repository to append to display.
 			 */
 			append: function(contextId, repo) {
-
 				var list = jQuery('.repo_list');
 	
 				// If a list has not yet been created.

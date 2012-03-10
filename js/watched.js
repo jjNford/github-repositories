@@ -15,7 +15,6 @@
 			 * @param repos Watched repositories to append to display.
 			 */
 			append: function(contextId, repos) {
-	
 				var list = jQuery('.watched_list');
 	
 				// If a list has not yet been created.
