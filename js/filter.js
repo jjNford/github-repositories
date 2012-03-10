@@ -34,7 +34,7 @@ Filter.prototype = {
 		follows: function() {
 			return "<div class='filters follows'>"
 			     + "<div class='search_wrapper'>"
-			     + "<input type='text' class='search' value='Find Repository...' />"
+			     + "<input type='text' class='search' value='Find User...' />"
 			     + "</div>"
 				 + "</div>";
 		},
