@@ -35,7 +35,7 @@ Filter.prototype = {
 			     + "<li type='forks'>Forks</li>"
 			     + "<li type='sources'>Sources</li>"
 			     + "<li type='private'>Private</li>"
-		             + "<li type='public'>Public</li>"
+		         + "<li type='public'>Public</li>"
 			     + "</ul>"
 		         + "</div>";
 		}
