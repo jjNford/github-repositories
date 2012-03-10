@@ -19,10 +19,8 @@
 	
 				// If a list has not yet been created.
 				if(list.length == 0) {
-					App.content.post(contextId, "Watched", function() {
-						repos = Watched.filter.data.recentlyPushed(repos);
-						App.content.display(Watched.html.list(repos));
-					});
+					repos = Watched.filter.data.recentlyPushed(repos);
+					Watched.display.list(contextId, repos);
 				}
 	
 				// Append the list.

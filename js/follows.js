@@ -19,9 +19,7 @@
 	
 				// If a list has not yet been created.
 				if(list.length == 0) {
-					App.content.post(contextId, name, function() {
-						App.content.display(window[name].html.list([user], name));
-					});
+					window[name].display.list(contextId, [user], name);
 				}
 
 				// Append the list.

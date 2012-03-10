@@ -86,10 +86,7 @@
 	
 				// If a list has not yet been created.
 				if(list.length == 0) {
-					App.content.post(contextId, "Repos", function() {	
-						App.content.display(Repos.html.list([repo]));
-						Repos.bind.list();
-					});
+					Repos.display.list(contextId, [repo]);
 				}
 	
 				// Append the list.
