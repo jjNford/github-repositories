@@ -80,7 +80,7 @@ window.App.switcher = {
 	
 				// Add repository count to panel if available.
 				if(i > 0) {
-					var cache = Cache.load(array[i].id, Repos.name);	
+					var cache = Cache.load(array[i].id, "Repos");	
 	
 					if(cache) {	
 						html += "<span class='count'>"
@@ -103,7 +103,7 @@ window.App.switcher = {
 					var newId = element.attr('rel');
 					if(newId && newId != App.user.context.id) {
 						App.user.update(newId);
-						App.navigation.update(Repos.name, true);
+						App.navigation.update("Repos", true);
 						App.switcher.toggle();
 						App.switcher.update();
 					}

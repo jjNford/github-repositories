@@ -87,7 +87,7 @@
 	
 				// If a list has not yet been created.
 				if(list.length == 0) {
-					App.content.post(contextId, Repos.name, function() {	
+					App.content.post(contextId, "Repos", function() {	
 						App.content.display(Repos.html.list([repo]));
 						Repos.bind.list();
 					});
@@ -95,7 +95,7 @@
 	
 				// Append the list.
 				else {
-					App.content.post(contextId, Repos.name, function() {
+					App.content.post(contextId, "Repos", function() {
 						var old = list.find('li.repo[id="' + repo.id + '"]');
 						var temp = list.find('li.repo:first-child');
 						var html = Repos.html.item(repo);
@@ -133,7 +133,7 @@
 			 * @param repos Repositories to be displayed.
 			 */
 			list: function(contextId, repos) {
-				App.content.post(contextId, Repos.name, function() {
+				App.content.post(contextId, "Repos", function() {
 					App.content.display(Repos.html.list(repos));
 					Repos.bind.list();
 				});
@@ -231,7 +231,7 @@
 			 * @param context Context requesting load.
 			 */
 			cache: function(context) {
-				var cache = Cache.load(context.id, Repos.name);
+				var cache = Cache.load(context.id, "Repos");
 	
 				if(cache != null) {
 					Repos.display.list(context.id, cache.data);
@@ -295,7 +295,7 @@
 							jQuery.getJSON("https://api.github.com/repos/" + context.login + "/" + buffer[index].name, {access_token: token})
 								.success(function(json) {
 									buffer[index] = json;
-									Socket.postMessage(Repos.name, "display", "append", [context.id, json]);
+									Socket.postMessage("Repos", "display", "append", [context.id, json]);
 									getParents(buffer, ++index);
 								})
 	
@@ -322,7 +322,7 @@
 								});	
 						}
 						else {
-							Socket.postMessage(Repos.name, "display", "append", [context.id, buffer[index]]);
+							Socket.postMessage("Repos", "display", "append", [context.id, buffer[index]]);
 							getParents(buffer, ++index);
 						}
 					}
@@ -330,10 +330,10 @@
 	
 						// Account for user having no data.
 						if(buffer.length == 0) {
-							Socket.postMessage(Repos.name, "display", "append", [context.id, null]);
+							Socket.postMessage("Repos", "display", "append", [context.id, null]);
 						}
 	
-						Cache.save(context.id, Repos.name, buffer);
+						Cache.save(context.id, "Repos", buffer);
 						Socket.postComplete();
 					}
 				};
@@ -345,7 +345,7 @@
 			 * @param context Context requesting refresh.
 			 */
 			refresh: function(context) {
-				Socket.postMessage(Repos.name, "load", "github", [context, OAuth2.getToken()]);
+				Socket.postMessage("Repos", "load", "github", [context, OAuth2.getToken()]);
 			}
 		}
 	};

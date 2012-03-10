@@ -7,10 +7,10 @@ Filter.prototype = {
 	
 	init: function() {
 		switch(this.type) {
-			case (Repos.name):
+			case ("Repos"):
 				this.html = Filter.prototype.html.repos;
 				break;
-			case (Watched.name):
+			case ("Watched"):
 				this.html = Filter.prototype.html.repos;
 				break;
 			default:
@@ -37,7 +37,7 @@ Filter.prototype = {
 			     + "<li type='private'>Private</li>"
 		             + "<li type='public'>Public</li>"
 			     + "</ul>"
-		             + "</div>";
+		         + "</div>";
 		}
 	},
 	

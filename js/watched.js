@@ -4,7 +4,6 @@
 	window.Watched = {
 	
 		init: function(){
-			this.name = "Watched";
 			this.filter = new Filter(this.name);
 		},
 	
@@ -23,7 +22,7 @@
 	
 				// If a list has not yet been created.
 				if(list.length == 0) {
-					App.content.post(contextId, Watched.name, function() {
+					App.content.post(contextId, "Watched", function() {
 						repos = Watched.filter.data.recentlyPushed(repos);
 						App.content.display(Watched.html.list(repos));
 					});
@@ -31,7 +30,7 @@
 	
 				// Append the list.
 				else {
-					App.content.post(contextId, Watched.name, function() {
+					App.content.post(contextId, "Watched", function() {
 						for(var i in repos) {
 							var repo = repos[i];
 	
@@ -65,7 +64,7 @@
 			 * @param repos Watched repositories to be displayed.
 			 */
 			list: function(contextId, repos) {
-				App.content.post(contextId, Watched.name, function() {
+				App.content.post(contextId, "Watched", function() {
 					App.content.display(Watched.html.list(repos));
 				});
 			}
@@ -124,7 +123,7 @@
 			 * @param context Context requesting load.
 			 */
 			cache: function(context) {
-				var cache = Cache.load(context.id, Watched.name);
+				var cache = Cache.load(context.id, "Watched");
 	
 				if(cache != null) {
 					Watched.display.list(context.id, cache.data);
@@ -147,12 +146,12 @@
 						.success(function(json) {
 							if(json.length > 0) {
 								json = Watched.filter.data.removeUserRepos(json, context.login);
-								Socket.postMessage(Watched.name, "display", "append", [context.id, json]);
+								Socket.postMessage("Watched", "display", "append", [context.id, json]);
 								getWatchedRepos(buffer.concat(json), ++page);
 							}
 							else {
 								buffer = Watched.filter.data.recentlyPushed(buffer);
-								Cache.save(context.id, Watched.name, buffer);
+								Cache.save(context.id, "Watched", buffer);
 								Socket.postComplete();
 							}
 						});
@@ -165,7 +164,7 @@
 			 * @param context Context requesting refresh.
 			 */
 			refresh: function(context) {
-				Socket.postMessage(Watched.name, "load", "github", [context, OAuth2.getToken()]);
+				Socket.postMessage("Watched", "load", "github", [context, OAuth2.getToken()]);
 			}
 		}
 	};

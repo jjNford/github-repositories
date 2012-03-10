@@ -36,7 +36,7 @@ window.App.navigation = {
 	 */
 	update: function(tab, force) {
 		if(tab == null) {
-			tab = Repos.name;
+			tab = "Repos";
 		}
 	
 		// Updated selected.
@@ -47,16 +47,16 @@ window.App.navigation = {
 			this.items[tab].addClass('selected');
 
 			if(App.user.context.type == "User") {
-				if(!this.items[Watched.name].is(":visible")) {
-					this.items[Repos.name].removeClass("orgs");
-					this.items[Watched.name].show();
+				if(!this.items["Watched"].is(":visible")) {
+					this.items["Repos"].removeClass("orgs");
+					this.items["Watched"].show();
 					this.items[App.FOLLOWING].show();
 					this.items[App.FOLLOWERS].show();
 				}
 			}
 			else {
-				this.items[Repos.name].addClass("orgs");
-				this.items[Watched.name].hide();
+				this.items["Repos"].addClass("orgs");
+				this.items["Watched"].hide();
 				this.items[App.FOLLOWING].hide();
 				this.items[App.FOLLOWERS].hide();
 			}
