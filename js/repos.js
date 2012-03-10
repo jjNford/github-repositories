@@ -117,6 +117,7 @@
 							old.remove();
 						}
 	
+						Repos.filter.apply(repo);
 						Repos.bind.item(repo);
 					});
 				}
@@ -132,6 +133,7 @@
 				App.content.post(contextId, "Repos", function() {
 					App.content.display(Repos.html.list(repos));
 					Repos.bind.list();
+					Repos.filter.apply();
 					Repos.filter.bind();
 				});
 			}
