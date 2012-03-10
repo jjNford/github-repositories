@@ -44,7 +44,7 @@
 					 + "<a href='https://github.com/" + user.login + "' target='_blank'>"
 					 + user.login
 					 + "</a>"
-					 + (user.name ? ("<em>(" + user.name + ")</em>") : "")
+					 + (user.name ? (" <em>(" + user.name + ")</em>") : "")
 					 + "</li>";
 			},
 
