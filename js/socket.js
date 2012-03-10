@@ -65,8 +65,7 @@
 		 * Post Complete
 		 */
 		postComplete: function() {
-			this.tasks--;
-			if(this.tasks == 0) {
+			if(--this.tasks == 0) {
 				this.port.postMessage("complete");
 			}
 		},
