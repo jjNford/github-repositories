@@ -1,5 +1,10 @@
 var Filter = function(type) {
 	this.type = type;
+	this.selected = Storage.load("filter." + type);
+	
+	if(!this.selected) {
+			this.selected = 'all';
+	}
 
 	switch(this.type) {
 		case "Repos":
@@ -24,10 +29,32 @@ Filter.prototype = {
 	bind: function() {
 
 		// Type selection.
-		jQuery('.filters .type li').on('click', function() {
-			jQuery('.filters .type li').removeClass('.selected');
+		var types = jQuery('.filters .type li');
+		types.on('click', function() {
+			types.each(function() {
+				jQuery(this).removeClass('selected');
+			});
 			jQuery(this).addClass('selected');
 		});
+	
+		// Input box.
+		var input = jQuery('.filters .search');
+		input.one('click', function() {
+			input.val("");
+		});
+
+		// Instant search.
+		input.keyup(function() {
+			var regExp = new RegExp(jQuery(this).val(), 'i');
+			jQuery('.content .item').each(function() {
+				if(jQuery(this).attr('tags').match(regExp)) {
+					jQuery(this).closest('li.item').show();
+				}
+				else {
+					jQuery(this).closest('li.item').hide();
+				}
+			})
+		})
 	},
 	
 	html: {
