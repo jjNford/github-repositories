@@ -502,7 +502,7 @@ button.positive:active {
 	font-weight: bold;
 }
 
-.follows li {
+.follows_list li {
 	padding: 5px 0;
 	height: 24px;
 	border-bottom: 1px solid #ddd;
@@ -512,25 +512,25 @@ button.positive:active {
 	overflow: hidden;
 }
 
-.follows li:last-child {
+.follows_list li:last-child {
 	border-bottom: none;
 }
 
-.follows li a {
+.follows_list li a {
 	color: #4183c4;
 	text-decoration: none;
 }
 
-.follows li a:hover {
+.follows_list li a:hover {
 	text-decoration: underline;
 }
 
-.follows li em {
+.follows_list li em {
 	color: #999;
 	font-style: normal;
 }
 
-.follows li img {
+.follows_list li img {
 	float: left;
 	margin-right: 10px;
 	padding: 1px;
