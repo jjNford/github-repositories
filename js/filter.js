@@ -1,27 +1,33 @@
 var Filter = function(type) {
 	this.type = type;
-	this.init();
+
+	switch(this.type) {
+		case "Repos":
+			this.html = Filter.prototype.html.repos;
+			break;
+		case "Watched":
+			this.html = Filter.prototype.html.repos;
+			break;
+		case "Followers":
+			this.html = Filter.prototype.html.follows;
+			break;
+		case "Following":
+			this.html = Filter.prototype.html.follows;
+			break;
+		default:
+			break;
+	}
 };
 	
 Filter.prototype = {
 	
-	init: function() {
-		switch(this.type) {
-			case "Repos":
-				this.html = Filter.prototype.html.repos;
-				break;
-			case "Watched":
-				this.html = Filter.prototype.html.repos;
-				break;
-			case "Followers":
-				this.html = Filter.prototype.html.follows;
-				break;
-			case "Following":
-				this.html = Filter.prototype.html.follows;
-				break;
-			default:
-				break;
-		}
+	bind: function() {
+
+		// Type selection.
+		jQuery('.filters .type li').on('click', function() {
+			jQuery('.filters .type li').removeClass('.selected');
+			jQuery(this).addClass('selected');
+		});
 	},
 	
 	html: {
