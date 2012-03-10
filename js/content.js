@@ -29,8 +29,7 @@ window.App.content = {
 			}
 		}
 		catch(error) {
-			// TODO: App.close();
-			console.log(error);
+			App.close();
 		}
 	},
 	

@@ -312,7 +312,7 @@
 									// jQuery.getJSON("https://api.github.com/repos" + buffer[index].owner.login + "/" + buffer[index].name, {access_token: token})
 									//     .success(function(json) {
 									//         buffer[index] = json;
-									//         // TODO: send to popup with socket.
+									//         Socket.postMessage("Repos", "display", "append", [context.id, json]);
 									//         getParents(buffer, ++index);
 									//     });
 	
