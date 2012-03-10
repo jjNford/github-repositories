@@ -7,8 +7,6 @@
 			this.filter = new Filter(this.name);
 		},
 	
-		bind: {},
-	
 		display: {
 	
 			/**
@@ -141,6 +139,10 @@
 			 * @param token Users OAuth2 token.
 			 */
 			github: function(context, token) {
+	
+				/* GitHub only returns 40 repositories per page so use recursion.
+				 *
+				 */ 
 				(function getWatchedRepos(buffer, page) {
 					jQuery.getJSON("https://api.github.com/user/watched", {access_token: token, page: page})
 						.success(function(json) {
