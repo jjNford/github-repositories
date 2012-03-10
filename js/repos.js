@@ -256,7 +256,7 @@
 					getOrgRepos([], 1);
 				}
 	
-				/* GitHub onlly returns 40 repositories per page - use recursion to retreive all
+				/* GitHub only returns 40 repositories per page - use recursion to retreive all
 				 * repositories. When all user repositories have been retreived, GitHub returns
 				 * and empty array. When all organization repositories have been retreived, GitHub
 				 * returns last page again.
