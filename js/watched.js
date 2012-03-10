@@ -61,6 +61,7 @@
 			list: function(contextId, repos) {
 				App.content.post(contextId, "Watched", function() {
 					App.content.display(Watched.html.list(repos));
+					Watched.filter.bind();
 				});
 			}
 		},
@@ -79,7 +80,8 @@
 					return "";
 				}
 	
-				return "<li class='repo " + (repo['private'] ? "private" : "public") + "' id='" + repo.id + "' pushed_at='" + repo.pushed_at + "'>"
+				return "<li class='item repo " + (repo['private'] ? "private" : "public") + "' id='" + repo.id + "' pushed_at='" + repo.pushed_at + "' "
+				     + "tags='" + repo.owner.login + " " + repo.name + "'>"
 				     + "<a href='" + repo.html_url + "' target='_blank'>"
 					 + "<span class='user'>" + repo.owner.login + "</span>"
 					 + "/"

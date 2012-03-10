@@ -56,6 +56,7 @@
 			list: function(contextId, users, name) {
 				App.content.post(contextId, name, function() {
 					App.content.display(window[name].html.list(users, name));
+					window[name].filter.bind();
 				});
 			}
 		},
@@ -74,7 +75,8 @@
 					return "";
 				}
 	
-				return "<li class='user' id='" + user.id + "' created_at='" + user.created_at + "'>"
+				return "<li class='item user' id='" + user.id + "' created_at='" + user.created_at + "' "
+				     + "tags='" + user.login + " " + (user.name ? user.name : "") + "'>"
 				     + "<a href='https://github.com/" + user.login + "' target='_blank'>"
 				 	 + "<img src='" + (user.avatar_url ? user.avatar_url : "undefined") + "' />"
 					 + "</a>"
