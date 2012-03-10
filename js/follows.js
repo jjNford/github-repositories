@@ -1,7 +1,7 @@
 (function() {
 	
 	var Follows = function(name) {
-		this.filter = new Filter(this.name);
+		this.filter = new Filter(name);
 	};
 	
 	Follows.prototype = {
@@ -25,7 +25,7 @@
 			 */
 			list: function(contextId, users, name) {
 				App.content.post(contextId, name, function() {
-					App.content.display(window[name].html.list(users));
+					App.content.display(window[name].html.list(users, name));
 				});
 			}
 		},
@@ -54,10 +54,11 @@
 			 * List
 			 * 
 			 * @param users Users to create HTML list for.
+			 * @param name Type to create filter for.
 			 * @return Users list HTML.
 			 */
-			list: function(users) {
-				var html = ""; // TODO: Filter box goes here.
+			list: function(users, name) {
+				var html = window[name].filter.html();
 				html += "<ul class='follows'>";
 
 				if(users) {
@@ -175,7 +176,7 @@
 	};
 
 	// Create types.
-	window.Followers = new Follows();
-	window.Following = new Follows();	
+	window.Followers = new Follows("Followers");
+	window.Following = new Follows("Following");	
 
 })();

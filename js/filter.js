@@ -32,7 +32,11 @@ Filter.prototype = {
 		 * @return Follows filter HTML.
 		 */
 		follows: function() {
-			return "";
+			return "<div class='filters follows'>"
+			     + "<div class='search_wrapper'>"
+			     + "<input type='text' class='search' value='Find Repository...' />"
+			     + "</div>"
+				 + "</div>";
 		},
 	
 		/**

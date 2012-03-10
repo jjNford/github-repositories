@@ -4,7 +4,6 @@ window.App.content = {
 	 * Initialize
 	 */
 	init: function() {
-
 		this._locked = false;
 		this.article = jQuery('.content');
 	},
@@ -16,7 +15,7 @@ window.App.content = {
 	 * @param caller The object type of the caller.
 	 * @param fn The function to be posted.
 	 */
-	post: function(contextId, caller, fn) {
+	post: function(contextId, caller, fn) {fn();return;
 		try {
 			if(caller == App.navigation.selected && contextId == App.user.context.id) {
 				if(this._locked) {

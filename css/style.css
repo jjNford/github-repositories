@@ -445,6 +445,10 @@ button.positive:active {
 	overflow: hidden;
 }
 
+.filters.follows {
+	padding: 10px;
+}
+
 .filters .search_wrapper {
 	padding-right: 20px;
 }
