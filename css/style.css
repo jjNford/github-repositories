@@ -1143,3 +1143,7 @@ button.positive:active {
 .watched_list .repo {
 	font-weight: bold;
 }
+
+.watched_list .user {
+	font-weight: normal;
+}
