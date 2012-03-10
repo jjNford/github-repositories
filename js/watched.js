@@ -104,7 +104,7 @@
 	
 				if(repos) {
 					for(var i in repos) {
-						html += Watched.html.item(repos[i]);
+						html += this.item(repos[i]);
 					}
 				}
 	

@@ -214,7 +214,7 @@
 	
 				if(repos) {
 					for(var i in repos) {
-						html += Repos.html.item(repos[i]);
+						html += this.item(repos[i]);
 					}
 				}
 	
