@@ -40,7 +40,7 @@ window.App = {
 		// Set refresh button mouse and click events.
 		var refresh = jQuery('.refresh');
 		refresh.on('click', function() {
-			window[App.navigation.selected].load.refresh(App.user.context);
+			window[App.navigation.selected].load.refresh(App.user.context, App.navigation.selected);
 		});
 		refresh.on('mousedown', function() {
 			refresh.addClass('down');
