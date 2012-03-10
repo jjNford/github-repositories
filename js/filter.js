@@ -7,11 +7,17 @@ Filter.prototype = {
 	
 	init: function() {
 		switch(this.type) {
-			case ("Repos"):
+			case "Repos":
 				this.html = Filter.prototype.html.repos;
 				break;
-			case ("Watched"):
+			case "Watched":
 				this.html = Filter.prototype.html.repos;
+				break;
+			case "Followers":
+				this.html = Filter.prototype.html.follows;
+				break;
+			case "Following":
+				this.html = Filter.prototype.html.follows;
 				break;
 			default:
 				break;
@@ -19,6 +25,15 @@ Filter.prototype = {
 	},
 	
 	html: {
+	
+		/**
+		 * Follows
+		 * 
+		 * @return Follows filter HTML.
+		 */
+		follows: function() {
+			return "";
+		},
 	
 		/**
 		 * Repos
@@ -42,6 +57,25 @@ Filter.prototype = {
 	},
 	
 	data: {
+
+		/**
+		 * Created At
+		 * 
+		 * @param data Data to be sorted.
+		 * @return Sorted data.
+		 */
+		createdAt: function(data) {
+			if(data && data.length > 0) {
+				data.sort(function(a, b) {
+					var a = new Date(a.created_at).getTime();
+					var b = new Date(b.created_at).getTime();
+					if(a > b) return -1;
+					if(a < b) return 1;
+					return 0;
+				});
+			}
+			return data;
+		},
 
 		/**
 		 * Recently Pushed
