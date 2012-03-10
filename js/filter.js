@@ -26,28 +26,24 @@ var Filter = function(type) {
 	
 Filter.prototype = {
 	
-	apply: function() {
-	
-		console.log(this.selected);
-		//console.log(jQuery('li.item').hasClass(this.selected));
-	},
+	apply: function() {},
 	
 	bind: function() {
 
 		var that = this;
 
 		// Set selected filter.
-		//console.log(jQuery('.filters .type .private'));
-		//jQuery('.filters .type[type]).addClass('selected');
+		jQuery('.filters .types li[type="' + this.selected + '"]').addClass('selected');
 
 		// Type selection.
 		var types = jQuery('.filters .types li');
 		types.on('click', function() {
 			types.each(function() {
 				jQuery(this).removeClass('selected');
-			});
-			jQuery(this).addClass('selected');	
-			Storage.save("filter." + that.type, jQuery(this).attr('type'));
+			});	
+			jQuery(this).addClass('selected');
+			that.selected = jQuery(this).attr('type');
+			Storage.save("filter." + that.type, that.selected);
 		});
 	
 		// Input box.
