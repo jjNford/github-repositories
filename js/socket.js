@@ -45,12 +45,12 @@
 	
 				port.onMessage.addListener(function(msg) {
 					try {
-						window[msg.namespace][msg.literal][msg.method].apply(this, msg.args);
-	
 						// Keep track of tasks running in background page.
 						if(Socket.port.name == "backgroundToPopup") {
 							Socket.tasks++;
 						}
+	
+						window[msg.namespace][msg.literal][msg.method].apply(this, msg.args);
 					}
 					catch(UnknownDestination) {
 						if(msg == "complete") {
