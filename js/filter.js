@@ -3,7 +3,7 @@ var Filter = function(type) {
 	this.selected = Storage.load("filter." + type);
 	
 	if(!this.selected) {
-			this.selected = 'all';
+			this.selected = 'item';
 	}
 
 	switch(this.type) {
@@ -26,7 +26,29 @@ var Filter = function(type) {
 	
 Filter.prototype = {
 	
-	apply: function() {},
+	apply: function(item) {
+
+		// If filter is being applied to an item.
+		if(item) {
+			if(!item.hasClass(this.selected)) {
+				item.addClass('hidden');
+			}
+		}
+
+		// If filter is being applied to a list.
+		else {
+			var that = this;
+
+			jQuery('.item').each(function() {
+				if(!jQuery(this).hasClass(that.selected)) {
+					jQuery(this).addClass('hidden');
+				}
+				else {
+					jQuery(this).removeClass('hidden');
+				}
+			});
+		}
+	},
 	
 	bind: function() {
 
@@ -44,6 +66,7 @@ Filter.prototype = {
 			jQuery(this).addClass('selected');
 			that.selected = jQuery(this).attr('type');
 			Storage.save("filter." + that.type, that.selected);
+			window[that.type].filter.apply();
 		});
 	
 		// Input box.
@@ -92,9 +115,9 @@ Filter.prototype = {
 			     + "<input type='text' class='search' value='Find Repository...' />"
 			     + "</div>"
 			     + "<ul class='types'>"
-			     + "<li type='all'>All Repositories</li>"
-			     + "<li type='forks'>Forks</li>"
-			     + "<li type='sources'>Sources</li>"
+			     + "<li type='item'>All Repositories</li>"
+			     + "<li type='fork'>Forks</li>"
+			     + "<li type='source'>Sources</li>"
 			     + "<li type='private'>Private</li>"
 		         + "<li type='public'>Public</li>"
 			     + "</ul>"
