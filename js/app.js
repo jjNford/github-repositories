@@ -1,7 +1,7 @@
 window.App = {
 
 	/**
-	 * Initializes the application and the applications components.
+	 * Initialize extension application.
 	 */
 	init: function(){
 		Authentication.validate(function(user) {
@@ -20,7 +20,7 @@ window.App = {
 	},
 
 	/**
-	 * Bind
+	 * Bind applicaiton events.
 	 */
 	bind: function() {
 
@@ -74,7 +74,7 @@ window.App = {
 	},
 
 	/**
-	 * Close
+	 * Close extension.
 	 */
 	close: function(){
 		window.close();
