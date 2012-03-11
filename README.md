@@ -28,6 +28,7 @@ External Libraries
 - [HTML5 Caching](https://github.com/jjNford/html5-caching) (included)
 - [Chrome Extension Socket](https://github.com/jjNford/chrome-extension-socket) (included)
 - [OAuth2 Chrome Extension](https://github.com/jjNford/oauth2-chrome-extension) (included)
+- [GitHub Notifier](https://github.com/sindresorhus/GitHub-Notifier) (included)
 
 License
 -------
@@ -37,6 +38,21 @@ License
 
 Changelog
 ---------
+
+### v2.1.0
+- Add CSS for private repositories
+- User links added to repositories
+- Show number of repositories in context switcher
+- New button classes (CSS)
+- Changed sort time from "updated_at" to "pushed_at"
+- Remove changed fork names from showing up in organization repos
+- Added background page to handle long load request when popup is closed
+- Smarter caching (Cache shows even when expired - triggers refresh)
+- Append data to DOM as soon as retrieved from GitHub
+- Improve instant search
+- Update filtering
+- Notifications
+- Refactored source
 
 ### v2.0.5
 - Added Google Analytics number to source (not worthy of an update - developer mistake)
