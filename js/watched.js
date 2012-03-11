@@ -158,7 +158,7 @@
 							else {
 								buffer = Watched.filter.data.recentlyPushed(buffer);
 								Cache.save(context.id, "Watched", buffer);
-								Socket.postComplete();
+								Socket.postTaskComplete();
 							}
 						});
 				})([], 1);	
@@ -170,7 +170,7 @@
 			 * @param context Context requesting refresh.
 			 */
 			refresh: function(context) {
-				Socket.postMessage("Watched", "load", "github", [context, OAuth2.getToken()]);
+				Socket.postTask("Watched", "load", "github", [context, OAuth2.getToken()]);
 			}
 		}
 	};

@@ -197,7 +197,7 @@
 				function getComplete() {
 					cacheBuffer = window[name].filter.data.createdAt(cacheBuffer);
 					Cache.save(context.id, name, cacheBuffer);
-					Socket.postComplete();
+					Socket.postTaskComplete();
 				}
 			},
 	
@@ -208,7 +208,7 @@
 			 * @param name Type to refresh.
 			 */
 			refresh: function(context, name) {
-				Socket.postMessage(name, "load", "github", [context, OAuth2.getToken(), name]);
+				Socket.postTask(name, "load", "github", [context, OAuth2.getToken(), name]);
 			}
 		}
 	};

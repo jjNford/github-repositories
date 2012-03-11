@@ -333,7 +333,7 @@
 						}
 	
 						Cache.save(context.id, "Repos", buffer);
-						Socket.postComplete();
+						Socket.postTaskComplete();
 					}
 				};
 			},
@@ -344,7 +344,7 @@
 			 * @param context Context requesting refresh.
 			 */
 			refresh: function(context) {
-				Socket.postMessage("Repos", "load", "github", [context, OAuth2.getToken()]);
+				Socket.postTask("Repos", "load", "github", [context, OAuth2.getToken()]);
 			}
 		}
 	};
