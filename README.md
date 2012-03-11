@@ -43,6 +43,7 @@ Changelog
 - Add CSS for private repositories
 - User links added to repositories
 - Show number of repositories in context switcher
+- New copy notification
 - New button classes (CSS)
 - Changed sort time from "updated_at" to "pushed_at"
 - Remove changed fork names from showing up in organization repos
