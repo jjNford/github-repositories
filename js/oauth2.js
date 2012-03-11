@@ -45,23 +45,23 @@
 		 * Initialize
 		 */
 		init: function() {
-			this._key = "token";
-			this._access_token_url = "https://github.com/login/oauth/access_token";
-			this._authorization_url = "https://github.com/login/oauth/authorize";
-			this._client_id = "911fa741a8b8dac7d28c";
-			this._client_secret = "e13f2f8ba4d9892eb231b4fcf3257013736327d1";
-			this._redirect_url = "https://github.com/robots.txt";
-			this._scopes = ['repo'];
+			this.KEY = "token";
+			this.ACCESS_TOKEN_URL = "https://github.com/login/oauth/access_token";
+			this.AUTHORIZATION_URL = "https://github.com/login/oauth/authorize";
+			this.CLIENT_ID = "911fa741a8b8dac7d28c";
+			this.CLIENT_SECRET = "e13f2f8ba4d9892eb231b4fcf3257013736327d1";
+			this.REDIRECT_URL = "https://github.com/robots.txt";
+			this.SCOPES = ['repo'];
 		},
 	
 		/**
 		 * Begin
 		 */
 		begin: function() {
-			var url = this._authorization_url + "?client_id=" + this._client_id + "&redirect_uri" + this._redirect_url + "&scope=";
+			var url = this.AUTHORIZATION_URL + "?client_id=" + this.CLIENT_ID + "&redirect_uri" + this.REDIRECT_URL + "&scope=";
 	
-			for(var i in this._scopes) {
-				url += this._scopes[i];
+			for(var i in this.SCOPES) {
+				url += this.SCOPES[i];
 			}
 	
 			chrome.tabs.create({url: url, selected: true}, function(data) {
@@ -96,8 +96,8 @@
 		requestToken: function(code) {
 			var that = this;
 			var data = new FormData();
-			data.append('client_id', this._client_id);
-			data.append('client_secret', this._client_secret);
+			data.append('client_id', this.CLIENT_ID);
+			data.append('client_secret', this.CLIENT_SECRET);
 			data.append('code', code); 
 
 			var xhr = new XMLHttpRequest();
@@ -113,7 +113,7 @@
 					}
 				}
 			});
-			xhr.open('POST', this._access_token_url, true);
+			xhr.open('POST', this.ACCESS_TOKEN_URL, true);
 			xhr.send(data);
 		},
 	
@@ -124,7 +124,7 @@
 		 */
 		finish: function(token) {
 			try {
-				window['localStorage'][this._key] = token;
+				window['localStorage'][this.KEY] = token;
 			}
 			catch(error) {}
 
@@ -140,7 +140,7 @@
 		 */
 		getToken: function() {
 			try {
-				return window['localStorage'][this._key];
+				return window['localStorage'][this.KEY];
 			}
 			catch(error) {
 				return null;
@@ -154,7 +154,7 @@
 		 */
 		deleteToken: function() {
 			try {
-				delete window['localStorage'][this._key];
+				delete window['localStorage'][this.KEY];
 				return true;
 			}
 			catch(error) {
