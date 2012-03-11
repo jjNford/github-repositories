@@ -82,7 +82,9 @@
 	<!-- end settings -->
 
 	<!-- application -->
-    <article id="application" class="hidden">	
+    <article id="application" class="hidden">
+	
+		<!-- header -->
         <header class="application_header">
             <ul class="user_links">
 				<li rel="notifications" tooltip="Notifications"></li>
@@ -90,7 +92,12 @@
                 <li rel="log_out" tooltip="Log Out"></li>
             </ul>
         </header>
+		<!-- end header -->
+		
+		<!-- dashboard -->
         <section class="dashboard">
+	
+			<!-- context switcher -->
             <div class="context_switcher">
                 <div class="overlay"></div>
                 <span class="context_switcher_button"></span>
@@ -103,6 +110,9 @@
 					<a href="https://github.com/account/organizations" target="_blank" class="manage">Manage Organizations</a>
                 </div>
             </div>
+			<!-- end context switcher -->
+			
+			<!-- navigation -->
 			<nav class="navigation">
 				<ul>
 					<li rel="Repos">Repositories</li>
@@ -111,12 +121,22 @@
 					<li rel="Followers">Followers</li>
 				</ul>
 			</nav>
+			<!-- end navigation -->
+			
         </section>
+		<!-- end dashboard -->
+		
+		<!-- content -->
         <section class="content loading"></section>
+		<!-- end content -->
+		
+		<!-- footer -->
         <footer class="application_footer">
         	<span class="user_links refresh">Refresh</span>
 			<span class="user_links loading"></span>
         </footer>
+		<!-- end footer -->
+
     </article>
 	<!-- end application -->
 
