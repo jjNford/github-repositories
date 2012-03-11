@@ -8,7 +8,7 @@ window.App = {
 
 			User.init(user);	
 			Content.init();
-			App.navigation.init();
+			Navigation.init();
 			App.settings.init();
 			App.switcher.init();
 			App.bind();	
@@ -60,7 +60,7 @@ window.App = {
 		// Set refresh button mouse and click events.
 		var refresh = jQuery('.refresh');
 		refresh.on('click', function() {
-			window[App.navigation.selected].load.refresh(User.context, App.navigation.selected);
+			window[Navigation.selected].load.refresh(User.context, Navigation.selected);
 		});
 		refresh.on('mousedown', function() {
 			refresh.addClass('down');

@@ -1,4 +1,4 @@
-window.App.navigation = {
+window.Navigation = {
 
 	/**
 	 * Initialize
@@ -10,7 +10,7 @@ window.App.navigation = {
 	
 		// Store navigation DOM elements into associative array.	
 		jQuery('.dashboard .navigation li').each(function() {
-			App.navigation.items[jQuery(this).attr('rel')] = jQuery(this);
+			Navigation.items[jQuery(this).attr('rel')] = jQuery(this);
 		});	
 	
 		this.bind();	
@@ -23,7 +23,7 @@ window.App.navigation = {
 	bind: function() {
 		for(var current in this.items) {
 			this.items[current].on('click', function() {
-				App.navigation.update(jQuery(this).attr('rel'));
+				Navigation.update(jQuery(this).attr('rel'));
 			});
 		}
 	},
