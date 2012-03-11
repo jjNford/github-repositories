@@ -10,8 +10,8 @@ window.Content = {
 
 	/**
 	 * Post a function to the content article.  Posting content to display will guarantee
-	 * that the correct context is updating the content article with the correct content.  Posts
-	 * are synchronized.
+	 * that the correct context is updating the content article with the correct content.  
+	 * Posts are synchronized.
 	 * 
 	 * @param contextId The user contenxt ID at the time of the call.
 	 * @param caller The object type of the caller.
