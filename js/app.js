@@ -47,6 +47,13 @@ window.App = {
 				bubble.css('margin-left', -bubble.width() / 2 + "px");
 			});
 		});
+
+		// Set notification click events.
+		jQuery('.user_links li[rel="notifications"]').on('click', function(event) {
+			event.preventDefault();
+			event.stopPropagation();
+			window.open("https://github.com/inbox/notifications", '_blank');
+		});
 	
 		// Set log out click events.
 		jQuery('.user_links li[rel="log_out"]').on('click', function() {
