@@ -86,11 +86,17 @@ window.App = {
 		 */
 		notifications: function(count) {
 			var notifications = jQuery('.user_links li[rel="notifications"]');
-			notifications.empty();
 
 			if(count != '') {
-				var html = "<span class='count'>" + count + "</span>";
-				notifications.append(html);
+				var unread = notifications.find('.unread');
+				if(unread.length > 0) {
+					unread.empty();
+					unread.append(count);
+				}
+				else {
+				 	unread = "<span class='unread'>" + count + "</span>";
+					notifications.append(unread);
+				}
 			}
 			else {
 				notifications.html("");

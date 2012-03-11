@@ -1061,11 +1061,9 @@ button.positive:active {
     background-position-y: -34px;
 }
 
-.user_links li .count {
-
+.user_links li .unread {
 	top: -7px;
 	left: 18px;
-
 	position: absolute;
 	padding: 3px 4px;
 	background: rgba(203, 108, 0, 0.8);
