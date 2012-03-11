@@ -42,6 +42,7 @@
 					return;
 				}
 	
+				// Add message listener to port.
 				port.onMessage.addListener(function(msg) {
 					try {
 
@@ -62,6 +63,14 @@
 					}
 					catch(UnknownDestination) {}
 				});
+
+				// Add disconnect listener to port.
+				port.onDisconnect.addListener(function(port) {
+					Socket.port.onMessage.removeListener(function() {});
+					Socket.port = null; 
+					port.onMessage.removeListener(function() {});
+					port = null;
+				});
 			});
 		},
 	
@@ -74,7 +83,9 @@
 		 * @param - args - Array of arguments to pass through socket.
 		 */
 		postMessage: function(namespace, literal, method, args) {
-			this.port.postMessage({type: "message", namespace: namespace, literal: literal, method: method, args: args});
+			if(Socket.port) {
+				this.port.postMessage({type: "message", namespace: namespace, literal: literal, method: method, args: args});
+			}
 		},
 
 		/**
@@ -92,7 +103,9 @@
 				jQuery('.user_links.loading').show();
 			}
 	
-			this.port.postMessage({type: "task", namespace: namespace, literal: literal, method: method, args: args});
+			if(Socket.port) {
+				 this.port.postMessage({type: "task", namespace: namespace, literal: literal, method: method, args: args});
+			}
 		},
 
 		/**
@@ -100,7 +113,9 @@
 		 */
 		postTaskComplete: function() {
 			if(--this.tasks == 0) {
-				this.port.postMessage({type: "taskComplete"});
+				if(Socket.port) {
+					this.port.postMessage({type: "taskComplete"});
+				}
 			}
 		}
 	};
