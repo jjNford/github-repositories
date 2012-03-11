@@ -1,6 +1,5 @@
 (function() {
 	
-	// Keep in global namespace for background page.
 	window.Watched = {
 	
 		init: function(){
@@ -10,7 +9,7 @@
 		display: {
 	
 			/**
-			 * Append
+			 * Append a watched repo to the DOM.
 			 * 
 			 * @param repos Watched repositories to append to display.
 			 */
@@ -57,7 +56,7 @@
 			},
 	
 			/**
-			 * List
+			 * Display entire list of watched repos.
 			 * 
 			 * @param contextId Context ID requesting display.
 			 * @param repos Watched repositories to be displayed.
@@ -74,8 +73,6 @@
 		html: {
 	
 			/**
-			 * Item
-			 * 
 			 * @param repo Item to generate HTML for.
 			 * @return Watched repo list item HTML.
 			 */
@@ -97,8 +94,6 @@
 			},
 	
 			/**
-			 * List
-			 * 
 			 * @param repos Watched repos to create HTML list for.
 			 * @return Watched repo list in HTML.
 			 */
@@ -120,7 +115,7 @@
 		load: {
 	
 			/**
-			 * Cache
+			 * Load watched repos from cache.
 			 * 
 			 * @param context Context requesting load.
 			 */
@@ -137,7 +132,7 @@
 			},
 	
 			/**
-			 * Github
+			 * Load watched repos from GitHub (this will run in the background page).
 			 * 
 			 * @param context Context requesting repositories.
 			 * @param token Users OAuth2 token.
@@ -165,7 +160,7 @@
 			},
 	
 			/**
-			 * Refresh
+			 * Post a task to the background page to begin loading data from GitHub.
 			 *
 			 * @param context Context requesting refresh.
 			 */
