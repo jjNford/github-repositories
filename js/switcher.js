@@ -1,4 +1,4 @@
-window.App.switcher = {
+window.Switcher = {
 
 	/**
 	 * Initialize
@@ -19,18 +19,18 @@ window.App.switcher = {
 	 */
 	bind: function(){
 		this.button.on('mousedown', function() {
-			App.switcher.button.addClass('down');
+			Switcher.button.addClass('down');
 		});
 		this.button.on('mouseup', function() {
-			App.switcher.button.removeClass('down');
+			Switcher.button.removeClass('down');
 		});
 		this.button.on('mouseleave', function() {
-			App.switcher.button.removeClass('down');
+			Switcher.button.removeClass('down');
 		});
 	
-		this.button.on('click', App.switcher.toggle.bind(this));
-		this.close.on('click', App.switcher.toggle.bind(this));
-		this.overlay.on('click', App.switcher.toggle.bind(this));
+		this.button.on('click', Switcher.toggle.bind(this));
+		this.close.on('click', Switcher.toggle.bind(this));
+		this.overlay.on('click', Switcher.toggle.bind(this));
 	},
 
 	/**
@@ -104,8 +104,8 @@ window.App.switcher = {
 					if(newId && newId != User.context.id) {
 						User.update(newId);
 						Navigation.update("Repos", true);
-						App.switcher.toggle();
-						App.switcher.update();
+						Switcher.toggle();
+						Switcher.update();
 					}
 				});
 			});
