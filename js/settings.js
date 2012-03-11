@@ -32,6 +32,13 @@ window.Settings = {
 	
 	bind: function() {
 
+		// Set hover event for octocat.
+		this.panel.find('.octocat').on('mouseover', function() {
+			jQuery(this).animate({right: "0"}, 1000);
+		}).on('mouseout', function() {
+			jQuery(this).animate({right: "-25px"}, 1000);
+		});
+
 		// Set click event and animation to settings button.
 		this.button.on('click', function() {
 			if(Settings.panel.is(':visible')) {

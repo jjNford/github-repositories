@@ -966,6 +966,16 @@ button.positive:active {
     text-shadow: 0 1px 0 #fff;    
 }
 
+#settings .octocat {
+	position: absolute;
+	right: -25px;
+	bottom: 80px;
+	display: block;
+	width: 96px;
+	height: 200px;
+	background: url("../img/octocat_peeking.png");
+}
+
 #settings .settings_footer {
     position: absolute;
 	bottom: 0;
