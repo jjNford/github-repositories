@@ -1,4 +1,6 @@
 var Filter = function(type) {
+
+	// Set type and load last setting.
 	this.type = type;
 	this.selected = Storage.load("filter." + type);
 	
@@ -6,6 +8,7 @@ var Filter = function(type) {
 			this.selected = 'item';
 	}
 
+	// Determing HTML function relevent to type.
 	switch(this.type) {
 		case "Repos":
 			this.html = Filter.prototype.html.repos;
@@ -23,7 +26,8 @@ var Filter = function(type) {
 			break;
 	}
 };
-	
+
+
 Filter.prototype = {
 	
 	bind: function() {
@@ -33,7 +37,7 @@ Filter.prototype = {
 		// Set selected filter.
 		jQuery('.filters .types li[type="' + this.selected + '"]').addClass('selected');
 
-		// Type selection.
+		// Set type selection events.
 		var types = jQuery('.filters .types li');
 		types.on('click', function() {
 			types.each(function() {
@@ -45,14 +49,14 @@ Filter.prototype = {
 			window[that.type].filter.dom();
 		});
 	
-		// Input box.
+		// Remove defualt text from input box on click event.
 		var input = jQuery('.filters .search');
 		input.one('click', function() {
 			input.val("");
 			input.removeClass('dead');
 		});
 
-		// Instant search.
+		// Instant search event.
 		input.keyup(function() {
 			var regExp = new RegExp(jQuery(this).val(), 'i');
 			jQuery('.content .item').each(function() {
@@ -70,8 +74,6 @@ Filter.prototype = {
 	html: {
 	
 		/**
-		 * Follows
-		 * 
 		 * @return Follows filter HTML.
 		 */
 		follows: function() {
@@ -83,8 +85,6 @@ Filter.prototype = {
 		},
 	
 		/**
-		 * Repos
-		 * 
 		 * @return Repositories filter HTML.
 		 */
 		repos: function() {
@@ -106,7 +106,7 @@ Filter.prototype = {
 	data: {
 
 		/**
-		 * Created At
+		 * Sort data set by newest created items to oldest created items.
 		 * 
 		 * @param data Data to be sorted.
 		 * @return Sorted data.
@@ -125,7 +125,7 @@ Filter.prototype = {
 		},
 
 		/**
-		 * Recently Pushed
+		 * Sort data set by most recently pushed items to last recently pushed items.
 		 * 
 		 * @param repos Repositories to sort.
 		 * @return Sorted repositories.
@@ -144,7 +144,7 @@ Filter.prototype = {
 		},
 	
 		/**
-		 * Remove Users Repos
+		 * Remove user repositories from repo set.
 		 * 
 		 * @param repos Set of repos to remove own repos from.
 		 * @param login Users login.
@@ -163,6 +163,9 @@ Filter.prototype = {
 		}
 	},
 	
+	/**
+	 * Filter the DOM dynamically based on currently set filter and instant search.
+	 */
 	dom: function(item) {
 		var that = this;
 
@@ -178,9 +181,13 @@ Filter.prototype = {
 		// Apply filter to an item.
 		function filterItem(item) {
 			if(item.hasClass(that.selected)) {
+
+				// If instant search is not being used.
 				if(jQuery('.filters .search').hasClass('dead')) {
 					item.show();
 				}
+
+				// If instant search is being used.
 				else {
 					var regExp = new RegExp(jQuery('.filters .search').val(), 'i');
 					if(item.attr('tags').match(regExp)) {
