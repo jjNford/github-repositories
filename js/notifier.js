@@ -61,14 +61,15 @@
 					var wrapper = document.createElement('div');
 					wrapper.innerHTML = data;
 
-					// Make sure extension user is the same as logged user.
+					// If name element does not exist, user is not logged into GitHub.
 					var nameElement = wrapper.querySelector('a.name');
 
 					if(nameElement) {
 						var githubName = nameElement.textContent;
 						var extensionName = Storage.load(Notifier.LOGIN);
-
 						if(githubName) {
+
+							// Make sure extension user is the same as logged user.
 							if(githubName == extensionName) {
 								var countElement = wrapper.querySelector('.unread_count');
 								var count = countElement ? countElement.textContent : '';
