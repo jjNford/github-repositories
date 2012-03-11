@@ -1051,6 +1051,23 @@ button.positive:active {
     background-position-y: -34px;
 }
 
+.user_links li .count {
+
+	top: -7px;
+	left: 18px;
+
+	position: absolute;
+	padding: 3px 4px;
+	background: rgba(203, 108, 0, 0.8);
+	border-bottom: 1px solid #8f4f07;
+	border-radius: 2px;
+	color: #fff;
+	font-size: 9px;
+	font-weight: bold;
+	line-height: 1;
+	white-space: nowrap;
+}
+
 .user_links.loading {
     display: none;
     width: 25px;
@@ -1103,16 +1120,10 @@ button.positive:active {
     text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
 }
 
-.user_links .trigger {
-	display: block;
-	height: 100%;
-	width: 100%;
-}
-
 .user_links .tooltip {
 	display: none;
 	position: absolute;
-	margin-top: 3px;
+	margin-top: 25px;
 }
 
 .user_links .tooltip .arrow {

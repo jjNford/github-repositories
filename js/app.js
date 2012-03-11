@@ -31,15 +31,14 @@ window.App = {
 		// Create user link tooltips.
 		jQuery('.user_links [tooltip]').each(function() {
 			var element = jQuery(this);
-			var html = "<span class='trigger'></span>"
-					 + "<span class='tooltip'>"
+			var html = "<span class='tooltip'>"
 			         + "<span class='arrow'></span>"
 					 + "<span class='bubble'>" + element.attr('tooltip') + "</span>"
 					 + "</span>";
 	
 			jQuery(this).append(html);
 
-			element.find('.trigger').on('hover', function() {
+			element.on('hover', function() {
 				element.find('.tooltip').fadeToggle(75);
 				var bubble = element.find('.bubble');
 				bubble.css('margin-left', -bubble.width() / 2 + "px");
