@@ -63,7 +63,7 @@ window.App.navigation = {
 	
 			this.selected = tab;
 			Storage.save(this._key, this.selected);
-			App.content.loading();
+			Content.loading();
 			window[this.selected].load.cache(User.context, this.selected);
 		}
 	}

@@ -90,7 +90,7 @@
 	
 				// Append the list.
 				else {
-					App.content.post(contextId, "Repos", function() {
+					Content.post(contextId, "Repos", function() {
 						var old = list.find('li.repo[id="' + repo.id + '"]');
 						var temp = list.find('li.repo:first-child');
 						var html = Repos.html.item(repo);
@@ -129,8 +129,8 @@
 			 * @param repos Repositories to be displayed.
 			 */
 			list: function(contextId, repos) {
-				App.content.post(contextId, "Repos", function() {
-					App.content.display(Repos.html.list(repos));
+				Content.post(contextId, "Repos", function() {
+					Content.display(Repos.html.list(repos));
 					Repos.bind.list();
 					Repos.filter.dom();
 					Repos.filter.bind();

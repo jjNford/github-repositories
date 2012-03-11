@@ -36,13 +36,13 @@ window.App.settings = {
 		this.button.on('click', function() {
 			if(App.settings.panel.is(':visible')) {
 				App.settings.panel.slideUp(500, function() {
-					App.content.article.css('overflow-y', 'auto');
+					Content.article.css('overflow-y', 'auto');
 				});
 				App.settings.button.removeClass('active');
 			}
 			else {
 				App.settings.button.addClass('active');
-				App.content.article.css('overflow-y', 'hidden');
+				Content.article.css('overflow-y', 'hidden');
 				App.settings.panel.slideDown(500);
 			}
 		});

@@ -24,7 +24,7 @@
 
 				// Append the list.
 				else {
-					App.content.post(contextId, name, function() {
+					Content.post(contextId, name, function() {
 						var old = list.find('li.user[id="' + user.id + '"]');
 						var temp = list.find('li.user:first-child');
 						var html = window[name].html.item(user);
@@ -54,8 +54,8 @@
 			 * @param users User to be displayed.
 			 */
 			list: function(contextId, users, name) {
-				App.content.post(contextId, name, function() {
-					App.content.display(window[name].html.list(users, name));
+				Content.post(contextId, name, function() {
+					Content.display(window[name].html.list(users, name));
 					window[name].filter.bind();
 				});
 			}

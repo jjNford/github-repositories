@@ -13,7 +13,7 @@
 				User.init();
 	
 				// Initialize components.
-				App.content.init();
+				Content.init();
 				App.navigation.init();
 				App.settings.init();
 				App.switcher.init();

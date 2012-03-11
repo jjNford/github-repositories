@@ -25,7 +25,7 @@
 	
 				// Append the list.
 				else {
-					App.content.post(contextId, "Watched", function() {
+					Content.post(contextId, "Watched", function() {
 						for(var i in repos) {
 							var repo = repos[i];
 	
@@ -63,8 +63,8 @@
 			 * @param repos Watched repositories to be displayed.
 			 */
 			list: function(contextId, repos) {
-				App.content.post(contextId, "Watched", function() {
-					App.content.display(Watched.html.list(repos));
+				Content.post(contextId, "Watched", function() {
+					Content.display(Watched.html.list(repos));
 					Watched.filter.bind();
 					Watched.filter.dom();
 				});
