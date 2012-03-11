@@ -19,6 +19,10 @@
 	 */
 	var Notifier = {
 
+		/**
+		 * Initialize
+		 * 
+		 */
 		init: function() {
 			this.NOTIFICATIONS_URL = "https://github.com/inbox/notifications";
 			this.CHECK_INTERVAL = 1000 * 60;
@@ -26,10 +30,18 @@
 			this.update();
 		},
 
+		/**
+		 * Bind
+		 * 
+		 */
 		bind: function() {
 			setInterval(this.update, this.CHECK_INTERVAL);
 		},
 
+		/**
+		 * Update
+		 * 
+		 */
 		update: function() {
 			xhr('GET', Notifier.NOTIFICATIONS_URL, function(data) {
 	
