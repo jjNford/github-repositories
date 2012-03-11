@@ -1,4 +1,4 @@
-// All constants can be added to the shared namespace and used for both the extension, and background page.
+// All constants can be added to the 'Shared' namespace and used for both the extension, and background page.
 window.Shared = {
 
 	CACHE_KEY:      "cache.",
