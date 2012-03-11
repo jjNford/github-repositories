@@ -1,9 +1,8 @@
 window.Switcher = {
 
-	/**
-	 * Initialize
-	 */
 	init: function() {
+
+		// Set DOM references.
 		this.button = jQuery('.context_switcher .context_switcher_button');
 		this.close = jQuery('.context_switcher .context_switcher_panel .close');
 		this.list = jQuery('.context_switcher .context_switcher_panel .organizations');
@@ -14,10 +13,9 @@ window.Switcher = {
 		this.update();
 	},
 	
-	/**
-	 * Bind
-	 */
 	bind: function(){
+
+		// Bind mouse events.
 		this.button.on('mousedown', function() {
 			Switcher.button.addClass('down');
 		});
@@ -28,13 +26,14 @@ window.Switcher = {
 			Switcher.button.removeClass('down');
 		});
 	
+		// Bind toggle events.
 		this.button.on('click', Switcher.toggle.bind(this));
 		this.close.on('click', Switcher.toggle.bind(this));
 		this.overlay.on('click', Switcher.toggle.bind(this));
 	},
 
 	/**
-	 * Toggle
+	 * Toggle the context switcher panel open/closed.
 	 */
 	toggle: function() {
 		if(this.panel.is(':visible')) {
@@ -50,7 +49,7 @@ window.Switcher = {
 	},
 
 	/**
-	 * Update
+	 * Update the context switcher button and context switcher panel to current context.
 	 */
 	update: function() {
 	
