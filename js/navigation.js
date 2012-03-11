@@ -1,8 +1,5 @@
 window.Navigation = {
 
-	/**
-	 * Initialize navigation.
-	 */
 	init: function() {	
 		this.selected = Storage.load(Shared.NAVIGATION_KEY);
 		this.items = {};
@@ -16,9 +13,6 @@ window.Navigation = {
 		this.update(this.selected, true);
 	},
 	
-	/**
-	 * Bind navigation events.
-	 */
 	bind: function() {
 		for(var current in this.items) {
 			this.items[current].on('click', function() {

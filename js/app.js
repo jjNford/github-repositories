@@ -1,8 +1,5 @@
 window.App = {
 
-	/**
-	 * Initialize extension application.
-	 */
 	init: function(){
 		Authentication.validate(function(user) {
 
@@ -19,9 +16,6 @@ window.App = {
 		});
 	},
 
-	/**
-	 * Bind applicaiton events.
-	 */
 	bind: function() {
 
 		// Get notifications.

@@ -1,8 +1,5 @@
 window.Content = {
 
-	/**
-	 * Initialize content article.
-	 */
 	init: function() {
 		this.locked = false;
 		this.article = jQuery('.content');

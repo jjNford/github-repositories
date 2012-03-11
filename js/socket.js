@@ -27,9 +27,6 @@
 
 	window.Socket = {
 	
-		/**
-		 * Initialize
-		 */
 		init: function() {
 			this.port = chrome.extension.connect({name: "popupToBackground"});
 			this.tasks = 0;

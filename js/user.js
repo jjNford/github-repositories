@@ -1,8 +1,6 @@
 window.User = {
 
 	/**
-	 * Initializes the user and restores last context used.
-	 * 
 	 * @param user GitHub user object to initialize.
 	 */
 	init: function(user) {
