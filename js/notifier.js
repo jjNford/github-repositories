@@ -31,17 +31,12 @@
 			this.update();
 		},
 
-		/**
-		 * Bind
-		 * 
-		 */
 		bind: function() {
 			setInterval(this.update, this.CHECK_INTERVAL);
 		},
 	
 		/**
-		 * Render
-		 * 
+		 * Render Google Chrome Extension icon badge and attemp to send notification count to popup.
 		 */
 		render: function(count) {
 			chrome.browserAction.setBadgeBackgroundColor({
@@ -51,12 +46,11 @@
 				text: count
 			});
 
-			Socket.postMessage("window", "App", "update", [count]);
+			Socket.postMessage("App", "update", "notifications", [count]);
 		},
 
 		/**
-		 * Update
-		 * 
+		 * Check for notificaitons.
 		 */
 		update: function() {
 			if(Storage.load(Notifier.PREF_NOTIFICATIONS) === true) {

@@ -77,18 +77,24 @@ window.App = {
 		});
 	},
 
-	/**
-	 * Update
-	 */
-	update: function(count) {
-		var notifications = jQuery('.user_links li[rel="notifications"]');
+	update: {
+	
+		/**
+		 * Update GitHub notificaitons count (user must also be logged into GitHub).
+		 * 
+		 * @param count Number of notifications the user currently has.
+		 */
+		notifications: function(count) {
+			var notifications = jQuery('.user_links li[rel="notifications"]');
+			notifications.empty();
 
-		if(count != '') {
-			var html = "<span class='count'>" + count + "</span>";
-			notifications.append(html);
-		}
-		else {
-			notifications.html("");
+			if(count != '') {
+				var html = "<span class='count'>" + count + "</span>";
+				notifications.append(html);
+			}
+			else {
+				notifications.html("");
+			}
 		}
 	}
 };
