@@ -7,13 +7,23 @@ window.App.settings = {
 		this.panel = jQuery('#settings');
 		this.button = jQuery('.user_links li[rel="extension_settings"]');
 		this.cacheButton = this.panel.find('.caching button');
+		this.notificationsButton = this.panel.find('.notifications button');
 		this.emptyButton = this.panel.find('.empty_cache button');
 	
+		// Initialize caching button.
 		if(Cache.isEnabled() === true) {
-			this.cacheButton.addClass('negative').html("Disable Cache");
+			this.cacheButton.addClass('positive');
 		}
 		else {
-			this.cacheButton.addClass('positive').html("Enable Cache");
+			this.cacheButton.addClass('negative');
+		}
+
+		// Initialize notifications button.
+		if(Storage.load("pref.notifications") === true) {
+			this.notificationsButton.addClass('positive');
+		}
+		else {
+			this.notificationsButton.addClass('negative');
 		}
 	
 		this.bind();
@@ -37,16 +47,28 @@ window.App.settings = {
 			}
 		});
 	
+		// Toggle notification preference.
+		this.notificationsButton.on('click', function() {
+			if(Storage.load("pref.notifications") === false) {
+				Storage.save("pref.notifications", true);
+				App.settings.notificationsButton.removeClass('negative').addClass('positive');
+			}
+			else {
+				Storage.save("pref.notifications", false);
+				App.settings.notificationsButton.removeClass('positive').addClass('negative');
+			}
+		});
+
 		// Toggle caching preference.
 		this.cacheButton.on('click', function() {
 			if(Cache.isEnabled() === false) {
 				Cache.setEnabled(true);
-				App.settings.cacheButton.removeClass('positive').addClass('negative').html("Disable Cache");
+				App.settings.cacheButton.removeClass('negative').addClass('positive');
 			}
 			else {
 				Cache.setEnabled(false);
 				Cache.clear();
-				App.settings.cacheButton.removeClass('negative').addClass('positive').html("Enable Cache");
+				App.settings.cacheButton.removeClass('positive').addClass('negative');
 			}
 		});
 	
