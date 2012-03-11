@@ -4,8 +4,7 @@ window.Navigation = {
 	 * Initialize navigation.
 	 */
 	init: function() {	
-		this._key = "navigation";	
-		this.selected = Storage.load(this._key);
+		this.selected = Storage.load(Shared.NAVIGATION_KEY);
 		this.items = {};
 	
 		// Store navigation DOM elements into associative array.	
@@ -62,7 +61,7 @@ window.Navigation = {
 			}
 	
 			this.selected = tab;
-			Storage.save(this._key, this.selected);
+			Storage.save(Shared.NAVIGATION_KEY, this.selected);
 			Content.loading();
 			window[this.selected].load.cache(User.context, this.selected);
 		}
