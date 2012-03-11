@@ -28,6 +28,9 @@ window.App = {
 	 */
 	bind: function() {
 	
+		// Get notifications.
+		Socket.postMessage("window", "Notifier", "update", []);
+	
 		// Create user link tooltips.
 		jQuery('.user_links [tooltip]').each(function() {
 			var element = jQuery(this);
@@ -75,6 +78,21 @@ window.App = {
 		chrome.tabs.getCurrent(function(tab) {
 			chrome.tabs.remove(tab.id, function(){});
 		});
+	},
+	
+	/**
+	 * Update
+	 */
+	update: function(count) {
+		var notifications = jQuery('.user_links li[rel="notifications"]');
+
+		if(count != '') {
+			var html = "<span class='count'>" + count + "</span>";
+			notifications.append(html);
+		}
+		else {
+			notifications.html("");
+		}
 	}
 };
 

@@ -67,6 +67,8 @@
 						chrome.browserAction.setBadgeText({
 							text: count
 						});
+	
+						Socket.postMessage("window", "App", "update", [count]);
 					}
 				}
 			});

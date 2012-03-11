@@ -45,29 +45,20 @@
 	
 				port.onMessage.addListener(function(msg) {
 					try {
-						// Keep track of tasks running in background page.
-						if(Socket.port.name == "backgroundToPopup") {
+						if(msg.type === "task") {
 							Socket.tasks++;
 						}
 	
-						window[msg.namespace][msg.literal][msg.method].apply(this, msg.args);
-					}
-					catch(UnknownDestination) {
-						if(msg == "complete") {
+						if(msg.type === "message" || msg.type === "task") {
+							window[msg.namespace][msg.literal][msg.method].apply(this, msg.args);
+						}
+						else if(msg.type === "complete") {
 							jQuery('.user_links.loading').hide();
 						}
 					}
+					catch(UnknownDestination) {}
 				});
 			});
-		},
-	
-		/**
-		 * Post Complete
-		 */
-		postComplete: function() {
-			if(--this.tasks == 0) {
-				this.port.postMessage("complete");
-			}
 		},
 	
 		/**
@@ -75,16 +66,38 @@
 		 * 
 		 * @param - namespace - Namespace of message destination.
 		 * @param - literal - Object of message destination.
-		 * @param - method - Method of message destination. 
+		 * @param - method - Method of message destination.
+		 * @param - args - Array of arguments to pass through socket.
 		 */
 		postMessage: function(namespace, literal, method, args) {
-	
-			// Display loading notification.
+			this.port.postMessage({type: "message", namespace: namespace, literal: literal, method: method, args: args});
+		},
+
+		/**
+		 * Post Task
+		 * 
+		 * @param - namespace - Namespace of message destination.
+		 * @param - literal - Object of message destination.
+		 * @param - method - Method of message destination.
+		 * @param - args - Array of arguments to pass through socket.
+		 */
+		postTask: function(namespace, literal, method, args) {
+
+			// Display loading notification for background task.
 			if(this.port.name == "popupToBackground") {
 				jQuery('.user_links.loading').show();
 			}
+	
+			this.port.postMessage({type: "task", namespace: namespace, literal: literal, method: method, args: args});
+		},
 
-			this.port.postMessage({namespace: namespace, literal: literal, method: method, args: args});
+		/**
+		 * Post Task Complete
+		 */
+		postTaskComplete: function() {
+			if(--this.tasks == 0) {
+				this.port.postMessage({type: "complete"});
+			}
 		}
 	};
 
