@@ -30,8 +30,8 @@
 		init: function() {
 			this._ttl = 900000; // 15 minutes
 			this._key = "cache.";
-			this._enabled = "pref.cen";
-			this._smart = "pref.csm";
+			this._enabled = "pref.cache";
+			this._smart = "pref.smart";
 			this._threshold = 1;
 			this.name = "Cache";
 		},
