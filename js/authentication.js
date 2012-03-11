@@ -44,7 +44,7 @@ window.Authentication = {
 	},
 
 	/**
-	 * Prompt for extension to be authorized to access private GitHub data.
+	 * Prompt for extension to be authorized with users GitHub account.
 	 */
 	prompt: function() {
 		jQuery('.github_header').delay(500).fadeOut(200, function() {
