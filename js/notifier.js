@@ -45,32 +45,36 @@
 		update: function() {
 			xhr('GET', Notifier.NOTIFICATIONS_URL, function(data) {
 	
+				var count = '';
+	
 				// Transform data into DOM items.
 				var wrapper = document.createElement('div');
 				wrapper.innerHTML = data;
 
 				// Make sure extension user is the same as logged user.
 				var nameElement = wrapper.querySelector('a.name');
-				var githubName = nameElement.textContent;
-				var extensionName = Storage.load('login');
 
-				// Get notification count.
-				if(githubName) {
-					if(githubName == extensionName) {
-						var countElement = wrapper.querySelector('.unread_count');
-						var count = countElement ? countElement.textContent : '';
+				if(nameElement) {
+					var githubName = nameElement.textContent;
+					var extensionName = Storage.load('login');
 
-						// Create badge.
-						chrome.browserAction.setBadgeBackgroundColor({
-							color: [255, 132, 55, 225]
-						});
-						chrome.browserAction.setBadgeText({
-							text: count
-						});
-	
-						Socket.postMessage("window", "App", "update", [count]);
+					if(githubName) {
+						if(githubName == extensionName) {
+							var countElement = wrapper.querySelector('.unread_count');
+							var count = countElement ? countElement.textContent : '';
+						}
 					}
 				}
+	
+				// Create badge.
+				chrome.browserAction.setBadgeBackgroundColor({
+					color: [255, 132, 55, 225]
+				});
+				chrome.browserAction.setBadgeText({
+					text: count
+				});
+
+				Socket.postMessage("window", "App", "update", [count]);
 			});
 		}
 	};
