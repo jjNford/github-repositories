@@ -1,7 +1,7 @@
 window.Content = {
 
 	/**
-	 * Initializes the content article.
+	 * Initialize content article.
 	 */
 	init: function() {
 		this.locked = false;
