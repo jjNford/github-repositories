@@ -179,12 +179,12 @@
 					 + "<li><a href='" + repo.html_url + "/issues?sort=created&direction=desc&state=open' target='_blank'>Issues</a></li>"
 					 + "<li><a href='" + repo.html_url + "/pulls' target='_blank'>Pull Requests</a></li>"
 					 + "<li><a href='" + repo.html_url + "/tags' target='_blank'>Tags</a></li>"
-					 + ((repo.owner.id == App.user.logged.id) ? "<li><a href='" + repo.html_url + "/admin' target='_blank'>Admin</a></li>" : "")
+					 + ((repo.owner.id == User.logged.id) ? "<li><a href='" + repo.html_url + "/admin' target='_blank'>Admin</a></li>" : "")
 					 + "</ul>"
 					 + "<a class='zip' href='" + repo.html_url + "/zipball/" + ((repo.master_branch == null) ? "master" : repo.master_branch) + "' target='_blank'>ZIP</a>"
 					 + "<ul class='links'>"
 					 + "<li rel='ssh' data='" + repo.ssh_url + "'>SSH</li>"
-					 + "<li rel='http' data='https://" + App.user.context.login + "@" + repo.clone_url.split("https://")[1] + "'>HTTP</li>"
+					 + "<li rel='http' data='https://" + User.context.login + "@" + repo.clone_url.split("https://")[1] + "'>HTTP</li>"
 					 + (repo['private'] == false ? "<li rel='git' data='" + repo.git_url + "'>Git Read-Only</li>" : "")
 					 + "<li rel='input'>"
 					 + "<input type='text' value='" + repo.ssh_url + "' />"

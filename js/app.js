@@ -1,12 +1,14 @@
 window.App = {
 
 	/**
-	 * Initialize
+	 * Initializes the application and the applications components.
 	 */
 	init: function(){
 		App.authentication.validate(function(user) {
-			jQuery.extend(App.user, user);
-			App.user.init();
+
+			// Merge user data from GitHub with user object and initialize user.
+			jQuery.extend(User, user);
+			User.init();
 	
 			App.content.init();
 			App.navigation.init();
@@ -64,7 +66,7 @@ window.App = {
 		// Set refresh button mouse and click events.
 		var refresh = jQuery('.refresh');
 		refresh.on('click', function() {
-			window[App.navigation.selected].load.refresh(App.user.context, App.navigation.selected);
+			window[App.navigation.selected].load.refresh(User.context, App.navigation.selected);
 		});
 		refresh.on('mousedown', function() {
 			refresh.addClass('down');

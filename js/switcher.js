@@ -55,20 +55,20 @@ window.App.switcher = {
 	update: function() {
 	
 		// Add image to context switcher button.
-		var html = "<img src='" + App.user.context.avatar_url + "' /><span>" + App.user.context.login + "</span>";
+		var html = "<img src='" + User.context.avatar_url + "' /><span>" + User.context.login + "</span>";
 		this.button.html(html);
 
 		// Add orgs to context switcher panel.
-		if(App.user.orgs.length > 0) {
+		if(User.orgs.length > 0) {
 			var array = [];
 
-			array.push(App.user.context);
-			if(App.user.context.id != App.user.logged.id) {
-				array.push(App.user.logged);
+			array.push(User.context);
+			if(User.context.id != User.logged.id) {
+				array.push(User.logged);
 			}
-			for(var index in App.user.orgs) {
-				if(App.user.context.id != App.user.orgs[index].id) {
-					array.push(App.user.orgs[index]);
+			for(var index in User.orgs) {
+				if(User.context.id != User.orgs[index].id) {
+					array.push(User.orgs[index]);
 				}
 			}
 
@@ -101,8 +101,8 @@ window.App.switcher = {
 				var element = jQuery(this);
 				element.on('click', function() {
 					var newId = element.attr('rel');
-					if(newId && newId != App.user.context.id) {
-						App.user.update(newId);
+					if(newId && newId != User.context.id) {
+						User.update(newId);
 						App.navigation.update("Repos", true);
 						App.switcher.toggle();
 						App.switcher.update();

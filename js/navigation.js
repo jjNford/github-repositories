@@ -46,7 +46,7 @@ window.App.navigation = {
 			}
 			this.items[tab].addClass('selected');
 
-			if(App.user.context.type == "User") {
+			if(User.context.type == "User") {
 				if(!this.items["Watched"].is(":visible")) {
 					this.items["Repos"].removeClass("orgs");
 					this.items["Watched"].show();
@@ -64,7 +64,7 @@ window.App.navigation = {
 			this.selected = tab;
 			Storage.save(this._key, this.selected);
 			App.content.loading();
-			window[this.selected].load.cache(App.user.context, this.selected);
+			window[this.selected].load.cache(User.context, this.selected);
 		}
 	}
 };

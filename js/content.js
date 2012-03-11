@@ -17,7 +17,7 @@ window.App.content = {
 	 */
 	post: function(contextId, caller, fn) {
 		try {
-			if(caller == App.navigation.selected && contextId == App.user.context.id) {
+			if(caller == App.navigation.selected && contextId == User.context.id) {
 				if(this._locked) {
 					this.post(contextId, caller, fn);
 				}
