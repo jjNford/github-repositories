@@ -1,6 +1,5 @@
 (function() {
 	
-	// Keep in global namespace for background page.
 	window.Repos = {
 	
 		init: function(){
@@ -10,7 +9,7 @@
 		bind: {
 	
 			/**
-			 * List
+			 * Bind events to the entire repo list.
 			 */
 			list: function() {
 				jQuery('.repo_list li.repo').each(function() {
@@ -19,7 +18,7 @@
 			},
 	
 			/**
-			 * Item
+			 * Bind events to an individual repository.
 			 * 
 			 * @param DOM item to bind events to.
 			 */
@@ -76,7 +75,7 @@
 		display: {
 	
 			/**
-			 * Append
+			 * Append a repository to the DOM.
 			 * 
 			 * @param repo Repository to append to display.
 			 */
@@ -108,6 +107,7 @@
 	
 						repo = list.find('li.repo[id="' + repo.id + '"]');
 	
+						// Before removing old DOM item, duplicate its start to the new DOM item.
 						if(old.length > 0) {
 							if(old.find('.repo_extras').is(':visible')) {
 								repo.find('.repo_extras').show();
@@ -116,6 +116,7 @@
 							old.remove();
 						}
 	
+						// Run item through filter and add bindings.
 						Repos.filter.dom(repo);
 						Repos.bind.item(repo);
 					});
@@ -123,7 +124,7 @@
 			},
 	
 			/**
-			 * List
+			 * Display entire list of repos.
 			 * 
 			 * @param contextId Context ID requesting display.
 			 * @param repos Repositories to be displayed.
@@ -141,8 +142,6 @@
 		html: {
 	
 			/**
-			 * Item
-			 * 
 			 * @param repo Item to generate HTML for.
 			 * @return Repo list item HTML.
 			 */
@@ -202,8 +201,6 @@
 			},
 	
 			/**
-			 * List
-			 * 
 			 * @param repos Repos to create HTML list for.
 			 * @return Repo list in HTML.
 			 */
@@ -225,7 +222,7 @@
 		load: {
 	
 			/**
-			 * Cache
+			 * Load repos from cache.
 			 * 
 			 * @param context Context requesting load.
 			 */
@@ -242,7 +239,7 @@
 			},
 	
 			/**
-			 * Github
+			 * Load repos from GitHub (this will run in the background page).
 			 * 
 			 * @param context Context requesting repositories.
 			 * @param token Users OAuth2 token.
@@ -261,6 +258,8 @@
 				 * returns last page again.
 				 *  
 				 */
+
+				// Load repos for a user context.
 				function getUserRepos(buffer, page) {
 					jQuery.getJSON("https://api.github.com/user/repos", {access_token: token, page: page})
 						.success(function(json) {
@@ -274,6 +273,7 @@
 						});
 				};
 	
+				// Load repos for an organization context.
 				function getOrgRepos(buffer, page, last) {
 					jQuery.getJSON("https://api.github.com/orgs/" + context.login + "/repos", {access_token: token, page: page})
 						.success(function(json) {
@@ -288,6 +288,7 @@
 						});
 				};
 	
+				// Load parent for each repo in repo set.
 				function getParents(buffer, index) {
 					if(index < buffer.length) {
 						if(buffer[index].fork) {
@@ -339,7 +340,7 @@
 			},
 	
 			/**
-			 * Refresh
+			 * Post a task to the background page to begin loading data from GitHub.
 			 *
 			 * @param context Context requesting refresh.
 			 */
