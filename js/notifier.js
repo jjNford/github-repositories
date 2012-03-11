@@ -19,8 +19,6 @@
 	 */
 	window.Notifier = {
 
-		PREFERENCE: "pref.notifications",
-
 		/**
 		 * Initialize
 		 * 
@@ -30,8 +28,8 @@
 			this.CHECK_INTERVAL = 1000 * 60;
 
 			// Set default notification preference.
-			if(!Storage.load(this.PREFERENCE)) {
-				Storage.save(this.PREFERENCE, true);
+			if(!Storage.load(Shared.PREF_NOTIFICATIONS)) {
+				Storage.save(Shared.PREF_NOTIFICATIONS, true);
 			}
 
 			this.bind();

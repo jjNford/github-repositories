@@ -18,7 +18,7 @@ window.Settings = {
 		}
 
 		// Initialize notifications button.
-		if(Storage.load("pref.notifications") === true) {
+		if(Storage.load(Shared.PREF_NOTIFICATIONS) === true) {
 			this.notificationsButton.addClass('positive');
 		}
 		else {
@@ -47,12 +47,12 @@ window.Settings = {
 	
 		// Toggle notification preference.
 		this.notificationsButton.on('click', function() {
-			if(Storage.load("pref.notifications") === false) {
-				Storage.save("pref.notifications", true);
+			if(Storage.load(Shared.PREF_NOTIFICATIONS) === false) {
+				Storage.save(Shared.PREF_NOTIFICATIONS, true);
 				Settings.notificationsButton.removeClass('negative').addClass('positive');
 			}
 			else {
-				Storage.save("pref.notifications", false);
+				Storage.save(Shared.PREF_NOTIFICATIONS, false);
 				Settings.notificationsButton.removeClass('positive').addClass('negative');
 			}
 		});
