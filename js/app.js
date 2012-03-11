@@ -8,19 +8,13 @@
 		init: function(){
 			Authentication.validate(function(user) {
 
-				// Merge user data from GitHub with user object and initialize user.
-				jQuery.extend(User, user);
-				User.init();
-	
-				// Initialize components.
+				User.init(user);	
 				Content.init();
 				App.navigation.init();
 				App.settings.init();
 				App.switcher.init();
-	
 				App.bind();	
 
-				// Show application.
 				jQuery('body').removeClass('loading').find('#application').show();
 	
 			}, function() {
