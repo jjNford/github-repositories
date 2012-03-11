@@ -8,6 +8,10 @@ The GitHub Repositories Chrome Extension uses the MIT license and all
 other license bound to it by its open source project contributions.
 https://github.com/jjNford/github-repositories
 
+The GitHub Notifier Chrome Extension was created by Sindre Sorhus
+and has been incorporated and extended into GitHub Repositories.
+https://github.com/sindresorhus/GitHub-Notifier
+
 The Timeago jQuery plugin created by Ryan McGeary uses the MIT license. 
 It is used to convert all ISO-8601 timestamps into relative times.
 https://github.com/rmm5t/jquery-timeago

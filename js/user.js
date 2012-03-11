@@ -4,7 +4,7 @@ window.App.user = {
 	 * Initialize
 	 */
 	init: function() {
-		this._key = "content";
+		this._key = "context";
 		this.load();
 	},
 	

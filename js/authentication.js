@@ -22,9 +22,9 @@ window.App.authentication = {
 						jQuery.getJSON("https://api.github.com/user/orgs", {access_token: OAuth2.getToken()})
 							.success(function(json) {
 	
-								// Don't have access to '/user/<org-name>' because token not for them, but
-								// it would be useful in getting the number or repositories each user has.
-	
+								// Save user name for notifier to use.
+								Storage.save("login", user.logged.login);
+
 								user.orgs = json;
 								pass(user);
 							});
