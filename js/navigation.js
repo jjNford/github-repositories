@@ -1,7 +1,7 @@
 window.Navigation = {
 
 	/**
-	 * Initialize
+	 * Initialize navigation.
 	 */
 	init: function() {	
 		this._key = "navigation";	
@@ -18,7 +18,7 @@ window.Navigation = {
 	},
 	
 	/**
-	 * Bind
+	 * Bind navigation events.
 	 */
 	bind: function() {
 		for(var current in this.items) {
@@ -29,7 +29,7 @@ window.Navigation = {
 	},
 
 	/**
-	 * Update
+	 * Update the selected tab, save it, and trigger data to load.
 	 * 
 	 * @param tab Tab to update the navigation to.
 	 * @param force Force navigation update (optional).
