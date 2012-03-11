@@ -28,12 +28,11 @@
 	window.Cache = {
 	
 		init: function() {
-			this._ttl = 900000; // 15 minutes
-			this._key = "cache.";
-			this._enabled = "pref.cache";
-			this._smart = "pref.smart";
-			this._threshold = 1;
-			this.name = "Cache";
+			this.TTL = Shared.CACHE_TTL;
+			this.KEY = Shared.CACHE_KEY;
+			this.PREF_ENABLED = Shared.PREF_CACHING;
+			this.PREF_SMART = Shared.PREF_SMART;
+			this.THRESHOLD = Shared.CACHE_THRESH;
 		},
 	
 		/**
@@ -43,7 +42,7 @@
 			try {
 				for(var i = window['localStorage'].length - 1; i >= 0; i--) {
 					var temp = window['localStorage'].key(i);
-					if(new RegExp(this._key).test(temp)) {
+					if(new RegExp(this.KEY).test(temp)) {
 						delete window['localStorage'][temp];
 					}
 				}
@@ -60,7 +59,7 @@
 		isEnabled: function() {
 			if(window['localStorage'] !== null) {
 				try {
-					return JSON.parse(window['localStorage'][this._enabled]);
+					return JSON.parse(window['localStorage'][this.PREF_ENABLED]);
 				}
 				catch(error) {
 					return true;
@@ -75,7 +74,7 @@
 		isSmart: function() {
 			if(this.isEnabled() === true) {
 				try {
-					return window['localStorage'][this._smart];
+					return window['localStorage'][this.PREF_SMART];
 				}
 				catch(error) {
 					return true;
@@ -94,12 +93,12 @@
 		load: function(id, address) {
 			if(this.isEnabled() === true) {
 				try {
-					var payload = JSON.parse(window['localStorage'][this._key + id])[address];
+					var payload = JSON.parse(window['localStorage'][this.KEY + id])[address];
 					var timestamp = new Date().getTime();
 					var expired = false;
 	
 					if(payload != null) {
-						if(timestamp - payload.time > this._ttl) {
+						if(timestamp - payload.time > this.TTL) {
 							if(this.isSmart() === false) {
 								return null;
 							}
@@ -125,11 +124,11 @@
 		save: function(id, address, data, _missed) {
 			if(this.isEnabled() === true) {
 				try {
-					if(!_missed || _missed <= this._threshold) {	
-						var block = JSON.parse(window['localStorage'][this._key + id]);
+					if(!_missed || _missed <= this.THRESHOLD) {	
+						var block = JSON.parse(window['localStorage'][this.KEY + id]);
 						var timestamp = new Date().getTime();
 						block[address] = {"time": timestamp, "data": data};
-						window['localStorage'][this._key + id] = JSON.stringify(block);
+						window['localStorage'][this.KEY + id] = JSON.stringify(block);
 						return true;
 					}
 					else {
@@ -140,7 +139,7 @@
 					if(!_missed) {
 						_missed = 0;
 					}
-					window['localStorage'][this._key + id] = "{}";
+					window['localStorage'][this.KEY + id] = "{}";
 					return this.save(id, address, data, ++_missed);
 				}
 			}
@@ -153,7 +152,7 @@
 		setEnabled: function(bool) {
 			if(bool === true || bool === false) {
 				try {
-					window['localStorage'][this._enabled] = bool;
+					window['localStorage'][this.PREF_ENABLED] = bool;
 				}
 				catch(error) {}
 			}
@@ -165,7 +164,7 @@
 		setSmart: function(bool) {
 			if(bool === true || bool === false) {
 				try {
-					window['localStorage'][this._smart] = bool;
+					window['localStorage'][this.PREF_SMART] = bool;
 				}
 				catch(error) {}
 			}
