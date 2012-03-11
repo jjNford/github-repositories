@@ -1,9 +1,8 @@
-window.App.settings = {
+window.Settings = {
 	
-	/**
-	 * Initialize
-	 */
 	init: function() {
+	
+		// Set DOM references.
 		this.panel = jQuery('#settings');
 		this.button = jQuery('.user_links li[rel="extension_settings"]');
 		this.cacheButton = this.panel.find('.caching button');
@@ -29,21 +28,20 @@ window.App.settings = {
 		this.bind();
 	},
 	
-	/**
-	 * Bind
-	 */
 	bind: function() {
+
+		// Set click event and animation to settings button.
 		this.button.on('click', function() {
-			if(App.settings.panel.is(':visible')) {
-				App.settings.panel.slideUp(500, function() {
+			if(Settings.panel.is(':visible')) {
+				Settings.panel.slideUp(500, function() {
 					Content.article.css('overflow-y', 'auto');
 				});
-				App.settings.button.removeClass('active');
+				Settings.button.removeClass('active');
 			}
 			else {
-				App.settings.button.addClass('active');
+				Settings.button.addClass('active');
 				Content.article.css('overflow-y', 'hidden');
-				App.settings.panel.slideDown(500);
+				Settings.panel.slideDown(500);
 			}
 		});
 	
@@ -51,11 +49,11 @@ window.App.settings = {
 		this.notificationsButton.on('click', function() {
 			if(Storage.load("pref.notifications") === false) {
 				Storage.save("pref.notifications", true);
-				App.settings.notificationsButton.removeClass('negative').addClass('positive');
+				Settings.notificationsButton.removeClass('negative').addClass('positive');
 			}
 			else {
 				Storage.save("pref.notifications", false);
-				App.settings.notificationsButton.removeClass('positive').addClass('negative');
+				Settings.notificationsButton.removeClass('positive').addClass('negative');
 			}
 		});
 
@@ -63,12 +61,12 @@ window.App.settings = {
 		this.cacheButton.on('click', function() {
 			if(Cache.isEnabled() === false) {
 				Cache.setEnabled(true);
-				App.settings.cacheButton.removeClass('negative').addClass('positive');
+				Settings.cacheButton.removeClass('negative').addClass('positive');
 			}
 			else {
 				Cache.setEnabled(false);
 				Cache.clear();
-				App.settings.cacheButton.removeClass('positive').addClass('negative');
+				Settings.cacheButton.removeClass('positive').addClass('negative');
 			}
 		});
 	

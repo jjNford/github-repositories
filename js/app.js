@@ -9,7 +9,7 @@ window.App = {
 			User.init(user);	
 			Content.init();
 			Navigation.init();
-			App.settings.init();
+			Settings.init();
 			App.switcher.init();
 			App.bind();	
 			jQuery('body').removeClass('loading').find('#application').show();
