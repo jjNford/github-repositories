@@ -27,7 +27,7 @@
 								.success(function(json) {
 	
 									// Save user name for notifier to use.
-									Storage.save("login", user.logged.login);
+									Storage.save(Shared.USER_LOGIN, user.logged.login);
 
 									user.orgs = json;
 									success(user);
