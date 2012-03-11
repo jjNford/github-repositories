@@ -4,6 +4,7 @@ window.User = {
 	 * @param user GitHub user object to initialize.
 	 */
 	init: function(user) {
+		this.KEY = "context";
 		jQuery.extend(this, user);
 		this.load();
 	},
@@ -15,7 +16,7 @@ window.User = {
 
 		// If no context, load from storage.
 		if(this.context == null) {
-			this.context = Storage.load(Shared.CONTEXT_KEY);
+			this.context = Storage.load(this.KEY);
 		}
 
 		// Check self.
@@ -43,7 +44,7 @@ window.User = {
 		}
 
 		// Save last used context.
-		Storage.save(Shared.CONTEXT_KEY, this.context.id);
+		Storage.save(this.KEY, this.context.id);
 	},
 
 	/**
@@ -53,7 +54,7 @@ window.User = {
 	 */
 	update: function(contextId) {
 		if(contextId != null) {
-			Storage.save(Shared.CONTEXT_KEY, contextId);
+			Storage.save(this.KEY, contextId);
 			this.context = contextId;
 		}
 		this.load();

@@ -1,5 +1,7 @@
 window.Authentication = {
 
+	LOGIN: "login",
+
 	/**
 	 * Validate that extension still has permission to access users private data.
 	 * 
@@ -25,7 +27,7 @@ window.Authentication = {
 							.success(function(json) {
 
 								// Save user name for notifier to use.
-								Storage.save(Shared.USER_LOGIN, user.logged.login);
+								Storage.save(Authentication.LOGIN, user.logged.login);
 
 								user.orgs = json;
 								success(user);

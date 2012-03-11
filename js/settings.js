@@ -2,6 +2,8 @@ window.Settings = {
 	
 	init: function() {
 	
+		this.PREF_NOTIFICATIONS = "settings.notifications";
+	
 		// Set DOM references.
 		this.panel = jQuery('#settings');
 		this.button = jQuery('.user_links li[rel="extension_settings"]');
@@ -18,7 +20,7 @@ window.Settings = {
 		}
 
 		// Initialize notifications button.
-		if(Storage.load(Shared.PREF_NOTIFICATIONS) === true) {
+		if(Storage.load(this.PREF_NOTIFICATIONS) === true) {
 			this.notificationsButton.addClass('positive');
 		}
 		else {
@@ -47,12 +49,12 @@ window.Settings = {
 	
 		// Toggle notification preference.
 		this.notificationsButton.on('click', function() {
-			if(Storage.load(Shared.PREF_NOTIFICATIONS) === false) {
-				Storage.save(Shared.PREF_NOTIFICATIONS, true);
+			if(Storage.load(this.PREF_NOTIFICATIONS) === false) {
+				Storage.save(this.PREF_NOTIFICATIONS, true);
 				Settings.notificationsButton.removeClass('negative').addClass('positive');
 			}
 			else {
-				Storage.save(Shared.PREF_NOTIFICATIONS, false);
+				Storage.save(this.PREF_NOTIFICATIONS, false);
 				Settings.notificationsButton.removeClass('positive').addClass('negative');
 			}
 		});

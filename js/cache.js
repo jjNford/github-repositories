@@ -28,11 +28,11 @@
 	window.Cache = {
 	
 		init: function() {
-			this.TTL = Shared.CACHE_TTL;
-			this.KEY = Shared.CACHE_KEY;
-			this.PREF_ENABLED = Shared.PREF_CACHING;
-			this.PREF_SMART = Shared.PREF_SMART;
-			this.THRESHOLD = Shared.CACHE_THRESH;
+			this.TTL = 900000;
+			this.KEY = "cache.";
+			this.PREF_ENABLED = "settings.caching";
+			this.PREF_SMART = "settings.smart";
+			this.THRESHOLD = 1;
 		},
 	
 		/**

@@ -1,5 +1,6 @@
 (function() {
 
+	// XMLHttpRequest Factory
 	var xhr = function() {
 		var xhr = new XMLHttpRequest();
 		return function(method, url, callback) {
@@ -13,23 +14,17 @@
 		};
 	}();
 	
-	/**
-	 * Notifier
-	 * 
-	 */
 	window.Notifier = {
 
-		/**
-		 * Initialize
-		 * 
-		 */
 		init: function() {
-			this.NOTIFICATIONS_URL = "https://github.com/inbox/notifications";
 			this.CHECK_INTERVAL = 1000 * 60;
+			this.LOGIN = "login";
+			this.NOTIFICATIONS_URL = "https://github.com/inbox/notifications";
+			this.PREF_NOTIFICATIONS = "settings.notifications";
 
 			// Set default notification preference.
-			if(!Storage.load(Shared.PREF_NOTIFICATIONS)) {
-				Storage.save(Shared.PREF_NOTIFICATIONS, true);
+			if(!Storage.load(this.PREF_NOTIFICATIONS)) {
+				Storage.save(this.PREF_NOTIFICATIONS, true);
 			}
 
 			this.bind();
@@ -64,7 +59,7 @@
 		 * 
 		 */
 		update: function() {
-			if(Storage.load(Notifier.PREFERENCE) === true) {
+			if(Storage.load(Notifier.PREF_NOTIFICATIONS) === true) {
 				xhr('GET', Notifier.NOTIFICATIONS_URL, function(data) {
 					var count = '';
 	
@@ -77,7 +72,7 @@
 
 					if(nameElement) {
 						var githubName = nameElement.textContent;
-						var extensionName = Storage.load('login');
+						var extensionName = Storage.load(Notifier.LOGIN);
 
 						if(githubName) {
 							if(githubName == extensionName) {
