@@ -1027,6 +1027,14 @@ button.positive:active {
     cursor: pointer;
 }
 
+.user_links li[rel="notifications"] {
+	background-position: -32px 4px;
+}
+
+.user_links li[rel="notifications"]:hover {
+	background-position-y: -34px;
+}
+
 .user_links li[rel="extension_settings"] {
     background-position: -92px 4px;
 }
@@ -1116,6 +1124,7 @@ button.positive:active {
 }
 
 .user_links .tooltip .bubble {
+	clear: both;
 	float: left;
 	height: 24px;
 	padding: 0 8px;
