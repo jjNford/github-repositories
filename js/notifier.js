@@ -17,7 +17,7 @@
 	 * Notifier
 	 * 
 	 */
-	var Notifier = {
+	window.Notifier = {
 
 		/**
 		 * Initialize
