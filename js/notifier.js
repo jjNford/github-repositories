@@ -42,6 +42,7 @@
 				var githubName = nameElement.textContent;
 				var extensionName = Storage.load('login');
 
+				// Get notification count.
 				if(githubName) {
 					if(githubName == extensionName) {
 						var countElement = wrapper.querySelector('.unread_count');
