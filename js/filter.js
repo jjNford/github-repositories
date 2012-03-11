@@ -186,6 +186,9 @@ Filter.prototype = {
 					if(item.attr('tags').match(regExp)) {
 						item.show();
 					}
+					else {
+						item.hide();
+					}
 				}
 			}
 			else {
