@@ -35,6 +35,8 @@
 			this.tasks = 0;
 
 			chrome.extension.onConnect.addListener(function(port) {
+	
+				// Create a socket from the background to the popup when popup is opened.
 				if(port.name == "backgroundToPopup") {}
 				else if(port.name == "popupToBackground") {
 					Socket.port = chrome.extension.connect({name: "backgroundToPopup"});
@@ -45,14 +47,19 @@
 	
 				port.onMessage.addListener(function(msg) {
 					try {
+
+						// If a task is being posted to the background page, keep note.
 						if(msg.type === "task") {
 							Socket.tasks++;
 						}
 	
+						// Call correct namespace function.
 						if(msg.type === "message" || msg.type === "task") {
 							window[msg.namespace][msg.literal][msg.method].apply(this, msg.args);
 						}
-						else if(msg.type === "complete") {
+	
+						// If task is complete, hide the loading notification.
+						else if(msg.type === "taskComplete") {
 							jQuery('.user_links.loading').hide();
 						}
 					}
@@ -96,10 +103,11 @@
 		 */
 		postTaskComplete: function() {
 			if(--this.tasks == 0) {
-				this.port.postMessage({type: "complete"});
+				this.port.postMessage({type: "taskComplete"});
 			}
 		}
 	};
 
 	Socket.init();
+
 })();
