@@ -22,11 +22,6 @@
 			this.NOTIFICATIONS_URL = "https://github.com/inbox/notifications";
 			this.PREF_NOTIFICATIONS = "settings.notifications";
 
-			// Set default notification preference to be off.
-			if(Storage.load(this.PREF_NOTIFICATIONS) === undefined) {
-				Storage.save(this.PREF_NOTIFICATIONS, true);
-			}
-
 			this.bind();
 			this.update();
 		},
@@ -53,11 +48,28 @@
 		 * Check for notificaitons.
 		 */
 		update: function() {
-			var loggedName = Storage.load(Notifier.LOGIN);
+			var user = Storage.load(Notifier.LOGIN);
 
-			// Only load GitHub data if extension is logged in.
-			if(loggedName) {
-				if(Storage.load(Notifier.PREF_NOTIFICATIONS) === true) {
+			// Only request XMLHttp request if exention is logged in.
+			if(!user) {
+				Notifier.render('');
+			}
+			else {
+
+				// Get current notifications setting.
+				var enabled = Storage.load(Notifier.PREF_NOTIFICATIONS);
+				if(enabled === undefined) {
+					Storage.save(Notifier.PREF_NOTIFICATIONS, true);
+					enabled = true;
+				}
+
+				// If notifications are disabled.
+				if(enabled === false) {
+					Notifier.render('');
+				}
+	
+				// If notifications are enabled.
+				else {
 					xhr('GET', Notifier.NOTIFICATIONS_URL, function(data) {
 						var count = '';
 	
@@ -73,19 +85,17 @@
 							if(githubName) {
 
 								// Make sure extension user is the same as logged user.
-								if(githubName == loggedName) {
+								if(githubName == user) {
 									var countElement = wrapper.querySelector('.unread_count');
 									var count = countElement ? countElement.textContent : '';
 								}
 							}
 						}
+
 						Notifier.render(count);
 					});
 				}
-			}
-			else {
-				Notifier.render('');
-			}
+			}	
 		}
 	};
 	

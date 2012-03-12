@@ -57,6 +57,7 @@ window.Settings = {
 				Storage.save(Settings.PREF_NOTIFICATIONS, false);
 				Settings.notificationsButton.removeClass('positive').addClass('negative');
 			}
+			Socket.postMessage("window", "Notifier", "update");
 		});
 
 		// Toggle caching preference.

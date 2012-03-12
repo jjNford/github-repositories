@@ -20,6 +20,9 @@ window.App = {
 
 	bind: function() {
 
+		// Update notifications.
+		Socket.postMessage("window", "Notifier", "update");
+
 		// Create user link tooltips.
 		jQuery('.user_links [tooltip]').each(function() {
 			var element = jQuery(this);
