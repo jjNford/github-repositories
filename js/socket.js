@@ -67,9 +67,7 @@
 				// Add disconnect listener to port.
 				port.onDisconnect.addListener(function(port) {
 					Socket.port.onMessage.removeListener(function() {});
-					Socket.port = null;
 					port.onMessage.removeListener(function() {});
-					port = null;
 				});
 			});
 		},
@@ -84,9 +82,7 @@
 		 */
 		postMessage: function(namespace, literal, method, args) {
 			try {
-				if(port) {
-					this.port.postMessage({type: "message", namespace: namespace, literal: literal, method: method, args: args});
-				}
+				this.port.postMessage({type: "message", namespace: namespace, literal: literal, method: method, args: args});
 			}
 			catch(disconnectedPortError) {}
 		},
@@ -107,9 +103,7 @@
 			}
 	
 			try {
-				if(port) {
-				 	this.port.postMessage({type: "task", namespace: namespace, literal: literal, method: method, args: args});
-				}
+				 this.port.postMessage({type: "task", namespace: namespace, literal: literal, method: method, args: args});
 			}
 			catch(disconnectedPortError) {}
 		},
@@ -120,9 +114,7 @@
 		postTaskComplete: function() {
 			if(--this.tasks == 0) {
 				try {
-					if(port) {
-						this.port.postMessage({type: "taskComplete"});
-					}
+					this.port.postMessage({type: "taskComplete"});
 				}
 				catch(disconnectedPortError) {}
 			}
