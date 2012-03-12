@@ -32,13 +32,6 @@ window.Settings = {
 	
 	bind: function() {
 
-		// Set hover event for octocat.
-		this.panel.find('.octocat').on('mouseover', function() {
-			jQuery(this).animate({right: "0"}, 1000);
-		}).on('mouseout', function() {
-			jQuery(this).animate({right: "-25px"}, 1000);
-		});
-
 		// Set click event and animation to settings button.
 		this.button.on('click', function() {
 			if(Settings.panel.is(':visible')) {
@@ -56,12 +49,12 @@ window.Settings = {
 	
 		// Toggle notification preference.
 		this.notificationsButton.on('click', function() {
-			if(Storage.load(this.PREF_NOTIFICATIONS) === false) {
-				Storage.save(this.PREF_NOTIFICATIONS, true);
+			if(Storage.load(Settings.PREF_NOTIFICATIONS) === false) {
+				Storage.save(Settings.PREF_NOTIFICATIONS, true);
 				Settings.notificationsButton.removeClass('negative').addClass('positive');
 			}
 			else {
-				Storage.save(this.PREF_NOTIFICATIONS, false);
+				Storage.save(Settings.PREF_NOTIFICATIONS, false);
 				Settings.notificationsButton.removeClass('positive').addClass('negative');
 			}
 		});
