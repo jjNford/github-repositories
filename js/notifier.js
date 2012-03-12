@@ -22,8 +22,8 @@
 			this.NOTIFICATIONS_URL = "https://github.com/inbox/notifications";
 			this.PREF_NOTIFICATIONS = "settings.notifications";
 
-			// Set default notification preference.
-			if(!Storage.load(this.PREF_NOTIFICATIONS)) {
+			// Set default notification preference to be off.
+			if(Storage.load(this.PREF_NOTIFICATIONS) === undefined) {
 				Storage.save(this.PREF_NOTIFICATIONS, true);
 			}
 
@@ -53,31 +53,35 @@
 		 * Check for notificaitons.
 		 */
 		update: function() {
-			if(Storage.load(Notifier.PREF_NOTIFICATIONS) === true) {
-				xhr('GET', Notifier.NOTIFICATIONS_URL, function(data) {
-					var count = '';
+			var loggedName = Storage.load(Notifier.LOGIN);
+
+			// Only load GitHub data if extension is logged in.
+			if(loggedName) {
+				if(Storage.load(Notifier.PREF_NOTIFICATIONS) === true) {
+					xhr('GET', Notifier.NOTIFICATIONS_URL, function(data) {
+						var count = '';
 	
-					// Transform data into DOM items.
-					var wrapper = document.createElement('div');
-					wrapper.innerHTML = data;
+						// Transform data into DOM items.
+						var wrapper = document.createElement('div');
+						wrapper.innerHTML = data;
 
-					// If name element does not exist, user is not logged into GitHub.
-					var nameElement = wrapper.querySelector('a.name');
+						// If name element does not exist, user is not logged into GitHub.
+						var nameElement = wrapper.querySelector('a.name');
 
-					if(nameElement) {
-						var githubName = nameElement.textContent;
-						var extensionName = Storage.load(Notifier.LOGIN);
-						if(githubName) {
+						if(nameElement) {
+							var githubName = nameElement.textContent;
+							if(githubName) {
 
-							// Make sure extension user is the same as logged user.
-							if(githubName == extensionName) {
-								var countElement = wrapper.querySelector('.unread_count');
-								var count = countElement ? countElement.textContent : '';
+								// Make sure extension user is the same as logged user.
+								if(githubName == loggedName) {
+									var countElement = wrapper.querySelector('.unread_count');
+									var count = countElement ? countElement.textContent : '';
+								}
 							}
 						}
-					}
-					Notifier.render(count);
-				});
+						Notifier.render(count);
+					});
+				}
 			}
 			else {
 				Notifier.render('');
