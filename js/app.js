@@ -89,20 +89,22 @@ window.App = {
 		 */
 		notifications: function(count) {
 			var notifications = jQuery('.user_links li[rel="notifications"]');
+			var unread = notifications.find('.unread');
 
 			if(count != '') {
-				var unread = notifications.find('.unread');
 				if(unread.length > 0) {
 					unread.empty();
-					unread.append(count);
+					unread.prepend(count);
 				}
 				else {
 				 	unread = "<span class='unread'>" + count + "</span>";
-					notifications.append(unread);
+					notifications.prepend(unread);
 				}
 			}
 			else {
-				notifications.html("");
+				if(unread.length > 0) {
+					unread.remove();
+				}
 			}
 		}
 	}
