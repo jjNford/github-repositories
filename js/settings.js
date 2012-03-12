@@ -32,6 +32,13 @@ window.Settings = {
 	
 	bind: function() {
 
+		// Add animation to octocat.
+		this.panel.find('.octocat').hover(function() {
+			jQuery(this).animate({right: "0"}, 1000);
+		}, function() {
+			jQuery(this).stop(true, false).animate({right: "-25px"}, 1000);
+		});
+
 		// Set click event and animation to settings button.
 		this.button.on('click', function() {
 			if(Settings.panel.is(':visible')) {
