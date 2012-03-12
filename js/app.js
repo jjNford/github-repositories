@@ -13,14 +13,16 @@ window.App = {
 			Switcher.init();
 
 			App.bind();
-
-			jQuery('body').removeClass('loading').find('#application').show();
+			App.show();
 
 		}, function() {
 			Authentication.prompt();
 		});
 	},
 
+	/**
+	 * Bind
+	 */
 	bind: function() {
 
 		// Update notifications.
@@ -83,6 +85,15 @@ window.App = {
 		chrome.tabs.getCurrent(function(tab) {
 			chrome.tabs.remove(tab.id, function(){});
 		});
+	},
+	
+	/**
+	 * Show
+	 * 
+	 * Show the extension application.
+	 */
+	show: function() {
+		jQuery('body').removeClass('loading').find('#application').show();
 	},
 
 	/**
