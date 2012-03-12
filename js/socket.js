@@ -67,9 +67,7 @@
 				// Add disconnect listener to port.
 				port.onDisconnect.addListener(function(port) {
 					Socket.port.onMessage.removeListener(function() {});
-					Socket.port = null; 
 					port.onMessage.removeListener(function() {});
-					port = null;
 				});
 			});
 		},
