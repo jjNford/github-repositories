@@ -1,5 +1,8 @@
 window.App = {
 
+	/**
+	 * Init
+	 */
 	init: function(){
 		Authentication.validate(function(user) {
 
@@ -71,7 +74,9 @@ window.App = {
 	},
 
 	/**
-	 * Close extension.
+	 * Close
+	 * 
+	 * Close extension popup/window.
 	 */
 	close: function(){
 		window.close();
@@ -80,10 +85,15 @@ window.App = {
 		});
 	},
 
+	/**
+	 * Update
+	 */
 	update: {
 	
 		/**
-		 * Update GitHub notificaitons count (user must also be logged into GitHub).
+		 * Notifications
+		 * 
+		 * Update notifications count (user must also be logged into GitHub).
 		 * 
 		 * @param count Number of notifications the user currently has.
 		 */
