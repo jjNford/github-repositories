@@ -73,7 +73,9 @@
 		},
 	
 		/**
-		 * Post Message 
+		 * Post Message
+		 * 
+		 * Posts a message to be sent through the socket.
 		 * 
 		 * @param - namespace - Namespace of message destination.
 		 * @param - literal - Object of message destination.
@@ -84,11 +86,16 @@
 			try {
 				this.port.postMessage({type: "message", namespace: namespace, literal: literal, method: method, args: args});
 			}
-			catch(disconnectedPortError) {}
+			catch(portError) {
+				// Catch errors just in case.
+			}
 		},
 
 		/**
 		 * Post Task
+		 * 
+		 * Post a task message to be sent through the socket.  This will
+		 * increment the background page task counter.
 		 * 
 		 * @param - namespace - Namespace of message destination.
 		 * @param - literal - Object of message destination.
@@ -105,18 +112,25 @@
 			try {
 				 this.port.postMessage({type: "task", namespace: namespace, literal: literal, method: method, args: args});
 			}
-			catch(disconnectedPortError) {}
+			catch(disconnectedPortError) {
+				// Catch errors just in case.
+			}
 		},
 
 		/**
 		 * Post Task Complete
+		 * 
+		 * Post a task complete message to be sent through the socket.  This
+		 * will decrement the background page task counter.
 		 */
 		postTaskComplete: function() {
 			if(--this.tasks == 0) {
 				try {
 					this.port.postMessage({type: "taskComplete"});
 				}
-				catch(disconnectedPortError) {}
+				catch(disconnectedPortError) {
+					// Catch errors just in case.
+				}
 			}
 		}
 	};
