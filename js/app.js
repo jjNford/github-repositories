@@ -8,7 +8,9 @@ window.App = {
 			Navigation.init();
 			Settings.init();
 			Switcher.init();
-			App.bind();	
+
+			App.bind();
+
 			jQuery('body').removeClass('loading').find('#application').show();
 
 		}, function() {
@@ -17,9 +19,6 @@ window.App = {
 	},
 
 	bind: function() {
-
-		// Get notifications.
-		Socket.postMessage("window", "Notifier", "update", []);
 
 		// Create user link tooltips.
 		jQuery('.user_links [tooltip]').each(function() {
@@ -48,6 +47,7 @@ window.App = {
 		// Set log out click events.
 		jQuery('.user_links li[rel="log_out"]').on('click', function() {
 			Storage.clear();
+			Socket.postMessage("window", "Notifier", "update");
 			App.close();
 		});
 
