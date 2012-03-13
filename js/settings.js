@@ -1,5 +1,8 @@
 window.Settings = {
 	
+	/**
+	 * Init
+	 */
 	init: function() {
 	
 		this.PREF_NOTIFICATIONS = "settings.notifications";
@@ -30,16 +33,19 @@ window.Settings = {
 		this.bind();
 	},
 	
+	/**
+	 * Bind
+	 */
 	bind: function() {
 
-		// Add animation to octocat.
+		// Bind hover event to octocat.
 		this.panel.find('.octocat').hover(function() {
 			jQuery(this).animate({right: "0"}, 1000);
 		}, function() {
 			jQuery(this).stop(true, false).animate({right: "-25px"}, 1000);
 		});
 
-		// Set click event and animation to settings button.
+		// Bind click event to settings button.
 		this.button.on('click', function() {
 			if(Settings.panel.is(':visible')) {
 				Settings.panel.slideUp(500, function() {
@@ -54,7 +60,7 @@ window.Settings = {
 			}
 		});
 	
-		// Toggle notification preference.
+		// Bind click event to notifications button.
 		this.notificationsButton.on('click', function() {
 			if(Storage.load(Settings.PREF_NOTIFICATIONS) === false) {
 				Storage.save(Settings.PREF_NOTIFICATIONS, true);
@@ -72,7 +78,7 @@ window.Settings = {
 			});
 		});
 
-		// Toggle caching preference.
+		// Bind click event to caching button.
 		this.cacheButton.on('click', function() {
 			if(Cache.isEnabled() === false) {
 				Cache.setEnabled(true);
@@ -85,7 +91,7 @@ window.Settings = {
 			}
 		});
 	
-		// Empty cache.
+		// Bind click event to empty cache button.
 		this.emptyButton.on('click', function() {
 			Cache.clear();
 		});
