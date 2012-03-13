@@ -4,7 +4,7 @@ window.App = {
 	 * Init
 	 */
 	init: function(){
-		Authentication.validate(function(user) {
+		Authentication.validate( function(user) {
 			User.init(user);	
 			Content.init();
 			Navigation.init();
@@ -32,7 +32,7 @@ window.App = {
 	bind: function() {
 
 		// Bind user link tooltips hover events.
-		jQuery('.user_links [tooltip]').each(function() {
+		jQuery('.user_links [tooltip]').each( function() {
 			var element = jQuery(this);
 			var html = "<span class='tooltip'>"
 			         + "<span class='arrow'></span>"
