@@ -28,29 +28,31 @@
 
 				// Append the list.
 				else {
-					Content.post(contextId, name, function() {
-						var old = list.find('li.user[id="' + user.id + '"]');
-						var temp = list.find('li.user:first-child');
-						var html = window[name].html.item(user);
+					if(user) {
+						Content.post(contextId, name, function() {
+							var old = list.find('li.user[id="' + user.id + '"]');
+							var temp = list.find('li.user:first-child');
+							var html = window[name].html.item(user);
 
-						// Find insertion point.
-						while(temp.length > 0 && temp.attr('created_at') > user.created_at) {
-							temp = temp.next();
-						}
+							// Find insertion point.
+							while(temp.length > 0 && temp.attr('created_at') > user.created_at) {
+								temp = temp.next();
+							}
 
-						// Insert user.
-						if(temp.length == 0) {
-							list.append(html);
-						}
-						else {
-							jQuery(html).insertBefore(temp);
-						}
+							// Insert user.
+							if(temp.length == 0) {
+								list.append(html);
+							}
+							else {
+								jQuery(html).insertBefore(temp);
+							}
 
-						// Remove old DOM item if it exists.
-						if(old.length > 0) {
-							old.remove();
-						}
-					});
+							// Remove old DOM item if it exists.
+							if(old.length > 0) {
+								old.remove();
+							}
+						});
+					}
 				}
 			},
 
