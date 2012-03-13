@@ -1,11 +1,16 @@
 window.Content = {
 
+	/**
+	 * Init
+	 */
 	init: function() {
 		this.locked = false;
 		this.article = jQuery('.content');
 	},
 
 	/**
+	 * Post 
+	 *
 	 * Post a function to the content article.  Posting content to display will guarantee
 	 * that the correct context is updating the content article with the correct content.  
 	 * Posts are synchronized.
@@ -33,7 +38,7 @@ window.Content = {
 	},
 
 	/**
-	 * Display content.
+	 * Display
 	 * 
 	 * @param content The content to be displayed.
 	 */
@@ -42,7 +47,9 @@ window.Content = {
 	},
 
 	/**
-	 * Display loading.
+	 * Loading
+	 * 
+	 * Display loading image.
 	 */
 	loading: function() {
 		this.article.html("").addClass('loading');
