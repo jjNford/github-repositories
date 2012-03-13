@@ -27,6 +27,9 @@
 	
 	window.Cache = {
 	
+		/**
+		 * Init
+		 */
 		init: function() {
 			this.TTL = 900000;
 			this.KEY = "cache.";
@@ -36,6 +39,8 @@
 		},
 	
 		/**
+		 * Clear	
+		 * 
 		 * @return Returns true if cache is cleared, false if not.
 		 */
 		clear: function() {
@@ -54,6 +59,8 @@
 		},
 	
 		/**
+		 * Is Enabled 
+		 *
 		 * @return True if cache is enabled, false if not.
 		 */
 		isEnabled: function() {
@@ -69,6 +76,8 @@
 		},
 	
 		/**
+		 * Is Smart 
+		 *
 		 * @return True if smart caching is on, false if not.
 		 */
 		isSmart: function() {
@@ -84,6 +93,8 @@
 		},
 	
 		/**
+		 * Load 
+		 *
 		 * @param id The ID of the cache block to load from.
 		 * @param key The address in the block to load data from.
 		 * @return If smart caching is turned on, cached data object {expired: <>, data: <>}, null 
@@ -116,6 +127,8 @@
 		},
 	
 		/**
+		 * Save 
+		 *
 		 * @param id The ID of the cache block to save data to.
 		 * @param key The address in the block to save data to.
 		 * @param The data to cache.
@@ -147,6 +160,8 @@
 		},
 	
 		/**
+		 * Set Enabled 
+		 *
 		 * @param bool True to turn caching on, false to turn it off.
 		 */
 		setEnabled: function(bool) {
@@ -159,6 +174,8 @@
 		},
 	
 		/**
+		 * Set Smart 
+		 *
 		 * @param bool True to turn smart caching on, false to turn it off.
 		 */
 		setSmart: function(bool) {
