@@ -136,6 +136,35 @@
 					}
 				}
 			},
+			
+			/**
+			 * Clean
+			 * 
+			 * Remove deleted repositories on refresh.
+			 * 
+			 * @param contextId Context ID requesting clean.
+			 * @param repos Full list of users repositories.
+			 */
+			clean: function(contextId, repos) {
+				var list = jQuery('.repo_list');
+				var remove = [];
+				
+				// Check that each DOM item still exists.
+				list.find('.item').each( function() {
+					var item = jQuery(this);					
+					for(var i = 0; i < repos.length; i++) {
+						if(item.attr('id') == repos[i].id) {
+							return;
+						}
+					}
+					remove.push(item);
+				});
+				
+				// Remove deleted repositories from the DOM.
+				for(var i in remove) {
+					remove[i].remove();
+				}
+			},
 	
 			/**
 			 * List
@@ -386,6 +415,14 @@
 								args: [context.id, null]
 							});
 						}
+						
+						// Clean removed repos from display.
+						Socket.postMessage({
+							namespace: "Repos",
+							literal: "display",
+							method: "clean",
+							args: [context.id, buffer]
+						});
 	
 						Cache.save(context.id, "Repos", buffer);
 						Socket.postTaskComplete();
