@@ -30,7 +30,6 @@
 		init: function() {
 			this.tasks = 0;
 			this.port = chrome.extension.connect({name: "popupToBackground"});
-
 			this.bind();
 		},
 
@@ -67,12 +66,12 @@
 		onMessage: function(msg) {
 			try {
 
-				// If a task is being posted to the background page, keep note.
+				// Increment task count if task message is posted to background.
 				if(msg.type === "task") {
 					Socket.tasks++;
 				}
 
-				// Call correct namespace function.
+				// Trigger posted message function.
 				if(msg.type === "message" || msg.type === "task") {
 					window[msg.namespace][msg.literal][msg.method].apply(this, msg.args);
 				}
@@ -82,7 +81,9 @@
 					jQuery('.user_links.loading').hide();
 				}
 			}
-			catch(UnknownDestination) {}
+			catch(UnknownDestination) {
+				// Catch errors for unknown message destinations.
+			}
 		},
 	
 		/**
