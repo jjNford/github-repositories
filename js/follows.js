@@ -13,9 +13,8 @@
 
 			/**
 			 * Append 
-			 *
-			 * Append a follower to the DOM.
 			 * 
+			 * @param contextId ID of context requestion display append.
 			 * @param user User to append to display.
 			 */
 			append: function(contextId, user, name) {
@@ -47,7 +46,7 @@
 							jQuery(html).insertBefore(temp);
 						}
 
-						// If old DOM item exists, remove it.
+						// Remove old DOM item if it exists.
 						if(old.length > 0) {
 							old.remove();
 						}
@@ -57,8 +56,6 @@
 
 			/**
 			 * List 
-			 *
-			 * Display a given set of followers in a list.
 			 * 
 			 * @param contextId Context ID requesting display.
 			 * @param users User to be displayed.

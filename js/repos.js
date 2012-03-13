@@ -2,14 +2,20 @@
 	
 	window.Repos = {
 	
+		/**
+		 * Init
+		 */
 		init: function(){
 			this.filter = new Filter("Repos");
 		},
 	
+		/**
+		 * Bind
+		 */
 		bind: {
 	
 			/**
-			 * Bind events to the entire repo list.
+			 * List
 			 */
 			list: function() {
 				jQuery('.repo_list li.repo').each(function() {
@@ -18,7 +24,7 @@
 			},
 	
 			/**
-			 * Bind events to an individual repository.
+			 * Item
 			 * 
 			 * @param DOM item to bind events to.
 			 */
@@ -30,18 +36,18 @@
 				var zip = extras.find('.zip');
 				var copy = extras.find('.copy');
 	
-				// Toggle cloning area.
+				// Bind click event to repo extras.
 				about.on('click', function() {
 					extras.slideToggle(225);
 					about.toggleClass('opened');
 				});
 	
-				// Select all text on input box click.
+				// Bind click event to input box.
 				input.on('click', function() {
 					jQuery(this).select();
 				});
 	
-				// Add mouse events to zip button.
+				// Bind mouse events to zip button.
 				zip.on('mousedown', function() {
 					jQuery(this).addClass('down');
 				});
@@ -52,7 +58,7 @@
 					jQuery(this).removeClass('down');
 				});
 	
-				// Change input to match current link and copy to clipboard.
+				// Bind click events to cloning link buttons.
 				links.find('li').each(function() {
 					var element = jQuery(this);
 					if(element.attr('rel') != "input") {
@@ -72,11 +78,15 @@
 			}
 		},
 	
+		/**
+		 * Display
+		 */
 		display: {
 	
 			/**
-			 * Append a repository to the DOM.
+			 * Append 
 			 * 
+			 * @param contextId ID of context requestion display append.
 			 * @param repo Repository to append to display.
 			 */
 			append: function(contextId, repo) {
@@ -94,10 +104,12 @@
 						var temp = list.find('li.repo:first-child');
 						var html = Repos.html.item(repo);
 	
+						// Find insertion point.
 						while(temp.length > 0 && temp.attr('pushed_at') > repo.pushed_at) {
 							temp = temp.next();
 						}
 	
+						// Insert repo.
 						if(temp.length == 0 || repo.pushed_at == null) {
 							list.append(html);
 						}
@@ -107,7 +119,7 @@
 	
 						repo = list.find('li.repo[id="' + repo.id + '"]');
 	
-						// Before removing old DOM item, duplicate its start to the new DOM item.
+						// Remove old DOM item if it exists.
 						if(old.length > 0) {
 							if(old.find('.repo_extras').is(':visible')) {
 								repo.find('.repo_extras').show();
@@ -124,7 +136,7 @@
 			},
 	
 			/**
-			 * Display entire list of repos.
+			 * List
 			 * 
 			 * @param contextId Context ID requesting display.
 			 * @param repos Repositories to be displayed.
@@ -139,9 +151,14 @@
 			}
 		},
 	
+		/**
+		 * HTML
+		 */
 		html: {
 	
 			/**
+			 * Item 
+			 *
 			 * @param repo Item to generate HTML for.
 			 * @return Repo list item HTML.
 			 */
@@ -201,6 +218,8 @@
 			},
 	
 			/**
+			 * List 
+			 *
 			 * @param repos Repos to create HTML list for.
 			 * @return Repo list in HTML.
 			 */
@@ -219,9 +238,14 @@
 			}
 		},
 	
+		/**
+		 * Load
+		 */
 		load: {
 	
 			/**
+			 * Cache 
+			 *
 			 * Load repos from cache.
 			 * 
 			 * @param context Context requesting load.
@@ -239,6 +263,8 @@
 			},
 	
 			/**
+			 * GitHub 
+			 *
 			 * Load repos from GitHub (this will run in the background page).
 			 * 
 			 * @param context Context requesting repositories.
@@ -366,6 +392,8 @@
 			},
 	
 			/**
+			 * Refresh 
+			 *
 			 * Post a task to the background page to begin loading data from GitHub.
 			 *
 			 * @param context Context requesting refresh.

@@ -1,5 +1,8 @@
 window.Navigation = {
 
+	/**
+	 * Init
+	 */
 	init: function() {	
 		this.KEY = "navigation";
 		this.selected = Storage.load(this.KEY);
@@ -14,6 +17,9 @@ window.Navigation = {
 		this.update(this.selected, true);
 	},
 	
+	/**
+	 * Bind
+	 */
 	bind: function() {
 		for(var current in this.items) {
 			this.items[current].on('click', function() {
@@ -23,6 +29,8 @@ window.Navigation = {
 	},
 
 	/**
+	 * Update 
+	 *
 	 * Update the selected tab, save it, and trigger data to load.
 	 * 
 	 * @param tab Tab to update the navigation to.
@@ -34,13 +42,13 @@ window.Navigation = {
 		}
 	
 		// Updated selected.
-		if(tab != this.selected | force) {
+		if(tab !== this.selected | force) {
 			if(this.items[this.selected]) {
 				this.items[this.selected].removeClass('selected');
 			}
 			this.items[tab].addClass('selected');
 
-			if(User.context.type == "User") {
+			if(User.context.type === "User") {
 				if(!this.items["Watched"].is(":visible")) {
 					this.items["Repos"].removeClass("orgs");
 					this.items["Watched"].show();
