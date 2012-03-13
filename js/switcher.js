@@ -1,5 +1,8 @@
 window.Switcher = {
 
+	/**
+	 * Init
+	 */
 	init: function() {
 
 		// Set DOM references.
@@ -13,6 +16,9 @@ window.Switcher = {
 		this.update();
 	},
 	
+	/**
+	 * Bind
+	 */
 	bind: function(){
 
 		// Bind mouse events.
@@ -26,14 +32,16 @@ window.Switcher = {
 			Switcher.button.removeClass('down');
 		});
 	
-		// Bind toggle events.
+		// Bind click events.
 		this.button.on('click', Switcher.toggle.bind(this));
 		this.close.on('click', Switcher.toggle.bind(this));
 		this.overlay.on('click', Switcher.toggle.bind(this));
 	},
 
 	/**
-	 * Toggle the context switcher panel open/closed.
+	 * Toggle 
+	 *
+	 * Open/Close context panel.
 	 */
 	toggle: function() {
 		if(this.panel.is(':visible')) {
@@ -49,6 +57,8 @@ window.Switcher = {
 	},
 
 	/**
+	 * Update 
+	 *
 	 * Update the context switcher button and context switcher panel to current context.
 	 */
 	update: function() {
