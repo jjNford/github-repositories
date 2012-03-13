@@ -29,6 +29,9 @@
 	
 	window.Storage = {
 	
+		/**
+		 * Init
+		 */
 		init: function() {
 			this._ = _;
 			this._exception = "StorageException";
@@ -36,6 +39,8 @@
 		},
 
 		/**
+		 * Clear 
+		 *
 		 * @return True if localStorage is cleared, false if not.
 		 * @throws StorageException
 		 */
@@ -53,6 +58,8 @@
 		},
 	
 		/**
+		 * Is Supported 
+		 *
 		 * @param fn Callback to be run if localStorage is not supported (optional).
 		 * @return True if localStorage is supported, false if not.
 		 * @throws StorageException
@@ -78,6 +85,8 @@
 		},
 	
 		/**
+		 * Load 
+		 *
 		 * @param key The hash key to load data from.
 		 * @return The stored data, null if no data if found.
 		 * @throws StorageException
@@ -101,6 +110,8 @@
 		},
 	
 		/**
+		 * Remove 
+		 *
 		 * @param key The hash key the data to remove is stored under.
 		 * @return True if the data is found and removed, false if not.
 		 * @throws StorageException
@@ -119,6 +130,8 @@
 		},
 	
 		/**
+		 * Save 
+		 *
 		 * @param key The hash key to save the data under.
 		 * @param data The data to be saved.
 		 * @return True if data is saved successfully, false if not.
@@ -141,6 +154,8 @@
 		},
 	
 		/**
+		 * Set Exceptions 
+		 *
 		 * @param bool Enable or disable localStorage Enhaced exceptions.
 		 */
 		setExceptions: function(bool) {
@@ -150,6 +165,8 @@
 		},
 	
 		/**
+		 * Size 
+		 *
 		 * @return The lenght of the localStorage.
 		 * @throws StorageException
 		 */
