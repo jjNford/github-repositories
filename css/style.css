@@ -1005,6 +1005,11 @@ button.positive:active {
     text-align: center;
 }
 
+.twitter {
+	padding-top: 6px;
+	padding-left: 60px;
+}
+
 .user_links {
     z-index: 50;
     position: relative;
