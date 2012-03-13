@@ -99,39 +99,41 @@
 	
 				// Append the list.
 				else {
-					Content.post(contextId, "Repos", function() {
-						var old = list.find('li.repo[id="' + repo.id + '"]');
-						var temp = list.find('li.repo:first-child');
-						var html = Repos.html.item(repo);
+					if(repo) {
+						Content.post(contextId, "Repos", function() {
+							var old = list.find('li.repo[id="' + repo.id + '"]');
+							var temp = list.find('li.repo:first-child');
+							var html = Repos.html.item(repo);
 	
-						// Find insertion point.
-						while(temp.length > 0 && temp.attr('pushed_at') > repo.pushed_at) {
-							temp = temp.next();
-						}
-	
-						// Insert repo.
-						if(temp.length == 0 || repo.pushed_at == null) {
-							list.append(html);
-						}
-						else {
-							jQuery(html).insertBefore(temp);
-						}
-	
-						repo = list.find('li.repo[id="' + repo.id + '"]');
-	
-						// Remove old DOM item if it exists.
-						if(old.length > 0) {
-							if(old.find('.repo_extras').is(':visible')) {
-								repo.find('.repo_extras').show();
-								repo.find('.repo_about').addClass('opened');
+							// Find insertion point.
+							while(temp.length > 0 && temp.attr('pushed_at') > repo.pushed_at) {
+								temp = temp.next();
 							}
-							old.remove();
-						}
 	
-						// Run item through filter and add bindings.
-						Repos.filter.dom(repo);
-						Repos.bind.item(repo);
-					});
+							// Insert repo.
+							if(temp.length == 0 || repo.pushed_at == null) {
+								list.append(html);
+							}
+							else {
+								jQuery(html).insertBefore(temp);
+							}
+	
+							repo = list.find('li.repo[id="' + repo.id + '"]');
+	
+							// Remove old DOM item if it exists.
+							if(old.length > 0) {
+								if(old.find('.repo_extras').is(':visible')) {
+									repo.find('.repo_extras').show();
+									repo.find('.repo_about').addClass('opened');
+								}
+								old.remove();
+							}
+	
+							// Run item through filter and add bindings.
+							Repos.filter.dom(repo);
+							Repos.bind.item(repo);
+						});
+					}
 				}
 			},
 	
