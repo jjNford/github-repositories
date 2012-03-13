@@ -5,12 +5,18 @@ window.App = {
 	 */
 	init: function(){
 		Authentication.validate(function(user) {
-
 			User.init(user);	
 			Content.init();
 			Navigation.init();
 			Settings.init();
 			Switcher.init();
+
+			// Update notifications.
+			Socket.postMessage({
+				namespace: "window",
+				literal: "Notifier",
+				method: "update"
+			});
 
 			App.bind();
 			App.show();
@@ -25,23 +31,14 @@ window.App = {
 	 */
 	bind: function() {
 
-		// Update notifications.
-		Socket.postMessage({
-			namespace: "window",
-			literal: "Notifier",
-			method: "update"
-		});
-
-		// Create user link tooltips.
+		// Bind user link tooltips hover events.
 		jQuery('.user_links [tooltip]').each(function() {
 			var element = jQuery(this);
 			var html = "<span class='tooltip'>"
 			         + "<span class='arrow'></span>"
 					 + "<span class='bubble'>" + element.attr('tooltip') + "</span>"
 					 + "</span>";
-
 			jQuery(this).append(html);
-
 			element.on('hover', function() {
 				element.find('.tooltip').fadeToggle(75);
 				var bubble = element.find('.bubble');
@@ -49,14 +46,14 @@ window.App = {
 			});
 		});
 
-		// Set notification click events.
+		// Bind notification click events.
 		jQuery('.user_links li[rel="notifications"]').on('click', function(event) {
 			event.preventDefault();
 			event.stopPropagation();
 			window.open("https://github.com/inbox/notifications", '_blank');
 		});
 
-		// Set log out click events.
+		// Bind logout click event.
 		jQuery('.user_links li[rel="log_out"]').on('click', function() {
 			Storage.clear();
 			
@@ -66,11 +63,10 @@ window.App = {
 				literal: "Notifier",
 				method: "update"
 			});
-			
 			App.close();
 		});
 
-		// Set refresh button mouse and click events.
+		// Bind refresh button click event and mouse events.
 		var refresh = jQuery('.refresh');
 		refresh.on('click', function() {
 			window[Navigation.selected].load.refresh(User.context, Navigation.selected);
