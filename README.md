@@ -39,6 +39,10 @@ License
 Changelog
 ---------
 
+### v2.1.1
+- Protect display post locks on null data returns from socket.
+- Remove data items from the DOM on refreshes if no longer relevant.
+
 ### v2.1.0
 - Make CSS more consistent with GitHub
 - Add quick links to repository extras
