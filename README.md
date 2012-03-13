@@ -19,26 +19,28 @@ Release version numbers will follow the format:
 
 All source code is minified before being published to the [Google Chrome Web Store](https://chrome.google.com/webstore/detail/jgekomkdphbcbfpnfjgcmjnnhfikinmn).
 
-External Libraries
-------------------
-- [GitHub API v3] (http://developer.github.com/v3/)
-- [jQuery](https://github.com/jquery/jquery) (included)
-- [jQuery Timeago](https://github.com/rmm5t/jquery-timeago) (included)
-- [HTML5 Storage](https://github.com/jjNford/html5-storage) (included)
-- [HTML5 Caching](https://github.com/jjNford/html5-caching) (included)
-- [Chrome Extension Socket](https://github.com/jjNford/chrome-extension-socket) (included)
-- [OAuth2 Chrome Extension](https://github.com/jjNford/oauth2-chrome-extension) (included)
-- [GitHub Notifier](https://github.com/sindresorhus/GitHub-Notifier) (included)
-
 License
 -------
-- [MIT](http://www.opensource.org/licenses/mit-license.php)
-- [Apache License v2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
-- [General Public License v2.0](http://www.opensource.org/licenses/gpl-2.0.php)
+[MIT License](http://en.wikipedia.org/wiki/MIT_License) (c) [JJ Ford](http://jjnford.com)
+
+Contributing Projects
+---------------------
+- [MIT License](http://en.wikipedia.org/wiki/MIT_License)
+  - [jQuery](https://github.com/jquery/jquery)
+  - [jQuery Timeago](https://github.com/rmm5t/jquery-timeago)
+  - [HTML5 Storage](https://github.com/jjNford/html5-storage)
+  - [HTML5 Caching](https://github.com/jjNford/html5-caching)
+  - [Chrome Extension Socket](https://github.com/jjNford/chrome-extension-socket)
+  - [OAuth2 Chrome Extension](https://github.com/jjNford/oauth2-chrome-extension)
+  - [GitHub Notifier](https://github.com/sindresorhus/GitHub-Notifier)
+- [Apache v2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
+  - [OAuth2 Chrome Extension](https://github.com/jjNford/oauth2-chrome-extension)
+- [GPL v2.0](http://www.gnu.org/licenses/gpl-2.0.html)
+   - [jQuery](https://github.com/jquery/jquery)
+
 
 Changelog
 ---------
-
 ### v2.1.1
 - Protect display post locks on null data returns from socket.
 - Remove data items from the DOM on refreshes if no longer relevant.
