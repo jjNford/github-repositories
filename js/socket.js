@@ -65,7 +65,6 @@
 		 */
 		onMessage: function(msg) {
 			try {
-
 				// Increment task count if task message is posted to background.
 				if(msg.type === "task") {
 					Socket.tasks++;
@@ -84,7 +83,7 @@
 			catch(UnknownDestination) {
 				// Catch errors for unknown message destinations.
 			}
-		},
+		},	
 	
 		/**
 		 * Post Message
@@ -96,11 +95,12 @@
 		 * @param - method - Method of message destination.
 		 * @param - args - Array of arguments to pass through socket.
 		 */
-		postMessage: function(namespace, literal, method, args) {
+		postMessage: function(msg) {
 			try {
-				this.port.postMessage({type: "message", namespace: namespace, literal: literal, method: method, args: args});
+				msg.type = "message";
+				this.port.postMessage(msg);
 			}
-			catch(portError) {
+			catch(SocketPostError) {
 				// Catch errors just in case.
 			}
 		},
@@ -116,17 +116,18 @@
 		 * @param - method - Method of message destination.
 		 * @param - args - Array of arguments to pass through socket.
 		 */
-		postTask: function(namespace, literal, method, args) {
+		postTask: function(msg) {
 
 			// Display loading notification for background task.
-			if(this.port.name == "popupToBackground") {
+			if(this.port.name === "popupToBackground") {
 				jQuery('.user_links.loading').show();
 			}
 	
 			try {
-				 this.port.postMessage({type: "task", namespace: namespace, literal: literal, method: method, args: args});
+				msg.type = "task";
+				 this.port.postMessage(msg);
 			}
-			catch(disconnectedPortError) {
+			catch(SocketPostError) {
 				// Catch errors just in case.
 			}
 		},
@@ -138,11 +139,11 @@
 		 * will decrement the background page task counter.
 		 */
 		postTaskComplete: function() {
-			if(--this.tasks == 0) {
+			if(--this.tasks === 0) {
 				try {
 					this.port.postMessage({type: "taskComplete"});
 				}
-				catch(disconnectedPortError) {
+				catch(SocketPostError) {
 					// Catch errors just in case.
 				}
 			}

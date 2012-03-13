@@ -141,7 +141,13 @@
 
 				if(context[type] == 0) {
 					getComplete();
-					Socket.postMessage(name, "display", "append", [context.id, null, name]);
+					
+					Socket.postMessage({
+						namespace: name,
+						literal: "display",
+						method: "append",
+						args: [context.id, null, name]
+					});
 				}
 				else {
 					getFollows([], 1);
@@ -179,7 +185,13 @@
 							users[index].name = json.name;
 							users[index].created_at = json.created_at;
 							cacheBuffer = cacheBuffer.concat(users[index]);
-							Socket.postMessage(name, "display", "append", [context.id, users[index], name]);
+							
+							Socket.postMessage({
+								namespace: name, 
+								literal: "display", 
+								method: "append", 
+								args: [context.id, users[index], name]
+							});
 
 							if(index < users.length - 1) {
 								getUserNames(users, ++index);
@@ -207,7 +219,12 @@
 			 * @param name Type to refresh.
 			 */
 			refresh: function(context, name) {
-				Socket.postTask(name, "load", "github", [context, OAuth2.getToken(), name]);
+				Socket.postTask({
+					namespace: name, 
+					literal: "load", 
+					method: "github", 
+					args: [context, OAuth2.getToken(), name]
+				});
 			}
 		}
 	};

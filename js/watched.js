@@ -147,7 +147,14 @@
 						.success(function(json) {
 							if(json.length > 0) {
 								json = Watched.filter.data.removeUserRepos(json, context.login);
-								Socket.postMessage("Watched", "display", "append", [context.id, json]);
+								
+								Socket.postMessage({
+									namespace: "Watched", 
+									literal: "display", 
+									method: "append", 
+									args: [context.id, json]
+								});
+								
 								getWatchedRepos(buffer.concat(json), ++page);
 							}
 							else {
@@ -165,7 +172,12 @@
 			 * @param context Context requesting refresh.
 			 */
 			refresh: function(context) {
-				Socket.postTask("Watched", "load", "github", [context, OAuth2.getToken()]);
+				Socket.postTask({
+					namespace: "Watched", 
+					literal: "load", 
+					method: "github", 
+					args: [context, OAuth2.getToken()]
+				});
 			}
 		}
 	};

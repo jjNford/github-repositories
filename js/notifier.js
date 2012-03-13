@@ -40,8 +40,14 @@
 			chrome.browserAction.setBadgeText({
 				text: count
 			});
-
-			Socket.postMessage("App", "update", "notifications", [count]);
+			
+			// Send notification count to popup.
+			Socket.postMessage({
+				namespace: "App", 
+				literal: "update", 
+				method: "notifications", 
+				args: [count]
+			});
 		},
 
 		/**

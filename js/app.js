@@ -26,7 +26,11 @@ window.App = {
 	bind: function() {
 
 		// Update notifications.
-		Socket.postMessage("window", "Notifier", "update");
+		Socket.postMessage({
+			namespace: "window",
+			literal: "Notifier",
+			method: "update"
+		});
 
 		// Create user link tooltips.
 		jQuery('.user_links [tooltip]').each(function() {
@@ -55,7 +59,14 @@ window.App = {
 		// Set log out click events.
 		jQuery('.user_links li[rel="log_out"]').on('click', function() {
 			Storage.clear();
-			Socket.postMessage("window", "Notifier", "update");
+			
+			// Remove notifications.
+			Socket.postMessage({
+				namespace: "window",
+				literal: "Notifier",
+				method: "update"
+			});
+			
 			App.close();
 		});
 

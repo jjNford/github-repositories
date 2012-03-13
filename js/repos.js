@@ -295,7 +295,15 @@
 							jQuery.getJSON("https://api.github.com/repos/" + context.login + "/" + buffer[index].name, {access_token: token})
 								.success(function(json) {
 									buffer[index] = json;
-									Socket.postMessage("Repos", "display", "append", [context.id, json]);
+									
+									Socket.postMessage({
+										namespace: "Repos",
+										literal: "display",
+										method: "append",
+										args: [context.id, json]
+									});
+									
+									
 									getParents(buffer, ++index);
 								})
 	
@@ -312,7 +320,14 @@
 									// jQuery.getJSON("https://api.github.com/repos" + buffer[index].owner.login + "/" + buffer[index].name, {access_token: token})
 									//     .success(function(json) {
 									//         buffer[index] = json;
-									//         Socket.postMessage("Repos", "display", "append", [context.id, json]);
+									//
+									//         Socket.postMessage({
+									//			namespace: "Repos",
+									//			literal: "display",
+									//			method: "append",
+									//			args: [context.id, json]
+									//		});
+									//
 									//         getParents(buffer, ++index);
 									//     });
 	
@@ -322,7 +337,13 @@
 								});	
 						}
 						else {
-							Socket.postMessage("Repos", "display", "append", [context.id, buffer[index]]);
+							Socket.postMessage({
+								namespace: "Repos",
+								literal: "display",
+								method: "append",
+								args: [context.id, buffer[index]]
+							});
+							
 							getParents(buffer, ++index);
 						}
 					}
@@ -330,7 +351,12 @@
 	
 						// Account for user having no data.
 						if(buffer.length == 0) {
-							Socket.postMessage("Repos", "display", "append", [context.id, null]);
+							Socket.postMessage({
+								namespace: "Repos",
+								literal: "display",
+								method: "append",
+								args: [context.id, null]
+							});
 						}
 	
 						Cache.save(context.id, "Repos", buffer);
@@ -345,7 +371,12 @@
 			 * @param context Context requesting refresh.
 			 */
 			refresh: function(context) {
-				Socket.postTask("Repos", "load", "github", [context, OAuth2.getToken()]);
+				Socket.postTask({
+					namespace: "Repos",
+					literal: "load",
+					method: "github",
+					args: [context, OAuth2.getToken()]
+				});
 			}
 		}
 	};
