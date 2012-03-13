@@ -33,7 +33,7 @@ window.Content = {
 			}
 		}
 		catch(error) {
-			App.close();
+			// If app is closed, user cannot instansiate again.  Keep open on errors.
 		}
 	},
 
