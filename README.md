@@ -40,19 +40,17 @@ Changelog
 ---------
 
 ### v2.1.0
-- Add CSS for private repositories
-- User links added to repositories
-- Show number of repositories in context switcher
-- New copy notification
-- New button classes (CSS)
-- Changed sort time from "updated_at" to "pushed_at"
-- Remove changed fork names from showing up in organization repos
-- Added background page to handle long load request when popup is closed
-- Smarter caching (Cache shows even when expired - triggers refresh)
-- Append data to DOM as soon as retrieved from GitHub
-- Improve instant search
-- Update filtering
-- Notifications
+- Make CSS more consistent with GitHub
+- Add quick links to repository extras
+- Display the number of user repositories in the context switcher panel
+- Add a new cloning link copy notification
+- Create CSS button classes
+- Changed repository sort time from "updated_at" to "pushed_at"
+- Remove forked repository with name changes from showing in organization repos
+- Add smarting caching that is offloaded to a background page
+- Dynamically update the DOM instead of calling display refresh
+- Improve instant search results
+- Add user notifications
 - Refactored source
 
 ### v2.0.5
