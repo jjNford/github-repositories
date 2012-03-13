@@ -6,9 +6,14 @@
 
 	Follows.prototype = {
 
+		/**
+		 * Display
+		 */
 		display: {
 
 			/**
+			 * Append 
+			 *
 			 * Append a follower to the DOM.
 			 * 
 			 * @param user User to append to display.
@@ -29,10 +34,12 @@
 						var temp = list.find('li.user:first-child');
 						var html = window[name].html.item(user);
 
+						// Find insertion point.
 						while(temp.length > 0 && temp.attr('created_at') > user.created_at) {
 							temp = temp.next();
 						}
 
+						// Insert user.
 						if(temp.length == 0) {
 							list.append(html);
 						}
@@ -40,6 +47,7 @@
 							jQuery(html).insertBefore(temp);
 						}
 
+						// If old DOM item exists, remove it.
 						if(old.length > 0) {
 							old.remove();
 						}
@@ -48,6 +56,8 @@
 			},
 
 			/**
+			 * List 
+			 *
 			 * Display a given set of followers in a list.
 			 * 
 			 * @param contextId Context ID requesting display.
@@ -61,9 +71,14 @@
 			}
 		},
 
+		/**
+		 * HTML
+		 */
 		html: {
 
 			/**
+			 * Item 
+			 *
 			 * @param user Item to generate HTML for.
 			 * @return User list item HTML.
 			 */
@@ -86,6 +101,8 @@
 			},
 
 			/**
+			 * List 
+			 *
 			 * @param users Users to create HTML list for.
 			 * @param name Type to create filter for.
 			 * @return Users list HTML.
@@ -105,9 +122,14 @@
 			}
 		},
 
+		/**
+		 * Load
+		 */
 		load: {
 
 			/**
+			 * Cache 
+			 *
 			 * Load following from cache.
 			 * 
 			 * @param context Context of requesting load.
@@ -127,6 +149,8 @@
 			},
 
 			/**
+			 * GitHub 
+			 *
 			 * Load following from GitHub (this will run in the background page).
 			 * 
 			 * @param context Context requesting follows.
@@ -213,6 +237,8 @@
 			},
 
 			/**
+			 * Refresh 
+			 *
 			 * Post a task to the background page to begin loading data from GitHub.
 			 * 
 			 * @param context Context requesting refresh.
