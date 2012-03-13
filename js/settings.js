@@ -20,11 +20,11 @@ window.Settings = {
 		}
 
 		// Initialize notifications button.
-		if(Storage.load(this.PREF_NOTIFICATIONS) === true) {
-			this.notificationsButton.addClass('positive');
+		if(Storage.load(this.PREF_NOTIFICATIONS) === false) {
+			this.notificationsButton.addClass('negative');
 		}
 		else {
-			this.notificationsButton.addClass('negative');
+			this.notificationsButton.addClass('positive');
 		}
 	
 		this.bind();
