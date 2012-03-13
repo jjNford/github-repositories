@@ -119,7 +119,7 @@ window.App = {
 			var notifications = jQuery('.user_links li[rel="notifications"]');
 			var unread = notifications.find('.unread');
 
-			if(count != '') {
+			if(count !== '') {
 				if(unread.length > 0) {
 					unread.empty();
 					unread.prepend(count);
