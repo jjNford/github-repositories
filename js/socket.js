@@ -31,26 +31,32 @@
 			this.tasks = 0;
 			this.port = chrome.extension.connect({name: "popupToBackground"});
 
+			this.bind();
+		},
+
+		/**
+		 * Bind
+		 */
+		bind: function() {
 			// Attach connection listener to port.
-			chrome.extension.onConnect.addListener(function(port) {
-	
-				// Connect background page to popup.
-				if(port.name == "popupToBackground") {
+			chrome.extension.onConnect.addListener( function(port) {
+				if(port.name === "popupToBackground") {
 					Socket.port = chrome.extension.connect({name: "backgroundToPopup"});
 				}
-	
-				// Add port
-				port.onMessage.addListener(function(msg) {
+
+				// Attach message listener to port.
+				port.onMessage.addListener( function(msg) {
 					Socket.onMessage(msg);
 				});
 
-				// Add disconnect listener to port.
-				port.onDisconnect.addListener(function(port) {
-					Socket.port.onMessage.removeListener(function() {});
-					port.onMessage.removeListener(function() {});
+				// Attach disconnection listener to port.
+				Socket.port.onDisconnect.addListener( function(port) {
+					port.onMessage.removeListener();
+					Socket.port.onMessage.removeListener();
 				});
 			});
 		},
+	
 		/**
 		 * On Message
 		 * 
