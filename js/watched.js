@@ -2,15 +2,22 @@
 	
 	window.Watched = {
 	
+		/**
+		 * Init
+		 */
 		init: function(){
 			this.filter = new Filter("Watched");
 		},
 	
+		/**
+		 * Display
+		 */
 		display: {
 	
 			/**
-			 * Append a watched repo to the DOM.
+			 * Append
 			 * 
+			 * @param contextId ID of context requestion display append.
 			 * @param repos Watched repositories to append to display.
 			 */
 			append: function(contextId, repos) {
@@ -56,7 +63,7 @@
 			},
 	
 			/**
-			 * Display entire list of watched repos.
+			 * List
 			 * 
 			 * @param contextId Context ID requesting display.
 			 * @param repos Watched repositories to be displayed.
@@ -70,9 +77,14 @@
 			}
 		},
 	
+		/**
+		 * HTML
+		 */
 		html: {
 	
 			/**
+			 * Item 
+			 *
 			 * @param repo Item to generate HTML for.
 			 * @return Watched repo list item HTML.
 			 */
@@ -94,6 +106,8 @@
 			},
 	
 			/**
+			 * List 
+			 *
 			 * @param repos Watched repos to create HTML list for.
 			 * @return Watched repo list in HTML.
 			 */
@@ -112,9 +126,14 @@
 			}
 		},
 	
+		/**
+		 * Load
+		 */
 		load: {
 	
 			/**
+			 * Cache 
+			 *
 			 * Load watched repos from cache.
 			 * 
 			 * @param context Context requesting load.
@@ -132,6 +151,8 @@
 			},
 	
 			/**
+			 * GitHub 
+			 *
 			 * Load watched repos from GitHub (this will run in the background page).
 			 * 
 			 * @param context Context requesting repositories.
@@ -167,6 +188,8 @@
 			},
 	
 			/**
+			 * Refresh 
+			 *
 			 * Post a task to the background page to begin loading data from GitHub.
 			 *
 			 * @param context Context requesting refresh.
