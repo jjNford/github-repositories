@@ -1,6 +1,8 @@
 window.User = {
 
 	/**
+	 * Init 
+	 *
 	 * @param user GitHub user object to initialize.
 	 */
 	init: function(user) {
@@ -10,6 +12,8 @@ window.User = {
 	},
 
 	/**
+	 * Load 
+	 *
 	 * Replaces the context ID stored in User.context with the user object belonging to the ID.
 	 */
 	load: function() {
