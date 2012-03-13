@@ -12,7 +12,7 @@
     		"run_at": "document_start"
     	}
     ],    
-    "description": "Quickly access your GitHub Repositories.",
+    "description": "Quickly access your GitHub data. Fork Me :)",
     "icons": {
         "16": "img/icon_16x16.png",
         "48": "img/icon_48x48.png",
