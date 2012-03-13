@@ -28,40 +28,20 @@
 	window.Socket = {
 	
 		init: function() {
-			this.port = chrome.extension.connect({name: "popupToBackground"});
 			this.tasks = 0;
+			this.port = chrome.extension.connect({name: "popupToBackground"});
 
+			// Attach connection listener to port.
 			chrome.extension.onConnect.addListener(function(port) {
 	
-				// Create a socket from the background to the popup when popup is opened.
-				if(port.name == "backgroundToPopup") {}
-				else if(port.name == "popupToBackground") {
+				// Connect background page to popup.
+				if(port.name == "popupToBackground") {
 					Socket.port = chrome.extension.connect({name: "backgroundToPopup"});
 				}
-				else {
-					return;
-				}
 	
-				// Add message listener to port.
+				// Add port
 				port.onMessage.addListener(function(msg) {
-					try {
-
-						// If a task is being posted to the background page, keep note.
-						if(msg.type === "task") {
-							Socket.tasks++;
-						}
-	
-						// Call correct namespace function.
-						if(msg.type === "message" || msg.type === "task") {
-							window[msg.namespace][msg.literal][msg.method].apply(this, msg.args);
-						}
-	
-						// If task is complete, hide the loading notification.
-						else if(msg.type === "taskComplete") {
-							jQuery('.user_links.loading').hide();
-						}
-					}
-					catch(UnknownDestination) {}
+					Socket.onMessage(msg);
 				});
 
 				// Add disconnect listener to port.
@@ -70,6 +50,33 @@
 					port.onMessage.removeListener(function() {});
 				});
 			});
+		},
+		/**
+		 * On Message
+		 * 
+		 * Triggered when the port receives a new message.
+		 * 
+		 * @param msg Message received from the port.
+		 */
+		onMessage: function(msg) {
+			try {
+
+				// If a task is being posted to the background page, keep note.
+				if(msg.type === "task") {
+					Socket.tasks++;
+				}
+
+				// Call correct namespace function.
+				if(msg.type === "message" || msg.type === "task") {
+					window[msg.namespace][msg.literal][msg.method].apply(this, msg.args);
+				}
+
+				// If task is complete, hide the loading notification.
+				else if(msg.type === "taskComplete") {
+					jQuery('.user_links.loading').hide();
+				}
+			}
+			catch(UnknownDestination) {}
 		},
 	
 		/**
