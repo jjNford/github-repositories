@@ -19,7 +19,7 @@ window.Authentication = {
 			// To validate user, load user object from GitHub.
 			jQuery.getJSON("https://api.github.com/user", {access_token: OAuth2.getToken()})
 				.success( function(json) {
-					if(json.type == "User") {
+					if(json.type === "User") {
 
 						var user = {};
 						user.logged = json;
@@ -37,7 +37,7 @@ window.Authentication = {
 					}
 				})
 				.error( function(json) {
-					if(json.readyState == 0 && json.status == 0) {
+					if(json.readyState === 0 && json.status === 0) {
 						// There is no data connection.
 					}
 					else {
