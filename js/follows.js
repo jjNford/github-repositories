@@ -55,6 +55,35 @@
 					}
 				}
 			},
+			
+			/**
+			 * Clean
+			 * 
+			 * Remove unfollowed users on refresh.
+			 * 
+			 * @param contextId Context ID requesting clean.
+			 * @param followers Full list of followers.
+			 */
+			clean: function(contextId, followers) {
+				var list = jQuery('.follows_list');
+				var remove = [];
+				
+				// Look for DOM items to remove.
+				list.find('.item').each( function() {
+					var item = jQuery(this);
+					for(var i = 0; i < followers.length; i++) {
+						if(item.attr('id') == followers[i].id) {
+							return;
+						}
+					}
+					remove.push(item);
+				});
+
+				// Remove deleted repositories from DOM.
+				for(var i in remove) {
+					remove[i].remove();
+				}
+			},
 
 			/**
 			 * List 
@@ -230,6 +259,15 @@
 				// When all user data has been loaded cache the results.
 				function getComplete() {
 					cacheBuffer = window[name].filter.data.createdAt(cacheBuffer);
+					
+					// Clean unwatched repos from display.
+					Socket.postMessage({
+						namespace: name,
+						literal: "display",
+						method: "clean",
+						args: [context.id, cacheBuffer]
+					});
+					
 					Cache.save(context.id, name, cacheBuffer);
 					Socket.postTaskComplete();
 				}
