@@ -1,11 +1,9 @@
 var Filter = function(type) {
-
-	// Set type and load last setting.
 	this.type = type;
 	this.selected = Storage.load("filter." + type);
 	
 	if(!this.selected) {
-			this.selected = 'item';
+		this.selected = 'item';
 	}
 
 	// Determing HTML function relevent to type.
@@ -30,6 +28,9 @@ var Filter = function(type) {
 
 Filter.prototype = {
 	
+	/**
+	 * Bind
+	 */
 	bind: function() {
 
 		var that = this;
@@ -37,7 +38,7 @@ Filter.prototype = {
 		// Set selected filter.
 		jQuery('.filters .types li[type="' + this.selected + '"]').addClass('selected');
 
-		// Set type selection events.
+		// Bind click events to filter types.
 		var types = jQuery('.filters .types li');
 		types.on('click', function() {
 			types.each(function() {
@@ -49,14 +50,14 @@ Filter.prototype = {
 			window[that.type].filter.dom();
 		});
 	
-		// Remove defualt text from input box on click event.
+		// Bind click event to filter search box.
 		var input = jQuery('.filters .search');
 		input.one('click', function() {
 			input.val("");
 			input.removeClass('dead');
 		});
 
-		// Instant search event.
+		// Bind key events to filter search box to create Instant Search.
 		input.keyup(function() {
 			var regExp = new RegExp(jQuery(this).val(), 'i');
 			jQuery('.content .item').each(function() {
@@ -71,9 +72,14 @@ Filter.prototype = {
 		})
 	},
 	
+	/**
+	 * HTML
+	 */
 	html: {
 	
 		/**
+		 * Follows 
+		 *
 		 * @return Follows filter HTML.
 		 */
 		follows: function() {
@@ -85,6 +91,8 @@ Filter.prototype = {
 		},
 	
 		/**
+		 * Repos 
+		 *
 		 * @return Repositories filter HTML.
 		 */
 		repos: function() {
@@ -103,9 +111,14 @@ Filter.prototype = {
 		}
 	},
 	
+	/**
+	 * Data
+	 */
 	data: {
 
 		/**
+		 * Created At 
+		 *
 		 * Sort data set by newest created items to oldest created items.
 		 * 
 		 * @param data Data to be sorted.
@@ -125,6 +138,8 @@ Filter.prototype = {
 		},
 
 		/**
+		 * Recently Pushed 
+		 *
 		 * Sort data set by most recently pushed items to last recently pushed items.
 		 * 
 		 * @param repos Repositories to sort.
@@ -144,6 +159,8 @@ Filter.prototype = {
 		},
 	
 		/**
+		 * Remove User Repos 
+		 *
 		 * Remove user repositories from repo set.
 		 * 
 		 * @param repos Set of repos to remove own repos from.
@@ -164,7 +181,11 @@ Filter.prototype = {
 	},
 	
 	/**
+	 * DOM 
+	 *
 	 * Filter the DOM dynamically based on currently set filter and instant search.
+	 * 
+	 * @param item DOM item to apply filter to (optional);
 	 */
 	dom: function(item) {
 		var that = this;
