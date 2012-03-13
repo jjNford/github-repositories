@@ -991,6 +991,17 @@ button.positive:active {
 	box-shadow: none;
 }
 
+#settings .social_media {
+	padding: 0;
+	padding-left: 60px;
+	float: left;
+}
+	
+#settings .social_media li {
+	float: left;
+	display: inline-block;
+}
+
 .toast {
     display: none;
     position: absolute;
