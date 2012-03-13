@@ -149,7 +149,7 @@
 				var list = jQuery('.repo_list');
 				var remove = [];
 				
-				// Check that each DOM item still exists.
+				// Look for DOM items to remove.
 				list.find('.item').each( function() {
 					var item = jQuery(this);					
 					for(var i = 0; i < repos.length; i++) {

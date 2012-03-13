@@ -61,6 +61,35 @@
 					});
 				}
 			},
+			
+			/**
+			 * Clean
+			 * 
+			 * Remove unwatched repositories on refresh.
+			 * 
+			 * @param contextId Context ID requesting clean.
+			 * @param repos Full list of watched repositories.
+			 */
+			clean: function(contextId, repos) {
+				var list = jQuery('.watched_list');
+				var remove = [];
+				
+				// Look for DOM items to remove.
+				list.find('.item').each( function() {
+					var item = jQuery(this);
+					for(var i = 0; i < repos.length; i++) {
+						if(item.attr('id') == repos[i].id) {
+							return;
+						}
+					}
+					remove.push(item);
+				});
+
+				// Remove deleted repositories from DOM.
+				for(var i in remove) {
+					remove[i].remove();
+				}
+			},
 	
 			/**
 			 * List
@@ -180,6 +209,15 @@
 							}
 							else {
 								buffer = Watched.filter.data.recentlyPushed(buffer);
+								
+								// Clean unwatched repos from display.
+								Socket.postMessage({
+									namespace: "Watched",
+									literal: "display",
+									method: "clean",
+									args: [context.id, buffer]
+								});
+								
 								Cache.save(context.id, "Watched", buffer);
 								Socket.postTaskComplete();
 							}
