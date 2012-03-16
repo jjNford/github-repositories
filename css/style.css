@@ -429,6 +429,7 @@ button.positive:active {
 
 .dashboard {
     padding: 10px;
+	width: 201px;
     height: 393px;
     float: left;
     border-right: 1px solid #cacaca;
@@ -616,7 +617,7 @@ button.positive:active {
 }
 
 .popup {
-    width: 720px;
+    width: 692px;
     height: 500px;
     color: #000000;
     font-family: helvetica, arial, freesans, clean, sans-serif;
