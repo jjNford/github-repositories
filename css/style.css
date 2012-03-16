@@ -817,7 +817,7 @@ button.positive:active {
 }
 
 .repo_list .repo_extras .links li input[type="text"] {
-    width: 140px;
+    width: 224px;
     height: 16px;
     padding: 3px 5px 2px 5px;
     display: inline-block;
