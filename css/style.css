@@ -216,7 +216,7 @@ button.positive:active {
 }
 
 .content {
-    width: 450px;
+    width: 504px;
     height: 413px;
     padding: 0 10px;
     float: left;
@@ -428,8 +428,8 @@ button.positive:active {
 }
 
 .dashboard {
-    width: 249px;
-    height: 413px;
+    padding: 10px;
+    height: 393px;
     float: left;
     border-right: 1px solid #cacaca;
     overflow-x: hidden;
@@ -817,7 +817,7 @@ button.positive:active {
 }
 
 .repo_list .repo_extras .links li input[type="text"] {
-    width: 140px;
+    width: 224px;
     height: 16px;
     padding: 3px 5px 2px 5px;
     display: inline-block;
