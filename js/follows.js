@@ -16,6 +16,7 @@
 			 * 
 			 * @param contextId ID of context requestion display append.
 			 * @param user User to append to display.
+			 * @param name Name of type (following/followers).
 			 */
 			append: function(contextId, user, name) {
 
@@ -63,25 +64,30 @@
 			 * 
 			 * @param contextId Context ID requesting clean.
 			 * @param followers Full list of followers.
+			 * @param name Name of type (following/followers).
 			 */
-			clean: function(contextId, followers) {
+			clean: function(contextId, followers, name) {
+				
 				var list = jQuery('.follows_list');
 				var remove = [];
 				
-				// Look for DOM items to remove.
-				list.find('.item').each( function() {
-					var item = jQuery(this);
-					for(var i = 0; i < followers.length; i++) {
-						if(item.attr('id') == followers[i].id) {
-							return;
+				if(list.attr('type') === name) {
+				
+					// Look for DOM items to remove.
+					list.find('.item').each( function() {
+						var item = jQuery(this);
+						for(var i = 0; i < followers.length; i++) {
+							if(item.attr('id') == followers[i].id) {
+								return;
+							}
 						}
-					}
-					remove.push(item);
-				});
+						remove.push(item);
+					});
 
-				// Remove deleted repositories from DOM.
-				for(var i in remove) {
-					remove[i].remove();
+					// Remove deleted repositories from DOM.
+					for(var i in remove) {
+						remove[i].remove();
+					}
 				}
 			},
 
@@ -90,6 +96,7 @@
 			 * 
 			 * @param contextId Context ID requesting display.
 			 * @param users User to be displayed.
+			 * @param name Name of type. (following/followers).
 			 */
 			list: function(contextId, users, name) {
 				Content.post(contextId, name, function() {
@@ -137,7 +144,7 @@
 			 */
 			list: function(users, name) {
 				var html = window[name].filter.html();
-				html += "<ul class='follows_list'>";
+				html += "<ul class='follows_list' type='" + name + "'>";
 
 				if(users) {
 					for(var i in users) {
@@ -265,7 +272,7 @@
 						namespace: name,
 						literal: "display",
 						method: "clean",
-						args: [context.id, cacheBuffer]
+						args: [context.id, cacheBuffer, name]
 					});
 					
 					Cache.save(context.id, name, cacheBuffer);
