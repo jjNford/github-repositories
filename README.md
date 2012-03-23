@@ -41,6 +41,11 @@ Contributing Projects
 
 Changelog
 ---------
+### v2.1.2
+- Remove excessive white space from dashboard.
+- Add feedback link to Web Store reviews.
+- Fix following/followers DOM cleansing. 
+
 ### v2.1.1
 - Protect display post locks on null data returns from socket.
 - Remove data items from the DOM on refreshes if no longer relevant.
