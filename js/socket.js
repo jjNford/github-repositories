@@ -125,7 +125,7 @@
 	
 			try {
 				msg.type = "task";
-				 this.port.postMessage(msg);
+ 				this.port.postMessage(msg);
 			}
 			catch(SocketPostError) {
 				// Catch errors just in case.

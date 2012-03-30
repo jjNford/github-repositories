@@ -198,7 +198,6 @@
 				if(!repo) {
 					return "";
 				}
-	
 				return "<li class='item repo " + (repo['private'] ? "private" : "public") + (repo.fork ? " fork" : " source" ) + "' id='" + repo.id + "' pushed_at='" + repo.pushed_at + "' "
 				     + "tags='" + repo.name + " " + repo.description + " " + (repo.fork ? repo.parent.owner.login + " " + repo.parent.name : "") + "'>"
 					 + "<ul class='repo_stats'>"
