@@ -41,6 +41,9 @@ Contributing Projects
 
 Changelog
 ---------
+### v2.1.3
+- Remove feedback link to Web Store.
+
 ### v2.1.2
 - Remove excessive white space from dashboard.
 - Add feedback link to Web Store reviews.

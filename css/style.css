@@ -636,25 +636,6 @@ button.positive:active {
     background: url('../img/header_logo_hover.png') 0 0 no-repeat;
 }
 
-.popup .feedback {
-	float: left;
-	margin-top: 12px;
-	width: 222px;
-	text-align: center;
-}
-
-.popup .feedback a {
-	color: #bbbbbb;
-	font-size: 10px;
-	text-shadow: 0 1px 1 #ffffff;
-	text-decoration: none;
-	cursor: pointer;
-}
-
-.popup .feedback a:hover {
-	text-decoration: underline;
-}
-
 .repo_list {
     margin-top: 10px;
 }
