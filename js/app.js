@@ -46,6 +46,13 @@ window.App = {
 			});
 		});
 
+		// Bind create repo click events.
+		jQuery('.user_links li[rel="create_repo"]').on('click', function(event) {
+			event.preventDefault();
+			event.stopPropagation();
+			window.open("https://github.com/new", '_blank');
+		});
+
 		// Bind notification click events.
 		jQuery('.user_links li[rel="notifications"]').on('click', function(event) {
 			event.preventDefault();

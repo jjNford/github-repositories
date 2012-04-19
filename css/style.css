@@ -1038,6 +1038,14 @@ button.positive:active {
     cursor: pointer;
 }
 
+.user_links li[rel="create_repo"] {
+	background-position: -188px 4px;
+}
+
+.user_links li[rel="create_repo"]:hover {
+	background-position-y: -34px;
+}
+
 .user_links li[rel="notifications"] {
 	background-position: -32px 4px;
 }
