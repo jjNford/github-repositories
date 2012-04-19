@@ -41,6 +41,13 @@ Contributing Projects
 
 Changelog
 ---------
+
+### v2.1.5
+- Fix notifications unread count positioning.
+
+### v2.1.4
+- Add "Create a New Repo" button in the user links.
+
 ### v2.1.3
 - Remove feedback link to Web Store.
 
