@@ -1072,7 +1072,7 @@ button.positive:active {
 
 .user_links li .unread {
 	top: -7px;
-	left: 18px;
+	left: 48px;
 	position: absolute;
 	padding: 3px 4px;
 	background: rgba(203, 108, 0, 0.8);
