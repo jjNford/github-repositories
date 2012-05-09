@@ -1,5 +1,17 @@
 {
-	"background_page" : "background.html",
+	"background": {
+		"scripts": [
+			"js/jquery-1.7.min.js",
+			"js/cache.js",
+			"js/socket.js",
+			"js/storage.js",
+			"js/filter.js",
+			"js/follows.js",
+			"js/notifier.js",
+			"js/repos.js",
+			"js/watched.js"
+		]
+	},
     "browser_action": {
         "default_icon": "img/icon_128x128.png",
         "default_title": "GitHub Repositories",
