@@ -415,14 +415,6 @@ button.positive:active {
 	color: #9999aa;
 }
 
-.context_switcher .context_switcher_panel .organizations .none {
-    padding: 20px 0;
-    color: #888;
-    font-size: 14px;
-    font-weight: normal;
-    text-align: center;
-}
-
 .context_switcher .context_switcher_panel .organizations span {
     padding-left: 3px;
 }
