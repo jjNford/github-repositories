@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<project name="GitHub Repositories Extension Exporter">
+	
+	<!-- EXPORT -->
+	<target name="export">
+		<echo>Starting export</echo>
+		<antcall target="import_properties" />
+	</target>
+	
+	<!-- IMPORT PROPERTIES -->
+	<target name="import_properties">
+		<property file="ant.properties" />
+		<echo>Importing Properties</echo>
+	</target>
+	
+</project>
