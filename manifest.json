@@ -12,6 +12,7 @@
     		"run_at": "document_start"
     	}
     ],    
+    Simple delivery	
     "description": "Quickly access your GitHub data.",
     "icons": {
         "16": "img/icon_16x16.png",
